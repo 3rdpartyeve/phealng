@@ -30,9 +30,9 @@ for further information
 ## USAGE
 
 ### Initialize the API Object
-  require_once "Pheal/Pheal.php";
-  spl_autoload_register("Pheal::classload");
-  $pheal = new Pheal("myUserid", "myAPI key"[, "scope for request"]);
+    require_once "Pheal/Pheal.php";
+    spl_autoload_register("Pheal::classload");
+    $pheal = new Pheal("myUserid", "myAPI key"[, "scope for request"]);
 the scope is the one used for the API requests, ex. account/char/corp/eve/map/server see API Reference the scope can be changed during runtime and defaults to account
 
 ### Request Information
