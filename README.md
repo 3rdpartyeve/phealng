@@ -22,7 +22,12 @@ for further information
 
 ## INSTALLATION
 1. `git clone git://github.com/ppetermann/pheal.git`
-2. make sure the classes are either autoloaded, or include/require all classes
+2. make sure your autoloader is able to find the classes
+   (filename example.php matches classname "example")
+   OR `include "../path/to/Pheal.php"; spl_autoload_register("Pheal::classload");`
+   in your application, which will use a simple buildin autoloader
+
+
 
 ## USAGE
 more documentation to come

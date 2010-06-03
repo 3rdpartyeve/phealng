@@ -39,7 +39,17 @@ class Pheal
         // @todo MORE CACHE FOO here
         
         return new PhealResult(new SimpleXMLElement($xml));
+    }
 
+    public static function classload($name)
+    {
+        $dir = pathinfo(__FILE__, PATHINFO_DIRNAME) ."/";
+        if(substr($name, 0, 5) == "Pheal" && file_exists($dir . $name .".php"))
+        {
+            require_once($dir . $name . ".php");
+            return true;
+        }
+        return false;
     }
 }
 
