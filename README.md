@@ -36,7 +36,7 @@ for further information
 the scope is the one used for the API requests, ex. account/char/corp/eve/map/server see API Reference the scope can be changed during runtime and defaults to account
 
 ### Request Information
-  $result = $pheal>ApiPage();
+    $result = $pheal>ApiPage();
 this will return an Object of type PhealResult which then can be used to read the api result
 
 ### Example 1, getting a list of characters on the account:
