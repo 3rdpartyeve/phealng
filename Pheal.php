@@ -25,19 +25,17 @@ class Pheal
     {
         
         $opts = array_merge(PhealConfig::getInstance()->additional_request_parameters, $opts);
-
-        // @todo CACHE FOO here
-        $url = PhealConfig::getInstance()->api_base . $scope . '/' . $name . ".xml.aspx";
-        
-        $url .= "?userid=" . $this->userid . "&apikey=" . $this->key;
-        foreach($opts as $name => $value)
+       if(!$xml = PhealConfig::getInstance()->cache->load($this->userid,$this->key,$scope,$name,$opts))
         {
-            $url .= "&" . $name . "=" . urlencode($value);
+            $url = PhealConfig::getInstance()->api_base . $scope . '/' . $name . ".xml.aspx";
+            $url .= "?userid=" . $this->userid . "&apikey=" . $this->key;
+            foreach($opts as $name => $value)
+            {
+                $url .= "&" . $name . "=" . urlencode($value);
+            }
+            $xml = join('', file($url));
+            PhealConfig::getInstance()->cache->save($this->userid,$this->key,$scope,$name,$opts,$xml);
         }
-        $xml = join('', file($url));
-
-        // @todo MORE CACHE FOO here
-        
         return new PhealResult(new SimpleXMLElement($xml));
     }
 
