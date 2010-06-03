@@ -25,47 +25,9 @@
  OTHER DEALINGS IN THE SOFTWARE.
 */
 /**
- * Pheal Result Object
+ * basic Pheal Exception, all Pheal exceptions should be derived from this
  */
-class PhealResult
+class PhealException extends Exception
 {
-    /**
-     * time at which the API got the request
-     * @var string
-     */
-    public $request_time;
-    /**
-     * time till the cache should hold this result
-     * @var string
-     */
-    public $cached_until;
 
-    /**
-     * root element of the result
-     * @var PhealElement
-     */
-    private $element = null;
-
-    /**
-     * initializes the PhealResult
-     * @param SimpleXMLElement $xml
-     */
-    public function __construct($xml)
-    {
-        $this->request_time = (string) $xml->currentTime;
-        $this->cached_until = (string) $xml->cachedUntil;
-        if($xml->error)
-            throw new PhealAPIException($xml->error["code"], (String) $xml->error);
-        $this->element = PhealElement::parse_element($xml->result);
-    }
-
-    /**
-     * magic method, forwarding attribute access to $this->element
-     * @param string $name
-     * @return mixed
-     */
-    public function  __get($name)
-    {
-        return $this->element->$name;
-    }
 }

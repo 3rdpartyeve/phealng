@@ -94,10 +94,11 @@ class PhealElement
                 $re = new PhealRowSet($element);
         } else {
             $key = $element->getName();
-            if(count($element->children()) > 0)
+            $echilds = $element->children();
+            if(count($echilds) > 0)
             {
                 $container = new PhealContainer();
-                foreach($element->children() as $celement)
+                foreach($echilds as $celement)
                 {
                     $cel = PhealElement::parse_element($celement);
                     if(count($celement->attributes()) > 0)

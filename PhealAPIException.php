@@ -24,48 +24,26 @@
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  OTHER DEALINGS IN THE SOFTWARE.
 */
+
 /**
- * Pheal Result Object
+ * Exception to be thrown if the EVE API returns an error
  */
-class PhealResult
+class PhealAPIException extends PhealException
 {
     /**
-     * time at which the API got the request
-     * @var string
+     * EVE API Errorcode
+     * @var int
      */
-    public $request_time;
-    /**
-     * time till the cache should hold this result
-     * @var string
-     */
-    public $cached_until;
+    public $code;
 
     /**
-     * root element of the result
-     * @var PhealElement
+     * construct exception with EVE API errorcode, and message
+     * @param int $code
+     * @param string $message
      */
-    private $element = null;
-
-    /**
-     * initializes the PhealResult
-     * @param SimpleXMLElement $xml
-     */
-    public function __construct($xml)
+    public function  __construct($code, $message)
     {
-        $this->request_time = (string) $xml->currentTime;
-        $this->cached_until = (string) $xml->cachedUntil;
-        if($xml->error)
-            throw new PhealAPIException($xml->error["code"], (String) $xml->error);
-        $this->element = PhealElement::parse_element($xml->result);
-    }
-
-    /**
-     * magic method, forwarding attribute access to $this->element
-     * @param string $name
-     * @return mixed
-     */
-    public function  __get($name)
-    {
-        return $this->element->$name;
+        $this->code = (int) $code;
+        parent::__construct($message);
     }
 }
