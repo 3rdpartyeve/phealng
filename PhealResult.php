@@ -5,10 +5,8 @@ class PhealResult extends PhealResultBase
 
     public function __construct($xml)
     {
-        var_dump($xml);
         $this->request_time = (string) $xml->currentTime;
-        $this->cached_until = (string) $xml->cachedUntil;
-        
+        $this->cached_until = (string) $xml->cachedUntil;   
         $this->element = PhealElement::parse_element($xml->result);
         
     }

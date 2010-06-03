@@ -13,6 +13,11 @@ class PhealRowSet extends ArrayObject
            {
                $row[$attkey] = (String) $attval;
            }
+           foreach($rowxml->children() as $child) // nested tags in rowset/row
+           {
+               $element= PhealElement::parse_element($child);
+               $row[$element->name] = $element;
+           }
            $this->append(new PhealRowSetRow($row));
         }
     }

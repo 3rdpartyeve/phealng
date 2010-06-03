@@ -49,7 +49,7 @@ class PhealElement
             {
                 foreach($element->attributes() as $attelem)
                 {
-                    $re->add_attrib($attelem->getName(), (String) $val);
+                    $re->add_attrib($attelem->getName(), (String) $attelem);
                 }
             }
 

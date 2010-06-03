@@ -41,6 +41,12 @@ class Pheal
         return new PhealResult(new SimpleXMLElement($xml));
     }
 
+    /**
+     * static method to use with spl_autoload_register
+     * for usage include Pheal.php and then spl_autoload_register("Pheal::classload");
+     * @param String $name
+     * @return boolean
+     */
     public static function classload($name)
     {
         $dir = pathinfo(__FILE__, PATHINFO_DIRNAME) ."/";
