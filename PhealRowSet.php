@@ -1,5 +1,6 @@
 <?php
 /*
+ MIT License
  Copyright (c) 2010 Peter Petermann
 
  Permission is hereby granted, free of charge, to any person
