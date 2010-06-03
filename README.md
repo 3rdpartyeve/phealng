@@ -32,7 +32,7 @@ more documentation to come
 
 ## TODO
 - more documentation
-- caching
+- error handling
 
 ## LINKS
 - [Github](http://github.com/ppetermann/pheal)

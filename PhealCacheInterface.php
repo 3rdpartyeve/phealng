@@ -23,11 +23,10 @@
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  OTHER DEALINGS IN THE SOFTWARE.
 */
-
 /**
- * null cache, as a placeholder if no cache is used
+ * Interface that should be implemented by the cache handlers
  */
-class PhealNullCache implements PhealCacheInterface
+interface PhealCacheInterface
 {
     /**
      * Load XML from cache
@@ -37,10 +36,7 @@ class PhealNullCache implements PhealCacheInterface
      * @param string $name
      * @param array $args
      */
-    public function load($userid, $apikey, $scope, $name, $args)
-    {
-        return false;
-    }
+    public function load($userid, $apikey, $scope, $name, $args);
 
     /**
      * Save XML from cache
@@ -51,8 +47,5 @@ class PhealNullCache implements PhealCacheInterface
      * @param array $args
      * @param string $xml
      */
-    public function save($userid, $apikey, $scope, $name, $args, $xml)
-    {
-        return false;
-    }
+    public function save($userid, $apikey, $scope, $name, $args, $xml);
 }

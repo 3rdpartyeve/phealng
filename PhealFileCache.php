@@ -1,8 +1,43 @@
 <?php
-class PhealFileCache
+/*
+ Copyright (c) 2010 Peter Petermann
+
+ Permission is hereby granted, free of charge, to any person
+ obtaining a copy of this software and associated documentation
+ files (the "Software"), to deal in the Software without
+ restriction, including without limitation the rights to use,
+ copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the
+ Software is furnished to do so, subject to the following
+ conditions:
+
+ The above copyright notice and this permission notice shall be
+ included in all copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ OTHER DEALINGS IN THE SOFTWARE.
+*/
+/**
+ * Simple filecache for the xml
+ */
+class PhealFileCache implements PhealCacheInterface
 {
+    /**
+     * path where to store the xml
+     * @var string
+     */
     private $basepath;
 
+    /**
+     * construct PhealFileCache,
+     * @param string $basepath optional string on where to store files, defaults to the current/users/home/.pheal/cache/
+     */
     public function __construct($basepath = false)
     {
         if(!$basepath)
@@ -10,6 +45,15 @@ class PhealFileCache
         $this->basepath = $basepath;
     }
 
+    /**
+     * create a filename to use
+     * @param int $userid
+     * @param string $apikey
+     * @param string $scope
+     * @param string $name
+     * @param array $args
+     * @return string
+     */
     private function filename($userid, $apikey, $scope, $name, $args)
     {
         $argstr = "";
@@ -28,6 +72,14 @@ class PhealFileCache
         return $filepath . $filename;
     }
 
+    /**
+     * Load XML from cache
+     * @param int $userid
+     * @param string $apikey
+     * @param string $scope
+     * @param string $name
+     * @param array $args
+     */
     public function load($userid, $apikey, $scope, $name, $args)
     {
         $filename = $this->filename($userid, $apikey, $scope, $name, $args);
@@ -40,6 +92,13 @@ class PhealFileCache
 
     }
 
+    /**
+     * validate the cached xml if it is still valid. This contains a name hack
+     * to work arround EVE API giving wrong cachedUntil values
+     * @param string $xml
+     * @param string $name
+     * @return boolean
+     */
     public function validate_cache($xml, $name) // contains name hack for broken eve api
     {
         $tz = date_default_timezone_get();
@@ -64,6 +123,15 @@ class PhealFileCache
         return false;
     }
 
+    /**
+     * Save XML from cache
+     * @param int $userid
+     * @param string $apikey
+     * @param string $scope
+     * @param string $name
+     * @param array $args
+     * @param string $xml
+     */
     public function save($userid,$apikey,$scope,$name,$args,$xml) 
     {
         $filename= $this->filename($userid, $apikey, $scope, $name, $args);
