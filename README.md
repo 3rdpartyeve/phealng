@@ -40,22 +40,22 @@ the scope is the one used for the API requests, ex. account/char/corp/eve/map/se
 this will return an Object of type PhealResult which then can be used to read the api result
 
 ### Example 1, getting a list of characters on the account:
-  require_once "Pheal/Pheal.php";
-  spl_autoload_register("Pheal::classload");
-  $pheal = new Pheal("myUserid", "myAPI key"[, "scope for request"]);
+    require_once "Pheal/Pheal.php";
+    spl_autoload_register("Pheal::classload");
+    $pheal = new Pheal("myUserid", "myAPI key"[, "scope for request"]);
 
-  $result = $pheal->Characters();
-  foreach($result->characters as $character)
-    echo $character->name;
+    $result = $pheal->Characters();
+    foreach($result->characters as $character)
+      echo $character->name;
 
 ### Example 2, getting the id for a given character name
-  require_once "Pheal/Pheal.php";
-  spl_autoload_register("Pheal::classload");
-  $pheal = new Pheal("myUserid", "myAPI key"[, "scope for request"]);
+    require_once "Pheal/Pheal.php";
+    spl_autoload_register("Pheal::classload");
+    $pheal = new Pheal("myUserid", "myAPI key"[, "scope for request"]);
 
-  $pheal->scope = "eve";
-  $result = $pheal->CharacterID(array("names" => "Peter Powers"));
-  echo $result->characters[0]->characterID;
+    $pheal->scope = "eve";
+    $result = $pheal->CharacterID(array("names" => "Peter Powers"));
+    echo $result->characters[0]->characterID;
 
 ### Using the cache
 Pheal comes with a simple file cache, to make use of this cache:
@@ -63,14 +63,14 @@ Pheal comes with a simple file cache, to make use of this cache:
 does the magic. if you dont give a path it defaults to $HOME/.pheal/cache
 
 ### Example 3, doing a cached request
-  require_once "Pheal/Pheal.php";
-  spl_autoload_register("Pheal::classload");
-  PhealConfig::getInstance()->cache = new PhealFileCache();
-  $pheal = new Pheal("myUserid", "myAPI key"[, "scope for request"]);
+    require_once "Pheal/Pheal.php";
+    spl_autoload_register("Pheal::classload");
+    PhealConfig::getInstance()->cache = new PhealFileCache();
+    $pheal = new Pheal("myUserid", "myAPI key"[, "scope for request"]);
 
-  $pheal->scope = "eve";
-  $result = $pheal->CharacterID(array("names" => "Peter Powers"));
-  echo $result->characters[0]->characterID;
+    $pheal->scope = "eve";
+    $result = $pheal->CharacterID(array("names" => "Peter Powers"));
+    echo $result->characters[0]->characterID;
 now the request will first check if the xml is allready in the cache, if it is still valid, and if so use the cached, only if the cache until of the saved file has expired, it will request again.
 
 ### Exceptions
@@ -78,15 +78,15 @@ Pheal throws an Exception of type PhealAPIException (derived from PhealException
 whenever the EVE API returns an error, this exception has an attribute called "code"
 which is the EVE APIs error code, and also contains the EVE API message as message.
 
-  require_once "Pheal/Pheal.php";
-  spl_autoload_register("Pheal::classload");
-  PhealConfig::getInstance()->cache = new PhealFileCache();
-  $pheal = new Pheal("myUserid", "myAPI key"[, "scope for request"]);
-  try {
-     $pheal->Killlog(array("characterID" => 12345));
-  } catch(PhealAPIException $e) {
-     echo 'error: ' . $e->code . ' meesage: ' . $e->getMessage();
-  }
+    require_once "Pheal/Pheal.php";
+    spl_autoload_register("Pheal::classload");
+    PhealConfig::getInstance()->cache = new PhealFileCache();
+    $pheal = new Pheal("myUserid", "myAPI key"[, "scope for request"]);
+    try {
+        $pheal->Killlog(array("characterID" => 12345));
+    } catch(PhealAPIException $e) {
+        echo 'error: ' . $e->code . ' meesage: ' . $e->getMessage();
+    }
 
 ## TODO
 - more documentation
