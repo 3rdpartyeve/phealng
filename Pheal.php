@@ -93,9 +93,9 @@ class Pheal
         {
             $url = PhealConfig::getInstance()->api_base . $scope . '/' . $name . ".xml.aspx";
             $url .= "?userid=" . $this->userid . "&apikey=" . $this->key;
-            foreach($opts as $name => $value)
+            foreach($opts as $optname => $value)
             {
-                $url .= "&" . $name . "=" . urlencode($value);
+                $url .= "&" . $optname . "=" . urlencode($value);
             }
             $xml = join('', file($url));
             PhealConfig::getInstance()->cache->save($this->userid,$this->key,$scope,$name,$opts,$xml);
