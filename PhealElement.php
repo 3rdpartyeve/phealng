@@ -66,7 +66,7 @@ class PhealElement
      */
     public function add_attrib($key, $val)
     {
-        $this->attribs = array_merge(array($key => $val));
+        $this->attribs = array_merge(array($key => $val), $this->attribs);
     }
 
     /**
