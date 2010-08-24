@@ -33,7 +33,7 @@ class PhealFileCache implements PhealCacheInterface
      * path where to store the xml
      * @var string
      */
-    private $basepath;
+    protected $basepath;
 
     /**
      * construct PhealFileCache,
@@ -55,7 +55,7 @@ class PhealFileCache implements PhealCacheInterface
      * @param array $args
      * @return string
      */
-    private function filename($userid, $apikey, $scope, $name, $args)
+    protected function filename($userid, $apikey, $scope, $name, $args)
     {
         $argstr = "";
         foreach($args as $key => $val)
