@@ -94,6 +94,7 @@ which is the EVE APIs error code, and also contains the EVE API message as messa
 
 ## LINKS
 - [Github](http://github.com/ppetermann/pheal)
+- [devedge](http://devedge.eu/project/pheal/)
 
 ## CONTACT
 - Peter Petermann <ppetermann80@googlemail.com>

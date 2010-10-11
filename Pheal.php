@@ -33,7 +33,7 @@ class Pheal
     /**
      * Version container
      */
-    public static $version = "0.0.4";
+    public static $version = "0.0.6";
 
     /**
      * @var int
@@ -88,8 +88,8 @@ class Pheal
     private function request_xml($scope, $name, $opts)
     {
         
-       $opts = array_merge(PhealConfig::getInstance()->additional_request_parameters, $opts);
-       if(!$xml = PhealConfig::getInstance()->cache->load($this->userid,$this->key,$scope,$name,$opts))
+        $opts = array_merge(PhealConfig::getInstance()->additional_request_parameters, $opts);
+        if(!$xml = PhealConfig::getInstance()->cache->load($this->userid,$this->key,$scope,$name,$opts))
         {
             $url = PhealConfig::getInstance()->api_base . $scope . '/' . $name . ".xml.aspx";
             $url .= "?userid=" . $this->userid . "&apikey=" . $this->key;
@@ -97,10 +97,17 @@ class Pheal
             {
                 $url .= "&" . $optname . "=" . urlencode($value);
             }
-            $xml = join('', file($url));
+            try {
+                $xml = join('', file($url));
+                $element = new SimpleXMLElement($xml);
+            } catch(Exception $e) {
+                throw new PhealException('API Date could not be read / parsed, orginial exception: ' . $e->getMessage());
+            }
             PhealConfig::getInstance()->cache->save($this->userid,$this->key,$scope,$name,$opts,$xml);
+        } else {
+            $element = new SimpleXMLElement($xml);
         }
-        return new PhealResult(new SimpleXMLElement($xml));
+        return new PhealResult($element);
     }
 
     /**
