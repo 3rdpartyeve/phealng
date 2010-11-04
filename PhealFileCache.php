@@ -67,7 +67,7 @@ class PhealFileCache implements PhealCacheInterface
         }
         $argstr = substr($argstr, 0, -1);
         $filename = "Request_" . $argstr . ".xml";
-        $filepath = $this->basepath . ($userid ? "private/$userid/$apikey/$scope/$name/" : "$scope/$name/");
+        $filepath = $this->basepath . ($userid ? "$userid/$apikey/$scope/$name/" : "public/public/$scope/$name/");
         if(!file_exists($filepath))
             mkdir($filepath, 0777, true);
         return $filepath . $filename;

@@ -73,7 +73,7 @@ class PhealConfig
     
     /**
      * which useragent should be used for http calls.
-     * (bool) false means do not change curl default
+     * (bool) false means do not change php default
      * @var String
      */
     public $http_user_agent = false;
@@ -83,6 +83,12 @@ class PhealConfig
      * @var bool
      */
     public $http_post = false;
+    
+    /**
+     * After what time should an api call considered to as timeout?
+     * @var Integer
+     */
+    public $http_timeout = 5;
 
     /**
      * Singleton Instance

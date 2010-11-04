@@ -33,7 +33,7 @@ class Pheal
     /**
      * Version container
      */
-    public static $version = "0.0.6-wollari";
+    public static $version = "0.0.6";
 
     /**
      * @var int
@@ -70,9 +70,10 @@ class Pheal
      * @param array $arguments an array of arguments
      * @return PhealResult
      */
-    public function  __call($name,  $arguments)
+    public function  __call($name, $arguments)
     {
-        if(count($arguments) < 1) $arguments[0] = array();
+        if(count($arguments) < 1 || !is_array($arguments[0]))
+            $arguments[0] = array();
         $scope = $this->scope;
         return $this->request_xml($scope, $name, $arguments[0]); // we only use the
         //first argument params need to be passed as an array, due to naming
@@ -93,14 +94,13 @@ class Pheal
             $url = PhealConfig::getInstance()->api_base . $scope . '/' . $name . ".xml.aspx";
             if($this->userid)	$opts['userid'] = $this->userid;
             if($this->key)	$opts['apikey'] = $this->key;
-
+            
             try {
-            	if(PhealConfig::getInstance()->http_method == "curl" && function_exists('curl_init'))
-            {
-            	    $xml = self::request_http_curl($url,$opts);
-            	} else {
-            	    $xml = self::request_http_file($url,$opts);
-            }
+                if(PhealConfig::getInstance()->http_method == "curl" && function_exists('curl_init'))
+                    $xml = self::request_http_curl($url,$opts);
+                else
+                    $xml = self::request_http_file($url,$opts);
+                
                 $element = new SimpleXMLElement($xml);
             } catch(Exception $e) {
                 throw new PhealException('API Date could not be read / parsed, orginial exception: ' . $e->getMessage());
@@ -127,20 +127,16 @@ class Pheal
      */
     public static function request_http_curl($url,$opts)
     {
-    	// init curl
+        // init curl
         $curl = curl_init();
        
         // custom user agent
         if(($http_user_agent = PhealConfig::getInstance()->http_user_agent) != false)
-        {
             curl_setopt($curl, CURLOPT_USERAGENT, $http_user_agent);
-        }
         
         // custom outgoing ip address
         if(($http_interface_ip = PhealConfig::getInstance()->http_interface_ip) != false)
-        {
             curl_setopt($curl, CURLOPT_INTERFACE, $http_interface_ip);
-        }
             
         // use post for params
         if(count($opts) && PhealConfig::getInstance()->http_post)
@@ -154,10 +150,12 @@ class Pheal
             $url .= "?" . http_build_query($opts);
         }
         
+        if(($http_timeout = PhealConfig::getInstance()->http_timeout) != false)
+            curl_setopt($curl, CURLOPT_TIMEOUT, $http_timeout);
+        
         // curl defaults
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_TIMEOUT, 4);
         curl_setopt($curl, CURLOPT_ENCODING, "");
         
         // call
@@ -167,15 +165,14 @@ class Pheal
         curl_close($curl);
         
         if($errno)
-        {
             throw new Exception($error, $errno);
-        }
+        
         return $result;
     }
     
     /**
      * method will do the actual http call using file()
-     * remember: on some installations, file(url) might not be available due to
+     * remember: on some installations, file_get_contents(url) might not be available due to
      * restrictions via allow_url_fopen
      * @param String $url url beeing requested
      * @param array $opts an array of query paramters
@@ -183,18 +180,36 @@ class Pheal
      */
     public static function http_call_file($url,$opts)
     {
-    	 // custom user agent
+        $options = array();
+        
+        // set custom user agent
         if(($http_user_agent = PhealConfig::getInstance()->http_user_agent) != false)
+            $options['http']['user_agent'] = $http_user_agent;
+        
+        // set custom http timeout
+        if(($http_timeout = PhealConfig::getInstance()->http_timeout) != false)
+            $options['http']['timeout'] = $http_timeout;
+        
+        // use post for params
+        if(count($opts) && PhealConfig::getInstance()->http_post)
         {
-            ini_set("user_agent", $http_user_agent);
+            $options['http']['method'] = 'POST';
+            $options['http']['content'] = http_build_query($opts);
         }
-    	
-    	// build url parameters
-        if(count($opts)) {
+        // else build url parameters
+        elseif(count($opts))
+        {
             $url .= "?" . http_build_query($opts);
         }
         
-        return join('', file($url));
+        // create context with options and request api call
+        if(count($options)) 
+        {
+            $context = stream_context_create($options);
+            return file_get_contents($url, false, $context);
+        } else {
+            return file_get_contents($url);
+        }
     }
     
     /**
