@@ -1,7 +1,7 @@
 <?php
 /*
  MIT License
- Copyright (c) 2010 Peter Petermann
+ Copyright (c) 2010 Peter Petermann, Daniel Hoffend
 
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -33,7 +33,7 @@ class Pheal
     /**
      * Version container
      */
-    public static $version = "0.0.6";
+    public static $version = "0.0.6-wollari";
 
     /**
      * @var int
@@ -57,7 +57,7 @@ class Pheal
      * @param string $key the EVE apikey
      * @param string $scope scope to use, defaults to account. scope can be changed during usage by modifycation of public attribute "scope"
      */
-    public function __construct($userid, $key, $scope="account")
+    public function __construct($userid=null, $key=null, $scope="account")
     {
         $this->userid = $userid;
         $this->key = $key;
@@ -87,29 +87,116 @@ class Pheal
      */
     private function request_xml($scope, $name, $opts)
     {
-        
         $opts = array_merge(PhealConfig::getInstance()->additional_request_parameters, $opts);
         if(!$xml = PhealConfig::getInstance()->cache->load($this->userid,$this->key,$scope,$name,$opts))
         {
             $url = PhealConfig::getInstance()->api_base . $scope . '/' . $name . ".xml.aspx";
-            $url .= "?userid=" . $this->userid . "&apikey=" . $this->key;
-            foreach($opts as $optname => $value)
-            {
-                $url .= "&" . $optname . "=" . urlencode($value);
-            }
+            if($this->userid)	$opts['userid'] = $this->userid;
+            if($this->key)	$opts['apikey'] = $this->key;
+
             try {
-                $xml = join('', file($url));
+            	if(PhealConfig::getInstance()->http_method == "curl" && function_exists('curl_init'))
+            {
+            	    $xml = self::request_http_curl($url,$opts);
+            	} else {
+            	    $xml = self::request_http_file($url,$opts);
+            }
                 $element = new SimpleXMLElement($xml);
             } catch(Exception $e) {
                 throw new PhealException('API Date could not be read / parsed, orginial exception: ' . $e->getMessage());
             }
             PhealConfig::getInstance()->cache->save($this->userid,$this->key,$scope,$name,$opts,$xml);
+            
+            // archive+save only non-error api calls
+            if(!$xml->error) {
+                PhealConfig::getInstance()->archive->save($this->userid,$this->key,$scope,$name,$opts,$xml);
+            }
         } else {
             $element = new SimpleXMLElement($xml);
         }
         return new PhealResult($element);
     }
 
+    /**
+     * method will do the actual http call using curl libary. 
+     * you can choose between POST/GET via config.
+     * will throw Exception if http request/curl times out or fails
+     * @param String $url url beeing requested
+     * @param array $opts an array of query paramters
+     * @return string raw http response
+     */
+    public static function request_http_curl($url,$opts)
+    {
+    	// init curl
+        $curl = curl_init();
+       
+        // custom user agent
+        if(($http_user_agent = PhealConfig::getInstance()->http_user_agent) != false)
+        {
+            curl_setopt($curl, CURLOPT_USERAGENT, $http_user_agent);
+        }
+        
+        // custom outgoing ip address
+        if(($http_interface_ip = PhealConfig::getInstance()->http_interface_ip) != false)
+        {
+            curl_setopt($curl, CURLOPT_INTERFACE, $http_interface_ip);
+        }
+            
+        // use post for params
+        if(count($opts) && PhealConfig::getInstance()->http_post)
+        {
+            curl_setopt($curl, CURLOPT_POST, true);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $opts);
+        }
+        // else build url parameters
+        elseif(count($opts))
+        {
+            $url .= "?" . http_build_query($opts);
+        }
+        
+        // curl defaults
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 4);
+        curl_setopt($curl, CURLOPT_ENCODING, "");
+        
+        // call
+        $result	= curl_exec($curl);
+        $errno = curl_errno($curl);
+        $error = curl_error($curl);
+        curl_close($curl);
+        
+        if($errno)
+        {
+            throw new Exception($error, $errno);
+        }
+        return $result;
+    }
+    
+    /**
+     * method will do the actual http call using file()
+     * remember: on some installations, file(url) might not be available due to
+     * restrictions via allow_url_fopen
+     * @param String $url url beeing requested
+     * @param array $opts an array of query paramters
+     * @return string raw http response
+     */
+    public static function http_call_file($url,$opts)
+    {
+    	 // custom user agent
+        if(($http_user_agent = PhealConfig::getInstance()->http_user_agent) != false)
+        {
+            ini_set("user_agent", $http_user_agent);
+        }
+    	
+    	// build url parameters
+        if(count($opts)) {
+            $url .= "?" . http_build_query($opts);
+        }
+        
+        return join('', file($url));
+    }
+    
     /**
      * static method to use with spl_autoload_register
      * for usage include Pheal.php and then spl_autoload_register("Pheal::classload");

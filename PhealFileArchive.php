@@ -1,7 +1,7 @@
 <?php
 /*
  MIT License
- Copyright (c) 2010 Peter Petermann
+ Copyright (c) 2010 Peter Petermann, Daniel Hoffend
 
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -25,9 +25,9 @@
  OTHER DEALINGS IN THE SOFTWARE.
 */
 /**
- * Simple filecache for the xml
+ * Simple filearchive for the xml
  */
-class PhealFileCache implements PhealCacheInterface
+class PhealFileArchive implements PhealArchiveInterface
 {
     /**
      * path where to store the xml
@@ -42,7 +42,7 @@ class PhealFileCache implements PhealCacheInterface
     public function __construct($basepath = false)
     {
         if(!$basepath)
-            $basepath = $_ENV["HOME"]. "/.pheal/cache/";
+            $basepath = $_ENV["HOME"]. "/.pheal/archive/";
         $this->basepath = $basepath;
     }
 
@@ -66,62 +66,11 @@ class PhealFileCache implements PhealCacheInterface
                 $argstr .= "$key:$val:";
         }
         $argstr = substr($argstr, 0, -1);
-        $filename = "Request_" . $argstr . ".xml";
-        $filepath = $this->basepath . ($userid ? "private/$userid/$apikey/$scope/$name/" : "$scope/$name/");
+        $filename = "Request_" . gmdate('Ymd-His') . ($argstr ? "_" . $argstr : "") . ".xml";
+        $filepath = $this->basepath . gmdate("Ymd" . "/" . ($userid ? "private/$userid/$apikey/$scope/$name/" : "$scope/$name/");
         if(!file_exists($filepath))
             mkdir($filepath, 0777, true);
         return $filepath . $filename;
-    }
-
-    /**
-     * Load XML from cache
-     * @param int $userid
-     * @param string $apikey
-     * @param string $scope
-     * @param string $name
-     * @param array $args
-     */
-    public function load($userid, $apikey, $scope, $name, $args)
-    {
-        $filename = $this->filename($userid, $apikey, $scope, $name, $args);
-        if(!file_exists($filename))
-            return false;
-        $xml = join('', file($filename));
-        if($this->validate_cache($xml, $name))
-            return $xml;
-        return false;
-
-    }
-
-    /**
-     * validate the cached xml if it is still valid. This contains a name hack
-     * to work arround EVE API giving wrong cachedUntil values
-     * @param string $xml
-     * @param string $name
-     * @return boolean
-     */
-    public function validate_cache($xml, $name) // contains name hack for broken eve api
-    {
-        $tz = date_default_timezone_get();
-        date_default_timezone_set("UTC");
-
-        $xml = new SimpleXMLElement($xml);
-        $dt = date_parse($xml->cachedUntil);
-        $dt = mktime($dt["hour"], $dt["minute"], $dt["second"], $dt["month"],$dt["day"], $dt["year"]);
-        $time = time();
-        date_default_timezone_set($tz);
-
-        switch($name) //name hack!
-        {  
-            case "WalletJournal":
-                if(($dt + 3600) > time())
-                    return true;
-                break;
-            default:
-                if($dt > $time)
-                    return true;
-        }
-        return false;
     }
 
     /**
