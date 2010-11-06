@@ -42,7 +42,7 @@ class PhealFileCache implements PhealCacheInterface
     public function __construct($basepath = false)
     {
         if(!$basepath)
-            $basepath = $_ENV["HOME"]. "/.pheal/cache/";
+            $basepath = getenv('HOME'). "/.pheal/cache/";
         $this->basepath = $basepath;
     }
 
