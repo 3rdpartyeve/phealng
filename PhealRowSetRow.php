@@ -30,6 +30,30 @@
  */
 class PhealRowSetRow extends ArrayObject
 {
+
+    /**
+    * @var string if the element has a specific string value, 
+    * it can be stored here;
+    */
+    private $_stringValue = null; 
+
+    /**
+    * set string value of row
+    * @param string $string 
+    */ 
+    public function setStringValue($string)
+    {
+        $this->_stringValue = $string;
+    }
+
+    /**
+    * Magic __toString method, will return stringvalue of row
+    */ 
+    public function __toString()
+    {
+        return $this->_stringValue;
+    }
+
     /**
      * magic function to allow access to the array like an object would do too
      * @param string $name
