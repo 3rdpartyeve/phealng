@@ -143,7 +143,11 @@ you while you're killing their API servers.
 ## CONTACT
 - Peter Petermann <ppetermann80@googlemail.com>
 
+## Contributors
+- Daniel Hoffend (Wollari)
+
 ## ACKNOWLEDGEMENTS
 - Pheal is based on [EAAL](http://github.com/ppetermann/eaal)
 - Pheal is written in [PHP](http://php.net)
 - Pheal is build for use of the [EVE Online](http://eveonline.com) API
+
