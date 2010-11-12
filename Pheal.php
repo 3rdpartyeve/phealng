@@ -50,6 +50,12 @@ class Pheal
      * @var String 
      */
     public $scope;
+    
+    /**
+     * Result of the last XML request, so application can use the raw xml data
+     * @var String 
+     */
+    public $xml;
 
     /**
      * creates new Pheal API object
@@ -97,11 +103,11 @@ class Pheal
             
             try {
                 if(PhealConfig::getInstance()->http_method == "curl" && function_exists('curl_init'))
-                    $xml = self::request_http_curl($url,$opts);
+                    $this->xml = self::request_http_curl($url,$opts);
                 else
-                    $xml = self::request_http_file($url,$opts);
+                    $this->xml = self::request_http_file($url,$opts);
                 
-                $element = new SimpleXMLElement($xml);
+                $element = new SimpleXMLElement($this->xml);
             } catch(Exception $e) {
                 throw new PhealException('API Date could not be read / parsed, orginial exception: ' . $e->getMessage());
             }
