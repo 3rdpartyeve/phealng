@@ -34,7 +34,7 @@ class PhealRowSet extends ArrayObject
      * name of the rowset
      * @var string
      */
-    public $name;
+    public $_name;
 
     /**
      * initialize the rowset
@@ -42,7 +42,7 @@ class PhealRowSet extends ArrayObject
      */
     public function __construct($xml)
     {
-       $this->name = (String) $xml->attributes()->name;
+       $this->_name = (String) $xml->attributes()->name;
        foreach($xml->row as $rowxml)
        {
            $row = array();
@@ -53,7 +53,7 @@ class PhealRowSet extends ArrayObject
            foreach($rowxml->children() as $child) // nested tags in rowset/row
            {
                $element= PhealElement::parse_element($child);
-               $row[$element->name] = $element;
+               $row[$element->_name] = $element;
            }
            $this->append(new PhealRowSetRow($row));
         }

@@ -34,19 +34,19 @@ class PhealElement
      * Name of the Element
      * @var String
      */
-    public $name;
+    public $_name;
 
     /**
      * Value of the Element
      * @var mixed
      */
-    public $value;
+    public $_value;
     
     /**
      * container containing information that the EVE API stored in XML attributes
      * @var array
      */
-    public $attribs = array();
+    public $_attribs = array();
 
     /**
      * create new PhealElement
@@ -55,8 +55,8 @@ class PhealElement
      */
     protected function  __construct($name, $value)
     {
-        $this->name = $name;
-        $this->value = $value;
+        $this->_name = $name;
+        $this->_value = $value;
     }
 
     /**
@@ -66,7 +66,7 @@ class PhealElement
      */
     public function add_attrib($key, $val)
     {
-        $this->attribs = array_merge(array($key => $val), $this->attribs);
+        $this->_attribs = array_merge(array($key => $val), $this->_attribs);
     }
 
     /**
@@ -77,9 +77,9 @@ class PhealElement
      */
     public function __get($name)
     {
-        if(isset($this->attribs[$name]))
-            return $this->attribs[$name];
-        return $this->value->$name;
+        if(isset($this->_attribs[$name]))
+            return $this->_attribs[$name];
+        return $this->_value->$name;
     }
 
     /**
@@ -91,7 +91,7 @@ class PhealElement
     {
         if($element->getName() =="rowset")
         {
-                $re = new PhealRowSet($element);
+            $re = new PhealRowSet($element);
         } else {
             $key = $element->getName();
             $echilds = $element->children();
@@ -102,9 +102,9 @@ class PhealElement
                 {
                     $cel = PhealElement::parse_element($celement);
                     if(count($celement->attributes()) > 0)
-                        $container->add_element($cel->name, $cel);
+                        $container->add_element($cel->_name, $cel);
                     else
-                        $container->add_element($cel->name, $cel->value);
+                        $container->add_element($cel->_name, $cel->_value);
                 }
                 $value = $container;
             } else $value = (String) $element;

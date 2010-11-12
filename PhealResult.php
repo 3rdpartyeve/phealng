@@ -44,7 +44,7 @@ class PhealResult
      * root element of the result
      * @var PhealElement
      */
-    private $element = null;
+    private $_element = null;
 
     /**
      * initializes the PhealResult
@@ -56,7 +56,7 @@ class PhealResult
         $this->cached_until = (string) $xml->cachedUntil;
         if($xml->error)
             throw new PhealAPIException($xml->error["code"], (String) $xml->error);
-        $this->element = PhealElement::parse_element($xml->result);
+        $this->_element = PhealElement::parse_element($xml->result);
     }
 
     /**
@@ -66,6 +66,6 @@ class PhealResult
      */
     public function  __get($name)
     {
-        return $this->element->$name;
+        return $this->_element->$name;
     }
 }
