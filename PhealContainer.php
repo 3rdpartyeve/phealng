@@ -34,7 +34,7 @@ class PhealContainer
     /**
      * @var array
      */
-    private $container = array();
+    private $_container = array();
 
     /**
      * Adds an Element to the container
@@ -43,7 +43,7 @@ class PhealContainer
      */
     public function add_element($key, $val)
     {
-        $this->container = array_merge($this->container, array($key=>$val));
+        $this->_container = array_merge($this->_container, array($key=>$val));
     }
 
     /**
@@ -53,8 +53,8 @@ class PhealContainer
      */
     public function  __get($name)
     {
-        if(isset($this->container[$name]))
-                return $this->container[$name];
+        if(isset($this->_container[$name]))
+                return $this->_container[$name];
         return null;
     }
 }

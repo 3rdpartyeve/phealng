@@ -1,7 +1,7 @@
 <?php
 /*
  MIT License
- Copyright (c) 2010 Peter Petermann
+ Copyright (c) 2010 Peter Petermann, Daniel Hoffend
 
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -24,48 +24,23 @@
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  OTHER DEALINGS IN THE SOFTWARE.
 */
+
 /**
- * Pheal Result Object
+ * null archive, as a placeholder if no cache is used
  */
-class PhealResult
+class PhealNullArchive implements PhealArchiveInterface
 {
     /**
-     * time at which the API got the request
-     * @var string
-     */
-    public $request_time;
-    /**
-     * time till the cache should hold this result
-     * @var string
-     */
-    public $cached_until;
-
-    /**
-     * root element of the result
-     * @var PhealElement
-     */
-    private $_element = null;
-
-    /**
-     * initializes the PhealResult
-     * @param SimpleXMLElement $xml
-     */
-    public function __construct($xml)
-    {
-        $this->request_time = (string) $xml->currentTime;
-        $this->cached_until = (string) $xml->cachedUntil;
-        if($xml->error)
-            throw new PhealAPIException($xml->error["code"], (String) $xml->error);
-        $this->_element = PhealElement::parse_element($xml->result);
-    }
-
-    /**
-     * magic method, forwarding attribute access to $this->element
+     * Save XML from cache
+     * @param int $userid
+     * @param string $apikey
+     * @param string $scope
      * @param string $name
-     * @return mixed
+     * @param array $args
+     * @param string $xml
      */
-    public function  __get($name)
+    public function save($userid, $apikey, $scope, $name, $args, $xml)
     {
-        return $this->_element->$name;
+        return false;
     }
 }

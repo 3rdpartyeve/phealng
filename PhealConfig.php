@@ -1,7 +1,7 @@
 <?php
 /*
  MIT License
- Copyright (c) 2010 Peter Petermann
+ Copyright (c) 2010 Peter Petermann, Daniel Hoffend
 
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -39,6 +39,12 @@ class PhealConfig
     public $cache;
 
     /**
+     * Archive Object, defaults to an PhealNullArchive Object
+     * @var PhealArchiveInterface
+     */
+    public $archive;
+
+    /**
      * usually this points to the EVE API directly, however if you use a API
      * proxy you might want to modify this.
      * @var String
@@ -53,6 +59,38 @@ class PhealConfig
     public $additional_request_parameters = array();
 
     /**
+     * which http request method should be used 'curl' or 'file'
+     * @var String
+     */
+    public $http_method	= "curl";
+    
+    /**
+     * which outgoing ip/inteface should be used for the http request
+     * (bool) false means use default ip address
+     * @var String
+     */
+    public $http_interface_ip = false;
+    
+    /**
+     * which useragent should be used for http calls.
+     * (bool) false means do not change php default
+     * @var String
+     */
+    public $http_user_agent = false;
+    
+    /**
+     * should parameters be transfered in the POST body request or via GET request
+     * @var bool
+     */
+    public $http_post = false;
+    
+    /**
+     * After what time should an api call considered to as timeout?
+     * @var Integer
+     */
+    public $http_timeout = 5;
+
+    /**
      * Singleton Instance
      * @var PhealConfig
      */
@@ -64,6 +102,7 @@ class PhealConfig
     private function __construct()
     {
         $this->cache = new PhealNullCache();
+        $this->archive = new PhealNullArchive();
     }
 
     /**
