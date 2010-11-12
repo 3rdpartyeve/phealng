@@ -35,9 +35,18 @@ for further information
     $pheal = new Pheal("myUserid", "myAPI key"[, "scope for request"]);
 the scope is the one used for the API requests, ex. account/char/corp/eve/map/server see API Reference the scope can be changed during runtime and defaults to account
 
+for public API's you can leave userID/apiKey empty.
+    $pheal = new Pheal();
+    $pheal->scope = 'map';
+or
+    $pheal = new Pheal(null, null, 'map');
+
 ### Request Information
     $result = $pheal>ApiPage();
 this will return an Object of type PhealResult which then can be used to read the api result
+If you want to access the raw http/xml result for whatever reason, you can just ask the xml 
+attribute afterwords.
+    $rawxml = $pheal->xml;
 
 ### Example 1, getting a list of characters on the account:
     require_once "Pheal/Pheal.php";
@@ -84,10 +93,45 @@ which is the EVE APIs error code, and also contains the EVE API message as messa
     $pheal = new Pheal("myUserid", "myAPI key"[, "scope for request"]);
     try {
         $pheal->Killlog(array("characterID" => 12345));
-    } catch(PhealAPIException $e) {
+    } catch(PhealException $e) {
         echo 'error: ' . $e->code . ' meesage: ' . $e->getMessage();
     }
 
+### Archiving
+If you wanna archive your api requests for future use, backups or possible feature 
+additions you can add an archive handler that saves your api responses in a similiar
+way like the cache handler is doing it. Only non-error API responses are beeing cached.
+The files are grouped by date and include the gmt timestamp.
+
+Make sure that you've a cronjob running that moves old archive folders into zip/tar/7z 
+archives. Otherwise you endup with million xml files in your filesystem.
+
+    require_once "Pheal/Pheal.php";
+    spl_autoload_register("Pheal::classload");
+    PhealConfig::getInstance()->cache = new PhealFileCache();
+    PhealConfig::getInstance()->archive = new PhealArchiveCache();
+    $pheal = new Pheal(null, null, 'map');
+    try {
+        $pheal->Sovereignty();
+    } catch(PhealException $e) {
+        echo 'error: ' . $e->code . ' meesage: ' . $e->getMessage();
+    }
+
+### HTTP request options
+There're 2 methods available for requesting the API information. Due to the some 
+php or webhosting restrictions file_get_contents() isn't available for remote 
+requests. You can choose between 'curl' and 'file'. Additionly you can set the 
+http method (GET or POST) and set your custom useragent string so CCP can recognize
+you while you're killing their API servers.
+
+    require_once "Pheal/Pheal.php";
+    spl_autoload_register("Pheal::classload");
+    PhealConfig::getInstance()->http_method = 'curl';
+    PhealConfig::getInstance()->http_post = false;
+    PhealConfig::getInstance()->http_user_agent = 'my mighty api tool';
+    PhealConfig::getInstance()->http_interface_ip' = '1.2.3.4';
+    PhealConfig::getInstance()->http_timeout = 5;
+    
 ## TODO
 - more documentation
 - more error handling
