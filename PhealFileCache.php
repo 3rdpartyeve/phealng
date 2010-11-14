@@ -146,8 +146,7 @@ class PhealFileCache implements PhealCacheInterface
     public function save($userid,$apikey,$scope,$name,$args,$xml) 
     {
         $filename= $this->filename($userid, $apikey, $scope, $name, $args);
-        $fp = fopen($filename, "w");
-        fwrite($fp, $xml);
-        fclose($fp);
+        file_put_contents($filename, $xml);
+        chmod($filename, 0666);
     }
 }
