@@ -72,8 +72,8 @@ class PhealResult
         
         $this->request_time = (string) $xml->currentTime;
         $this->cached_until = (string) $xml->cachedUntil;
-        $this->request_time_unixtime = (int) strotime($xml->currentTime);
-        $this->cached_until_unixtime = (int) strotime($xml->cachedUntil);
+        $this->request_time_unixtime = (int) strtotime($xml->currentTime);
+        $this->cached_until_unixtime = (int) strtotime($xml->cachedUntil);
         
         // switch back to normal time
         date_default_timezone_set($oldtz);
