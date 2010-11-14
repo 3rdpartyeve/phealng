@@ -36,6 +36,12 @@ class PhealFileCache implements PhealCacheInterface
     protected $basepath;
 
     /**
+     * delimiter for arguments in the filename
+     * @var string
+     */
+    protected $delimiter = ":";
+
+    /**
      * construct PhealFileCache,
      * @param string $basepath optional string on where to store files, defaults to the current/users/home/.pheal/cache/
      */
@@ -44,6 +50,9 @@ class PhealFileCache implements PhealCacheInterface
         if(!$basepath)
             $basepath = getenv('HOME'). "/.pheal/cache/";
         $this->basepath = $basepath;
+
+        // Windows systems don't allow : as part of the filename
+        $this->delimiter = (strtoupper (substr(PHP_OS, 0,3)) == 'WIN') ? "#" : ":";
     }
 
     /**
@@ -58,15 +67,16 @@ class PhealFileCache implements PhealCacheInterface
     protected function filename($userid, $apikey, $scope, $name, $args)
     {
         $argstr = "";
+
         foreach($args as $key => $val)
         {
             if(strlen($val) < 1)
                 unset($args[$key]);
-            else
-                $argstr .= "$key:$val:";
+            elseif($key != 'userid' && $key != 'apikey')
+                $argstr .= $key . $this->delimiter . $val . $this->delimiter;
         }
         $argstr = substr($argstr, 0, -1);
-        $filename = "Request_" . $argstr . ".xml";
+        $filename = "Request" . ($argstr ? "_" . $argstr : "") . ".xml";
         $filepath = $this->basepath . ($userid ? "$userid/$apikey/$scope/$name/" : "public/public/$scope/$name/");
         if(!file_exists($filepath))
             mkdir($filepath, 0777, true);
