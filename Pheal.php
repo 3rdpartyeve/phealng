@@ -184,7 +184,7 @@ class Pheal
      * @param array $opts an array of query paramters
      * @return string raw http response
      */
-    public static function http_call_file($url,$opts)
+    public static function request_http_file($url,$opts)
     {
         $options = array();
         
