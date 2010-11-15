@@ -98,24 +98,38 @@ class Pheal
         if(!$this->xml = PhealConfig::getInstance()->cache->load($this->userid,$this->key,$scope,$name,$opts))
         {
             $url = PhealConfig::getInstance()->api_base . $scope . '/' . $name . ".xml.aspx";
-            if($this->userid)	$opts['userid'] = $this->userid;
-            if($this->key)	$opts['apikey'] = $this->key;
+            if($this->userid) $opts['userid'] = $this->userid;
+            if($this->key) $opts['apikey'] = $this->key;
             
             try {
+                // start measure the response time
+                PhealConfig::getInstance()->log->start();
+
+                // request
                 if(PhealConfig::getInstance()->http_method == "curl" && function_exists('curl_init'))
                     $this->xml = self::request_http_curl($url,$opts);
                 else
                     $this->xml = self::request_http_file($url,$opts);
-                
+
+                // stop measure the response time
+                PhealConfig::getInstance()->log->stop();
+
+                // parse
                 $element = new SimpleXMLElement($this->xml);
+
             } catch(Exception $e) {
+                // log + throw error
+                PhealConfig::getInstance()->log->errorLog($scope,$name,$opts,$e->getCode() . ': ' . $e->getMessage());
                 throw new PhealException('API Date could not be read / parsed, orginial exception: ' . $e->getMessage());
             }
             PhealConfig::getInstance()->cache->save($this->userid,$this->key,$scope,$name,$opts,$this->xml);
             
-            // archive+save only non-error api calls
+            // archive+save only non-error api calls + logging
             if(!$element->error) {
+                PhealConfig::getInstance()->log->log($scope,$name,$opts);
                 PhealConfig::getInstance()->archive->save($this->userid,$this->key,$scope,$name,$opts,$this->xml);
+            } else {
+                PhealConfig::getInstance()->log->errorLog($scope,$name,$opts,$element->error['code'] . ': ' . $element->error);
             }
         } else {
             $element = new SimpleXMLElement($this->xml);
@@ -135,7 +149,7 @@ class Pheal
     {
         // init curl
         $curl = curl_init();
-       
+
         // custom user agent
         if(($http_user_agent = PhealConfig::getInstance()->http_user_agent) != false)
             curl_setopt($curl, CURLOPT_USERAGENT, $http_user_agent);
@@ -163,17 +177,19 @@ class Pheal
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_ENCODING, "");
+
+
         
         // call
         $result	= curl_exec($curl);
         $errno = curl_errno($curl);
         $error = curl_error($curl);
         curl_close($curl);
-        
+
         if($errno)
             throw new Exception($error, $errno);
-        
-        return $result;
+        else
+            return $result;
     }
     
     /**
@@ -211,7 +227,7 @@ class Pheal
         // set track errors. needed for $php_errormsg
         $oldTrackErrors = ini_get('track_errors');
         ini_set('track_errors', true);
-        
+
         // create context with options and request api call
         // suppress the 'warning' message which we'll catch later with $php_errormsg
         if(count($options)) 
@@ -222,16 +238,21 @@ class Pheal
             $result = @file_get_contents($url);
         }
 
-        // check for error
+         // throw error
         if($result === false) {
-            throw new Exception(($php_errormsg ? $php_errormsg : 'HTTP Request Failed'));
-        }
+            $message = ($php_errormsg ? $php_errormsg : 'HTTP Request Failed');
+            
+            // set track_errors back to the old value
+            ini_set('track_errors',$oldTrackErrors);
 
-        // set track_errors back to the old value
-        ini_set('track_errors',$oldTrackErrors);
+            throw new Exception($message);
 
         // return result
-        return $result;
+        } else {
+            // set track_errors back to the old value
+            ini_set('track_errors',$oldTrackErrors);
+            return $result;
+        }
     }
     
     /**

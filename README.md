@@ -80,6 +80,7 @@ does the magic. if you dont give a path it defaults to $HOME/.pheal/cache
     $pheal->scope = "eve";
     $result = $pheal->CharacterID(array("names" => "Peter Powers"));
     echo $result->characters[0]->characterID;
+
 now the request will first check if the xml is allready in the cache, if it is still valid, and if so use the cached, only if the cache until of the saved file has expired, it will request again.
 
 ### Exceptions
@@ -110,6 +111,24 @@ archives. Otherwise you endup with million xml files in your filesystem.
     spl_autoload_register("Pheal::classload");
     PhealConfig::getInstance()->cache = new PhealFileCache();
     PhealConfig::getInstance()->archive = new PhealArchiveCache();
+    $pheal = new Pheal(null, null, 'map');
+    try {
+        $pheal->Sovereignty();
+    } catch(PhealException $e) {
+        echo 'error: ' . $e->code . ' meesage: ' . $e->getMessage();
+    }
+
+### Logging
+Pheal allows you to log all api calls that are requested from CCP's API Server. This
+is useful for debugging and performance tracking (response times) of the API server.
+
+The responseTime is beeing tracked. The API Key will be truncated to for better 
+security. This can be turned of via the module options array. Pheal will use 2 logfiles.
+One 'pheal_access.log' for sucecessful calls and a 'pheal_error.log' for failed requests.
+
+    require_once "Pheal/Pheal.php";
+    spl_autoload_register("Pheal::classload");
+    PhealConfig::getInstance()->log = new PhealFileLog();
     $pheal = new Pheal(null, null, 'map');
     try {
         $pheal->Sovereignty();
