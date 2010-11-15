@@ -88,7 +88,7 @@ class PhealConfig
      * After what time should an api call considered to as timeout?
      * @var Integer
      */
-    public $http_timeout = 5;
+    public $http_timeout = 10;
 
     /**
      * Singleton Instance
