@@ -207,15 +207,31 @@ class Pheal
         {
             $url .= "?" . http_build_query($opts);
         }
+
+        // set track errors. needed for $php_errormsg
+        $oldTrackErrors = ini_get('track_errors');
+        ini_set('track_errors', true);
         
         // create context with options and request api call
+        // suppress the 'warning' message which we'll catch later with $php_errormsg
         if(count($options)) 
         {
             $context = stream_context_create($options);
-            return file_get_contents($url, false, $context);
+            $result = @file_get_contents($url, false, $context);
         } else {
-            return file_get_contents($url);
+            $result = @file_get_contents($url);
         }
+
+        // check for error
+        if($result === false) {
+            throw new Exception(($php_errormsg ? $php_errormsg : 'HTTP Request Failed'));
+        }
+
+        // set track_errors back to the old value
+        ini_set('track_errors',$oldTrackErrors);
+
+        // return result
+        return $result;
     }
     
     /**
