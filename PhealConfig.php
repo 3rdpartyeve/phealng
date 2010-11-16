@@ -103,6 +103,7 @@ class PhealConfig
     {
         $this->cache = new PhealNullCache();
         $this->archive = new PhealNullArchive();
+        $this->log = new PhealNullLog();
     }
 
     /**
