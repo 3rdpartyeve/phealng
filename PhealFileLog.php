@@ -112,7 +112,7 @@ class PhealFileLog implements PhealLogInterface
      * @param string $name
      * @param array $opts
      */
-    private function formatUrl($scope,$name,$opts)
+    protected function formatUrl($scope,$name,$opts)
     {
         // create url
         $url = PhealConfig::getInstance()->api_base . $scope . '/' . $name . ".xml.aspx";
@@ -137,7 +137,7 @@ class PhealFileLog implements PhealLogInterface
     /**
      * returns current microtime
      */
-    private function getmicrotime()
+    protected function getmicrotime()
     {
         list($usec, $sec) = explode(" ",microtime());
         return ((float)$usec + (float)$sec);
