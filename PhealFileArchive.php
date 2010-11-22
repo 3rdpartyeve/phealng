@@ -82,7 +82,7 @@ class PhealFileArchive implements PhealArchiveInterface
             if(strlen($val) < 1)
                 unset($args[$key]);
             elseif($key != 'userid' && $key != 'apikey')
-                $argstr .= $key . $this->delimiter . $val . $this->delimiter;
+                $argstr .= $key . $this->options['delimiter'] . $val . $this->options['delimiter'];
         }
         $argstr = substr($argstr, 0, -1);
         $filename = "Request_" . gmdate('Ymd-His') . ($argstr ? "_" . $argstr : "") . ".xml";
