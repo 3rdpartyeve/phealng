@@ -92,8 +92,11 @@ class PhealFileLog implements PhealLogInterface
             return false;
         
         // check for directory
-        if(!file_exists($this->basepath))
+        if(!file_exists($this->basepath)) {
+            $oldUmask = umask(0);
             mkdir($this->basepath, $this->options['umask_directory'], true);
+            umask($oldUmask);
+        }
 
         // create full logfile name (incl. name passing through strftime
         $fullFilename = $this->basepath . strftime($filename);
