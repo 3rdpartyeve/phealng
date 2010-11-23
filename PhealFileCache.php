@@ -88,8 +88,11 @@ class PhealFileCache implements PhealCacheInterface
         $argstr = substr($argstr, 0, -1);
         $filename = "Request" . ($argstr ? "_" . $argstr : "") . ".xml";
         $filepath = $this->basepath . ($userid ? "$userid/$apikey/$scope/$name/" : "public/public/$scope/$name/");
-        if(!file_exists($filepath))
+        if(!file_exists($filepath)) {
+            $oldUmask = umask(0);
             mkdir($filepath, $this->options['umask_directory'], true);
+            umask($oldUmask);
+        }
         return $filepath . $filename;
     }
 
