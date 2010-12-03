@@ -39,25 +39,28 @@ class PhealRowSet extends ArrayObject
     /**
      * initialize the rowset
      * @param SimpleXMLElement $xml
+     * @optional String $name
+     * @optional String $rowname
      */
-    public function __construct($xml)
+    public function __construct($xml,$name=null,$rowname='row')
     {
-       $this->_name = (String) $xml->attributes()->name;
-       foreach($xml->row as $rowxml)
-       {
-           $row = array();
-           foreach($rowxml->attributes() as $attkey => $attval)
-           {
-               $row[$attkey] = (String) $attval;
-           }
-           foreach($rowxml->children() as $child) // nested tags in rowset/row
-           {
-               $element= PhealElement::parse_element($child);
-               $row[$element->_name] = $element;
-           }
-           $rowObject = new PhealRowSetRow($row);
-           $rowObject->setStringValue((string) $rowxml);
-           $this->append($rowObject);
+        $this->_name = (String) ($name !== null) ? $name : $xml->attributes()->name;
+       
+        foreach($xml->$rowname as $rowxml)
+        {
+            $row = array();
+            foreach($rowxml->attributes() as $attkey => $attval)
+            {
+                $row[$attkey] = (String) $attval;
+            }
+            foreach($rowxml->children() as $child) // nested tags in rowset/row
+            {
+                $element= PhealElement::parse_element($child);
+                $row[(String) $element->_name] = $element;
+            }
+            $rowObject = new PhealRowSetRow($row);
+            $rowObject->setStringValue((string) $rowxml);
+            $this->append($rowObject);
         }
     }
 }
