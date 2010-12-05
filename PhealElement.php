@@ -92,7 +92,16 @@ class PhealElement
         if($element->getName() =="rowset")
         {
             $re = new PhealRowSet($element);
-        } else {
+        }
+        // corp/MemberSecurity workaround
+        elseif($element->getName() == "result" && $element->member)
+        {
+            $container = new PhealContainer();
+            $container->add_element('members',new PhealRowSet($element,'members','member'));
+            $re = new PhealElement('result',$container);
+        }
+        else
+        {
             $key = $element->getName();
             $echilds = $element->children();
             if(count($echilds) > 0)

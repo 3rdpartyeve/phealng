@@ -43,7 +43,7 @@ class PhealContainer
      */
     public function add_element($key, $val)
     {
-        $this->_container = array_merge($this->_container, array($key=>$val));
+        $this->_container = array_merge($this->_container, array((String) $key => $val));
     }
 
     /**
