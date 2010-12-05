@@ -38,7 +38,7 @@ class PhealResult
     /**
      * time at which the API got the request as unixtimestamp
      * @var int
-     
+
      */
     public $request_time_unixtime;
     
@@ -78,9 +78,9 @@ class PhealResult
         // switch back to normal time
         date_default_timezone_set($oldtz);
 
-	// error detection
+        // error detection
         if($xml->error)
-            throw new PhealAPIException($xml->error["code"], (String) $xml->error);
+            throw new PhealAPIException($xml->error["code"], (String) $xml->error, $xml);
         $this->_element = PhealElement::parse_element($xml->result);
     }
 
