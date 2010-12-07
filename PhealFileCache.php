@@ -123,30 +123,20 @@ class PhealFileCache implements PhealCacheInterface
      * @param string $name
      * @return boolean
      */
-    public function validate_cache($xml, $name) // contains name hack for broken eve api
+    public function validate_cache($xml) // contains name hack for broken eve api
     {
         $tz = date_default_timezone_get();
         date_default_timezone_set("UTC");
 
         $xml = new SimpleXMLElement($xml);
-        $dt = date_parse($xml->cachedUntil);
-        $dt = mktime($dt["hour"], $dt["minute"], $dt["second"], $dt["month"],$dt["day"], $dt["year"]);
+        $dt = (int) strtotime($xml->cachedUntil);
         $time = time();
+
         date_default_timezone_set($tz);
 
-        switch($name) //name hack!
-        {  
-            case "WalletJournal":
-                if(($dt + 3600) > time())
-                    return true;
-                break;
-            default:
-                if($dt > $time)
-                    return true;
-        }
-        return false;
+        return (bool) ($dt > $time);
     }
-
+    
     /**
      * Save XML from cache
      * @param int $userid
