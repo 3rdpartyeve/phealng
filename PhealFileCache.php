@@ -110,7 +110,7 @@ class PhealFileCache implements PhealCacheInterface
         if(!file_exists($filename))
             return false;
         $xml = join('', file($filename));
-        if($this->validate_cache($xml, $name))
+        if($this->validate_cache($xml))
             return $xml;
         return false;
 
@@ -120,33 +120,22 @@ class PhealFileCache implements PhealCacheInterface
      * validate the cached xml if it is still valid. This contains a name hack
      * to work arround EVE API giving wrong cachedUntil values
      * @param string $xml
-     * @param string $name
      * @return boolean
      */
-    public function validate_cache($xml, $name) // contains name hack for broken eve api
+    public function validate_cache($xml)
     {
         $tz = date_default_timezone_get();
         date_default_timezone_set("UTC");
 
         $xml = new SimpleXMLElement($xml);
-        $dt = date_parse($xml->cachedUntil);
-        $dt = mktime($dt["hour"], $dt["minute"], $dt["second"], $dt["month"],$dt["day"], $dt["year"]);
+        $dt = (int) strtotime($xml->cachedUntil);
         $time = time();
+
         date_default_timezone_set($tz);
 
-        switch($name) //name hack!
-        {  
-            case "WalletJournal":
-                if(($dt + 3600) > time())
-                    return true;
-                break;
-            default:
-                if($dt > $time)
-                    return true;
-        }
-        return false;
+        return (bool) ($dt > $time);
     }
-
+    
     /**
      * Save XML from cache
      * @param int $userid

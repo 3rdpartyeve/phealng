@@ -37,13 +37,56 @@ class PhealAPIException extends PhealException
     public $code;
 
     /**
+     * time at which the API got the request
+     * @var string
+     */
+    public $request_time;
+
+    /**
+     * time at which the API got the request as unixtimestamp
+     * @var int
+     */
+    public $request_time_unixtime;
+
+    /**
+     * time till the cache should hold this result
+     * @var string
+     */
+    public $cached_until;
+
+    /**
+     * time till the cache should hold this result
+     * @var string
+     */
+    public $cached_until_unixtime;
+
+    /**
      * construct exception with EVE API errorcode, and message
      * @param int $code
      * @param string $message
+     * @param SimpleXMLElement $xml
      */
-    public function  __construct($code, $message)
+    public function  __construct($code, $message, $xml)
     {
         $this->code = (int) $code;
+
+        // switch to UTC
+        $oldtz	= date_default_timezone_get();
+        date_default_timezone_set('UTC');
+
+        // save request/cache timers (if ccp provides them)
+        if($xml->currentTime) {
+            $this->request_time = (string) $xml->currentTime;
+            $this->request_time_unixtime = (int) strtotime($xml->currentTime);
+        }
+        if($xml->cachedUntil) {
+            $this->cached_until = (string) $xml->cachedUntil;
+            $this->cached_until_unixtime = (int) strtotime($xml->cachedUntil);
+        }
+
+        // switch back to normal time
+        date_default_timezone_set($oldtz);
+
         parent::__construct($message);
     }
 }

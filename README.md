@@ -100,17 +100,17 @@ which is the EVE APIs error code, and also contains the EVE API message as messa
 
 ### Archiving
 If you wanna archive your api requests for future use, backups or possible feature 
-additions you can add an archive handler that saves your api responses in a similiar
-way like the cache handler is doing it. Only non-error API responses are beeing cached.
+additions you can add an archive handler that saves your api responses in a similar
+way like the cache handler is doing it. Only non-error API responses are being cached.
 The files are grouped by date and include the gmt timestamp.
 
-Make sure that you've a cronjob running that moves old archive folders into zip/tar/7z 
-archives. Otherwise you endup with million xml files in your filesystem.
+Make sure that you've a cron job running that moves old archive folders into zip/tar/7z
+archives. Otherwise you end up with million xml files in your filesystem.
 
     require_once "Pheal/Pheal.php";
     spl_autoload_register("Pheal::classload");
     PhealConfig::getInstance()->cache = new PhealFileCache();
-    PhealConfig::getInstance()->archive = new PhealArchiveCache();
+    PhealConfig::getInstance()->archive = new PhealFileArchive();
     $pheal = new Pheal(null, null, 'map');
     try {
         $pheal->Sovereignty();
@@ -122,9 +122,9 @@ archives. Otherwise you endup with million xml files in your filesystem.
 Pheal allows you to log all api calls that are requested from CCP's API Server. This
 is useful for debugging and performance tracking (response times) of the API server.
 
-The responseTime is beeing tracked. The API Key will be truncated to for better 
-security. This can be turned of via the module options array. Pheal will use 2 logfiles.
-One 'pheal_access.log' for sucecessful calls and a 'pheal_error.log' for failed requests.
+The responseTime is being tracked. The API Key will be truncated to for better
+security. This can be turned of via the module options array. Pheal will use 2 log files.
+One 'pheal_access.log' for successful calls and a 'pheal_error.log' for failed requests.
 
     require_once "Pheal/Pheal.php";
     spl_autoload_register("Pheal::classload");
