@@ -33,10 +33,9 @@ class PhealFileCacheForced extends PhealFileCache
     /**
      * allways returns true since we assume when the file is there then we want to use it
      * @param string $xml
-     * @param string $name
      * @return boolean
      */
-    public function validate_cache($xml, $name) // contains name hack for broken eve api
+    public function validate_cache($xml)
     {
         return true;
     }
