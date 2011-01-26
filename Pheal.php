@@ -87,6 +87,19 @@ class Pheal
     }
 
     /**
+     * Magic __get method used to set scope
+     * @param string $name name of the scope e.g. "mapScope"
+     * @return Pheal
+     */
+    public function __get($name)
+    {
+        if (preg_match('/(.+)Scope$/', $name, $matches) == 1) {
+            $this->scope = $matches[1];
+        }
+        return $this;
+    }
+
+    /**
      * method will ask caching class for valid xml, if non valid available
      * will make API call, and return the appropriate result
      * @todo errorhandling
