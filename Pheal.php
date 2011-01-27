@@ -89,14 +89,15 @@ class Pheal
     /**
      * Magic __get method used to set scope
      * @param string $name name of the scope e.g. "mapScope"
-     * @return Pheal
+     * @return mixed Pheal or null
      */
     public function __get($name)
     {
         if (preg_match('/(.+)Scope$/', $name, $matches) == 1) {
             $this->scope = $matches[1];
+            return $this;
         }
-        return $this;
+        return null;
     }
 
     /**
