@@ -83,6 +83,13 @@ does the magic. if you dont give a path it defaults to $HOME/.pheal/cache
 
 now the request will first check if the xml is allready in the cache, if it is still valid, and if so use the cached, only if the cache until of the saved file has expired, it will request again.
 
+### Fluent interface to scope
+erikfercak added a way to set the scope fluently, you now can do
+    $pheal->scopenameScope->apiCall()
+for example
+    $pheal->eveScope->CharacterID();
+be aware that this sets the scope to the last used scope in the fluent interface!
+
 ### Exceptions
 Pheal throws an Exception of type PhealAPIException (derived from PhealException)
 whenever the EVE API returns an error, this exception has an attribute called "code"
