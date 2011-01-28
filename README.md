@@ -165,11 +165,9 @@ remote server. HTTP Keep-Alive is only available with the curl method.
     PhealConfig::getInstance()->http_keepalive = true; // default 15 seconds
     PhealConfig::getInstance()->http_keepalive = 10; // KeepAliveTimeout in seconds
 
-### SSL Connection
+### SSL Encrypted API Calls
 With Incursion 1.1.2 CCP allows you to make SSL encrypted calls. To accomplish that
-you only need to point the api_base to the correct SSL url. If you've trouble with 
-SSL certificate verification you can turn this off (for debug purposes) but keep in
-mind you'll be vulnerable to man-in-the-middle attacks then.
+you only need to point the api_base to the correct SSL url.
 
 At the moment SSL is not enabled by default.
 
@@ -177,8 +175,9 @@ At the moment SSL is not enabled by default.
     spl_autoload_register("Pheal::classload");
     PhealConfig::getInstance()->api_base = 'https://api.eveonline.com/';
 
-If you've problems with the SSL connection you can turn off the peer and certificate
-verification for debugging purposes.
+If you've trouble with the SSL connection you can turn off the peer and certificate
+verification (for debug purposes), but keep in mind you'll be vulnerable to
+man-in-the-middle attacks then.
 
     PhealConfig::getInstance()->http_ssl_verifypeer = false;
     
