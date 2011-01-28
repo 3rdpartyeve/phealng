@@ -75,6 +75,13 @@ class PhealResult
         $this->request_time_unixtime = (int) strtotime($xml->currentTime);
         $this->cached_until_unixtime = (int) strtotime($xml->cachedUntil);
         
+	// workaround if cachedUntil is missing in API response (request + 1 hour)
+        if(!$this->cached_until)
+        {
+            $this->cached_until_unixtime = $this->request_time_unixtime + 60*60;
+            $this->cached_until = date('Y-m-d H:i:s',$this->cached_until_unixtime);
+        }
+             
         // switch back to normal time
         date_default_timezone_set($oldtz);
 
