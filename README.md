@@ -1,6 +1,6 @@
 # Pheal
 
-Copyright (C) 2010 by Peter Petermann
+Copyright (C) 2010-2011 by Peter Petermann
 All rights reserved.
 
 Pheal is a port of EAAL to PHP
@@ -176,6 +176,10 @@ At the moment SSL is not enabled by default.
     require_once "Pheal/Pheal.php";
     spl_autoload_register("Pheal::classload");
     PhealConfig::getInstance()->api_base = 'https://api.eveonline.com/';
+
+If you've problems with the SSL Connection you can turn off the per and certificate
+verification for debugging purposes.
+
     PhealConfig::getInstance()->http_ssl_verifypeer = false;
     
 ## TODO
