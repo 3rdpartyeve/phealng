@@ -47,9 +47,10 @@ class PhealConfig
     /**
      * usually this points to the EVE API directly, however if you use a API
      * proxy you might want to modify this.
+     * use https://api.eveonline.com/ if you like to have ssl support
      * @var String
      */
-    public $api_base = "http://api.eve-online.com/";
+    public $api_base = "http://api.eveonline.com/";
 
     /**
      * associative array with additional parameters that should be passed
@@ -89,6 +90,20 @@ class PhealConfig
      * @var Integer
      */
     public $http_timeout = 10;
+
+    /**
+     * verify ssl peer (CURLOPT_SSL_VERIFYPEER
+     * @var bool
+     */
+    public $http_ssl_verifypeer = true;
+
+    /**
+     * reuse a http connection (keep-alive for X seconds) to lower the connection handling overhead
+     * keep in mind after the script ended the connection will be closed anyway.
+     *
+     * @var bool|integer number of seconds a connection should be kept open (bool true == 60)
+     */
+    public $http_keepalive = false;
 
     /**
      * Singleton Instance

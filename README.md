@@ -148,7 +148,12 @@ There're 2 methods available for requesting the API information. Due to the some
 php or webhosting restrictions file_get_contents() isn't available for remote 
 requests. You can choose between 'curl' and 'file'. Additionly you can set the 
 http method (GET or POST) and set your custom useragent string so CCP can recognize
-you while you're killing their API servers.
+you while you're killing their API servers. Keep-Alive keeps the connection open
+for X seconds, this reduce the tcp/ssl handshake overhead if you're doing multiple
+api calls. The connection will be automatically closed after X seconds or at the
+end of the script. Keep in mind that multiple running connections (different scripts,
+http calls, etc) can lower interfere with maximum connections per IP on the remote
+server. HTTP Keep-Alive is only available with the curl method.
 
     require_once "Pheal/Pheal.php";
     spl_autoload_register("Pheal::classload");
@@ -156,7 +161,21 @@ you while you're killing their API servers.
     PhealConfig::getInstance()->http_post = false;
     PhealConfig::getInstance()->http_user_agent = 'my mighty api tool';
     PhealConfig::getInstance()->http_interface_ip' = '1.2.3.4';
-    PhealConfig::getInstance()->http_timeout = 5;
+    PhealConfig::getInstance()->http_timeout = 15;
+    PhealConfig::getInstance()->http_keepalive = 30;
+
+### SSL Connection
+With Incursion 1.1.2 CCP allows you to make SSL encrypted calls. To accomplish that
+you only need to point the api_base to the correct SSL url. If you've trouble with 
+SSL certificate verification you can turn this off (for debug purposes) but keep in
+mind you'll be vulnerable to man-in-the-middle attacks then.
+
+At the moment SSL is not enabled by default.
+
+    require_once "Pheal/Pheal.php";
+    spl_autoload_register("Pheal::classload");
+    PhealConfig::getInstance()->api_base = 'https://api.eveonline.com/';
+    PhealConfig::getInstance()->http_ssl_verifypeer = false;
     
 ## TODO
 - more documentation
