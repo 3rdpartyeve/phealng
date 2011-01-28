@@ -224,7 +224,7 @@ class Pheal
 
         // curl defaults
         curl_setopt(self::$curl, CURLOPT_URL, $url);
-        curl_setopt(self::$curl, CURLOPT_HEADER, $headers);
+        curl_setopt(self::$curl, CURLOPT_HTTPHEADER, $headers);
         curl_setopt(self::$curl, CURLOPT_RETURNTRANSFER, true);
         
         // call
