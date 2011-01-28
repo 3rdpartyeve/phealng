@@ -151,9 +151,9 @@ http method (GET or POST) and set your custom useragent string so CCP can recogn
 you while you're killing their API servers. Keep-Alive keeps the connection open
 for X seconds, this reduce the tcp/ssl handshake overhead if you're doing multiple
 api calls. The connection will be automatically closed after X seconds or at the
-end of the script. Keep in mind that multiple running connections (different scripts,
-http calls, etc) can lower interfere with maximum connections per IP on the remote
-server. HTTP Keep-Alive is only available with the curl method.
+end of the script. Keep in mind that multiple running api requests (different scripts,
+cronjobs, www, etc) can interfere with the max allowed connections per IP on the
+remote server. HTTP Keep-Alive is only available with the curl method.
 
     require_once "Pheal/Pheal.php";
     spl_autoload_register("Pheal::classload");
@@ -162,7 +162,8 @@ server. HTTP Keep-Alive is only available with the curl method.
     PhealConfig::getInstance()->http_user_agent = 'my mighty api tool';
     PhealConfig::getInstance()->http_interface_ip' = '1.2.3.4';
     PhealConfig::getInstance()->http_timeout = 15;
-    PhealConfig::getInstance()->http_keepalive = 30;
+    PhealConfig::getInstance()->http_keepalive = true; // default 15 seconds
+    PhealConfig::getInstance()->http_keepalive = 10; // KeepAliveTimeout in seconds
 
 ### SSL Connection
 With Incursion 1.1.2 CCP allows you to make SSL encrypted calls. To accomplish that

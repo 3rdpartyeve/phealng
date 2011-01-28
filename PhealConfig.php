@@ -87,7 +87,7 @@ class PhealConfig
     
     /**
      * After what time should an api call considered to as timeout?
-     * @var Integer
+     * @var int
      */
     public $http_timeout = 10;
 
@@ -101,7 +101,7 @@ class PhealConfig
      * reuse a http connection (keep-alive for X seconds) to lower the connection handling overhead
      * keep in mind after the script ended the connection will be closed anyway.
      *
-     * @var bool|integer number of seconds a connection should be kept open (bool true == 60)
+     * @var bool|int number of seconds a connection should be kept open (bool true == 15)
      */
     public $http_keepalive = false;
 

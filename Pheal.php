@@ -210,9 +210,9 @@ class Pheal
         if(($http_keepalive = PhealConfig::getInstance()->http_keepalive) != false)
         {
             curl_setopt(self::$curl, CURLOPT_FORBID_REUSE, false);
-            $http_keepalive = ($http_keepalive === true) ? 60 : (int)$http_keepalive;
+            $http_keepalive = ($http_keepalive === true) ? 15 : (int)$http_keepalive;
             $headers[] = "Connection: keep-alive";
-            $headers[] = "Keep-Alive: " . $http_keepalive;
+            $headers[] = "Keep-Alive: timeout=" . $http_keepalive . ", max=1000";
         }
         else 
         {
@@ -233,7 +233,7 @@ class Pheal
         $error = curl_error(self::$curl);
 
         if(!PhealConfig::getInstance()->http_keepalive)
-            curl_close(self::$curl);
+            self::disconnect();
 
         if($errno)
             throw new Exception($error, $errno);
@@ -306,6 +306,19 @@ class Pheal
             ini_set('track_errors',$oldTrackErrors);
             return $result;
         }
+    }
+
+    /**
+     * static method to close open http connections.
+     * example: force closing keep-alive connections that are no longer needed.
+     * @static
+     * @return void
+     */
+    public static function disconnect()
+    {
+        if(is_resource(self::$curl) && get_resource_type(self::$curl) == 'curl')
+            curl_close(self::$curl);
+        self::$curl = null;
     }
     
     /**
