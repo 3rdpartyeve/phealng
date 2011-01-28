@@ -177,7 +177,7 @@ At the moment SSL is not enabled by default.
     spl_autoload_register("Pheal::classload");
     PhealConfig::getInstance()->api_base = 'https://api.eveonline.com/';
 
-If you've problems with the SSL Connection you can turn off the per and certificate
+If you've problems with the SSL connection you can turn off the peer and certificate
 verification for debugging purposes.
 
     PhealConfig::getInstance()->http_ssl_verifypeer = false;
