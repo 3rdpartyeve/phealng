@@ -33,7 +33,14 @@ class Pheal
     /**
      * Version container
      */
-    public static $version = "0.0.12";
+    public static $version = "0.0.13";
+
+    /**
+     * resource handler for curl
+     * @static
+     * @var resource
+     */
+    public static $curl;
 
     /**
      * @var int
@@ -162,43 +169,71 @@ class Pheal
     public static function request_http_curl($url,$opts)
     {
         // init curl
-        $curl = curl_init();
+        if(!(is_resource(self::$curl) && get_resource_type(self::$curl) == 'curl'))
+            self::$curl = curl_init();
 
         // custom user agent
         if(($http_user_agent = PhealConfig::getInstance()->http_user_agent) != false)
-            curl_setopt($curl, CURLOPT_USERAGENT, $http_user_agent);
+            curl_setopt(self::$curl, CURLOPT_USERAGENT, $http_user_agent);
         
         // custom outgoing ip address
         if(($http_interface_ip = PhealConfig::getInstance()->http_interface_ip) != false)
-            curl_setopt($curl, CURLOPT_INTERFACE, $http_interface_ip);
+            curl_setopt(self::$curl, CURLOPT_INTERFACE, $http_interface_ip);
+
+        // ignore ssl peer verification if needed
+        if(substr($url,5) == "https")
+            curl_setopt(self::$curl, CURLOPT_SSL_VERIFYPEER, PhealConfig::getInstance()->http_ssl_verifypeer);
+            
+        // http timeout 
+        if(($http_timeout = PhealConfig::getInstance()->http_timeout) != false)
+            curl_setopt(self::$curl, CURLOPT_TIMEOUT, $http_timeout);
             
         // use post for params
         if(count($opts) && PhealConfig::getInstance()->http_post)
         {
-            curl_setopt($curl, CURLOPT_POST, true);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, $opts);
+            curl_setopt(self::$curl, CURLOPT_POST, true);
+            curl_setopt(self::$curl, CURLOPT_POSTFIELDS, $opts);
         }
-        // else build url parameters
-        elseif(count($opts))
+        else
         {
+            curl_setopt(self::$curl, CURLOPT_POST, false);
+            
+            // attach url parameters
+            if(count($opts))
             $url .= "?" . http_build_query($opts);
         }
         
-        if(($http_timeout = PhealConfig::getInstance()->http_timeout) != false)
-            curl_setopt($curl, CURLOPT_TIMEOUT, $http_timeout);
+        // additional headers
+        $headers = array();
         
+        // enable/disable keepalive
+        if(($http_keepalive = PhealConfig::getInstance()->http_keepalive) != false)
+        {
+            curl_setopt(self::$curl, CURLOPT_FORBID_REUSE, false);
+            $http_keepalive = ($http_keepalive === true) ? 15 : (int)$http_keepalive;
+            $headers[] = "Connection: keep-alive";
+            $headers[] = "Keep-Alive: timeout=" . $http_keepalive . ", max=1000";
+        }
+        else 
+        {
+            curl_setopt(self::$curl, CURLOPT_FORBID_REUSE, true);
+        }
+
+        // allow all encodings
+        curl_setopt(self::$curl, CURLOPT_ENCODING, "");
+
         // curl defaults
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_ENCODING, "");
-
-
+        curl_setopt(self::$curl, CURLOPT_URL, $url);
+        curl_setopt(self::$curl, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt(self::$curl, CURLOPT_RETURNTRANSFER, true);
         
         // call
-        $result	= curl_exec($curl);
-        $errno = curl_errno($curl);
-        $error = curl_error($curl);
-        curl_close($curl);
+        $result	= curl_exec(self::$curl);
+        $errno = curl_errno(self::$curl);
+        $error = curl_error(self::$curl);
+
+        if(!PhealConfig::getInstance()->http_keepalive)
+            self::disconnect();
 
         if($errno)
             throw new Exception($error, $errno);
@@ -225,6 +260,10 @@ class Pheal
         // set custom http timeout
         if(($http_timeout = PhealConfig::getInstance()->http_timeout) != false)
             $options['http']['timeout'] = $http_timeout;
+        
+        // ignore ssl peer verification if needed
+        if(substr($url,5) == "https")
+            $options['ssl']['verify_peer'] = PhealConfig::getInstance()->http_ssl_verifypeer;
         
         // use post for params
         if(count($opts) && PhealConfig::getInstance()->http_post)
@@ -267,6 +306,19 @@ class Pheal
             ini_set('track_errors',$oldTrackErrors);
             return $result;
         }
+    }
+
+    /**
+     * static method to close open http connections.
+     * example: force closing keep-alive connections that are no longer needed.
+     * @static
+     * @return void
+     */
+    public static function disconnect()
+    {
+        if(is_resource(self::$curl) && get_resource_type(self::$curl) == 'curl')
+            curl_close(self::$curl);
+        self::$curl = null;
     }
     
     /**
