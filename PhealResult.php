@@ -100,4 +100,19 @@ class PhealResult
     {
         return $this->_element->$name;
     }
+
+    /**
+     * returns the Object as associated array
+     * @return array
+     */
+    public function toArray()
+    {
+        return array_merge(
+            array(
+                'currentTime' => $this->request_time,
+                'cachedUntil' => $this->cached_until,
+            ),
+            $this->_element->toArray()
+        );
+    }
 }

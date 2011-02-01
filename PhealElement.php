@@ -83,6 +83,21 @@ class PhealElement
     }
 
     /**
+     * returns the Object as associated array
+     * @return array
+     */
+    public function toArray()
+    {
+        $return = array();
+        foreach($this->_attribs AS $key => $value)
+            $return[$key] = $value;
+        
+        $return[$this->_name] = is_object($this->_value) ? $this->_value->toArray() : $this->_value;
+
+        return $return;
+    }
+
+    /**
      * parse SimpleXMLElement
      * @param SimpleXMLElement $element
      * @return mixed

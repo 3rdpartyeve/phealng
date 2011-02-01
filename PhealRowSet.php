@@ -63,5 +63,18 @@ class PhealRowSet extends ArrayObject
             $this->append($rowObject);
         }
     }
+
+    /**
+     * returns the Object as associated array
+     * @return array
+     */
+    public function toArray()
+    {
+        $return = array();
+        foreach($this AS $row)
+            $return[] = $row->toArray();
+
+        return $return;
+    }
 }
 

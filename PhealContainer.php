@@ -57,4 +57,17 @@ class PhealContainer
                 return $this->_container[$name];
         return null;
     }
+
+    /**
+     * returns the Object as associated array
+     * @return array
+     */
+    public function toArray()
+    {
+        $return = array();
+        foreach($this->_container AS $key => $value)
+            $return[$key] = is_object($value) ? $value->toArray() : $value;
+
+        return $return;
+    }
 }

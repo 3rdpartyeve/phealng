@@ -63,4 +63,20 @@ class PhealRowSetRow extends ArrayObject
     {
         return $this[$name];
     }
+
+    /**
+     * returns the Object as associated array
+     * @return array
+     */
+    public function toArray()
+    {
+        $return = array();
+        foreach($this AS $key => $value)
+            $return[$key] = is_object($value) ? $value->toArray() : $value;
+        
+        if($this->_stringValue)
+            $return['_stringValue'] = $this->_stringValue;
+        
+        return $return;
+    }
 }
