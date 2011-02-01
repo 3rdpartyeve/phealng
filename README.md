@@ -33,7 +33,8 @@ for further information
     require_once "Pheal/Pheal.php";
     spl_autoload_register("Pheal::classload");
     $pheal = new Pheal("myUserid", "myAPI key"[, "scope for request"]);
-the scope is the one used for the API requests, ex. account/char/corp/eve/map/server see API Reference the scope can be changed during runtime and defaults to account
+the scope is the one used for the API requests, ex. account/char/corp/eve/map/server 
+see API Reference the scope can be changed during runtime and defaults to account
 
 for public API's you can leave userID/apiKey empty.
     $pheal = new Pheal();
@@ -69,7 +70,7 @@ attribute afterwords.
 ### Using the cache
 Pheal comes with a simple file cache, to make use of this cache:
 `PhealConfig::getInstance()->cache = new PhealFileCache("/path/to/cache/directory/");`
-does the magic. if you dont give a path it defaults to $HOME/.pheal/cache
+does the magic. if you don't give a path it defaults to $HOME/.pheal/cache
 
 ### Example 3, doing a cached request
     require_once "Pheal/Pheal.php";
@@ -81,7 +82,9 @@ does the magic. if you dont give a path it defaults to $HOME/.pheal/cache
     $result = $pheal->CharacterID(array("names" => "Peter Powers"));
     echo $result->characters[0]->characterID;
 
-now the request will first check if the xml is allready in the cache, if it is still valid, and if so use the cached, only if the cache until of the saved file has expired, it will request again.
+now the request will first check if the xml is already in the cache, if it is still
+valid, and if so use the cached, only if the cache until of the saved file has 
+expired, it will request again.
 
 ### Fluent interface to scope
 erikfercak added a way to set the scope fluently, you now can do
@@ -144,9 +147,9 @@ One 'pheal_access.log' for successful calls and a 'pheal_error.log' for failed r
     }
 
 ### HTTP request options
-There're 2 methods available for requesting the API information. Due to the some 
+There're 2 methods available for requesting the API information. Due to the some
 php or webhosting restrictions file_get_contents() isn't available for remote 
-requests. You can choose between 'curl' and 'file'. Additionly you can set the 
+requests. You can choose between 'curl' and 'file'. Additionally you can set the
 http method (GET or POST) and set your custom useragent string so CCP can recognize
 you while you're killing their API servers. Keep-Alive keeps the connection open
 for X seconds, this reduce the tcp/ssl handshake overhead if you're doing multiple
@@ -180,6 +183,16 @@ verification (for debug purposes), but keep in mind you'll be vulnerable to
 man-in-the-middle attacks then.
 
     PhealConfig::getInstance()->http_ssl_verifypeer = false;
+
+### Helper Function
+The method **toArray()** can be called on any leven of the api result. It's usefull 
+if you wanna convert an api result object into a json string or if you wanna use the 
+result array in your favorite template engine.
+
+    $pheal = new Pheal();
+    $result = $pheal->eveScope->FacWarStats();
+    $array = $result->toArray();
+    $json = json_encode($array);
     
 ## TODO
 - more documentation
