@@ -28,7 +28,7 @@
  * RowSetRow, extends array object to allow
  * usage as array
  */
-class PhealRowSetRow extends ArrayObject
+class PhealRowSetRow extends ArrayObject implements PhealArrayInterface
 {
 
     /**
@@ -72,7 +72,7 @@ class PhealRowSetRow extends ArrayObject
     {
         $return = array();
         foreach($this AS $key => $value)
-            $return[$key] = is_object($value) ? $value->toArray() : $value;
+            $return[$key] = ($value instanceof PhealArrayInterface) ? $value->toArray() : $value;
         
         if($this->_stringValue)
             $return['_stringValue'] = $this->_stringValue;

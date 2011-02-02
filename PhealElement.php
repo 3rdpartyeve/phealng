@@ -28,7 +28,7 @@
 /**
  * PhealElement holds elements of the EVE API
  */
-class PhealElement
+class PhealElement implements PhealArrayInterface
 {
     /**
      * Name of the Element
@@ -92,7 +92,7 @@ class PhealElement
         foreach($this->_attribs AS $key => $value)
             $return[$key] = $value;
         
-        $return[$this->_name] = is_object($this->_value) ? $this->_value->toArray() : $this->_value;
+        $return[$this->_name] = ($this->_value instanceof PhealArrayInterface) ? $this->_value->toArray() : $this->_value;
 
         return $return;
     }

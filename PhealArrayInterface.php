@@ -25,18 +25,12 @@
  OTHER DEALINGS IN THE SOFTWARE.
 */
 /**
- * Interface that should be implemented by the archive handlers
+ * Interface that should be implemented the toArray Method (for Pheal API Result Objects)
  */
-interface PhealArchiveInterface
+interface PhealArrayInterface
 {
     /**
-     * Save XML from cache
-     * @param int $userid
-     * @param string $apikey
-     * @param string $scope
-     * @param string $name
-     * @param array $args
-     * @param string $xml
+     * returns the current api result object as array
      */
-    public function save($userid, $apikey, $scope, $name, $args, $xml);
-}   
+    public function toArray();
+}

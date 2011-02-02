@@ -27,7 +27,7 @@
 /**
  * Pheal Result Object
  */
-class PhealResult
+class PhealResult implements PhealArrayInterface
 {
     /**
      * time at which the API got the request
@@ -107,12 +107,15 @@ class PhealResult
      */
     public function toArray()
     {
-        return array_merge(
-            array(
-                'currentTime' => $this->request_time,
-                'cachedUntil' => $this->cached_until,
-            ),
-            $this->_element->toArray()
-        );
+        if($this->_element instanceof PhealArrayInterface)
+            return array_merge(
+                array(
+                    'currentTime' => $this->request_time,
+                    'cachedUntil' => $this->cached_until,
+                ),
+                $this->_element->toArray()
+            );
+        else
+            return array();
     }
 }

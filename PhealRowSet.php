@@ -28,7 +28,7 @@
 /**
  * class to implement EVE API RowSets
  */
-class PhealRowSet extends ArrayObject
+class PhealRowSet extends ArrayObject implements PhealArrayInterface
 {
     /**
      * name of the rowset
@@ -72,7 +72,8 @@ class PhealRowSet extends ArrayObject
     {
         $return = array();
         foreach($this AS $row)
-            $return[] = $row->toArray();
+            if($row instanceof PhealArrayInterface)
+                $return[] = $row->toArray();
 
         return $return;
     }

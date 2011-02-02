@@ -29,7 +29,7 @@
  * Container Class
  * all elements in the container should be available by PhealContainer->keyname
  */
-class PhealContainer
+class PhealContainer implements PhealArrayInterface
 {
     /**
      * @var array
@@ -66,7 +66,7 @@ class PhealContainer
     {
         $return = array();
         foreach($this->_container AS $key => $value)
-            $return[$key] = is_object($value) ? $value->toArray() : $value;
+            $return[$key] = ($value instanceof PhealArrayInterface) ? $value->toArray() : $value;
 
         return $return;
     }
