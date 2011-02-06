@@ -33,7 +33,7 @@ class Pheal
     /**
      * Version container
      */
-    public static $version = "0.0.13";
+    public static $version = "0.0.14";
 
     /**
      * resource handler for curl
