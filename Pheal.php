@@ -138,6 +138,11 @@ class Pheal
                 // parse
                 $element = new SimpleXMLElement($this->xml);
 
+            // just forward HTTP Errors
+            } catch(PhealHTTPException $e) {
+               throw $e;
+
+            // other request errors
             } catch(Exception $e) {
                 // log + throw error
                 PhealConfig::getInstance()->log->errorLog($scope,$name,$opts,$e->getCode() . ': ' . $e->getMessage());
@@ -232,9 +237,17 @@ class Pheal
         $errno = curl_errno(self::$curl);
         $error = curl_error(self::$curl);
 
+        // response http headers
+        $httpCode = curl_getinfo(self::$curl, CURLINFO_HTTP_CODE);
+
         if(!PhealConfig::getInstance()->http_keepalive)
             self::disconnect();
 
+        // http errors
+        if($httpCode >= 400)
+            throw new PhealHTTPException($httpCode, $url);
+
+        // curl errors
         if($errno)
             throw new Exception($error, $errno);
         else
@@ -290,8 +303,17 @@ class Pheal
         } else {
             $result = @file_get_contents($url);
         }
+        
+        // check for http errors via magic $http_response_header
+        $httpCode = 200;
+        if(isset($http_response_header[0]))
+            list($httpVersion,$httpCode,$httpMsg) = explode(' ', $http_response_header[0], 3);
+        
+        // throw http error
+        if(is_numeric($httpCode) && $httpCode >= 400)
+            throw new PhealHTTPException($httpCode, $url);
 
-         // throw error
+        // throw error
         if($result === false) {
             $message = ($php_errormsg ? $php_errormsg : 'HTTP Request Failed');
             
