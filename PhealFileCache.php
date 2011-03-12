@@ -91,7 +91,7 @@ class PhealFileCache implements PhealCacheInterface
         if(!file_exists($filepath)) {
             // check write access
             if(!is_writable($this->basepath))
-                throw new PhealException(sprintf("Cache directory '%s' isn't writeable", dirname($filename));
+                throw new PhealException(sprintf("Cache directory '%s' isn't writeable", $filepath));
 
             // create cache folder
             $oldUmask = umask(0);
@@ -101,9 +101,9 @@ class PhealFileCache implements PhealCacheInterface
         } else {
             // check write access
             if(!is_writable($filepath))
-                throw new PhealException(sprintf("Cache directory '%s' isn't writeable", $filepath);
+                throw new PhealException(sprintf("Cache directory '%s' isn't writeable", $filepath));
             if(file_exists($filename) && !is_writeable($filename))
-                throw new PhealException(sprintf("Cache file '%s' isn't writeable", $filename);
+                throw new PhealException(sprintf("Cache file '%s' isn't writeable", $filename));
         }
         return $filepath . $filename;
     }
