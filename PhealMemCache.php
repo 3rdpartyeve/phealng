@@ -71,7 +71,8 @@ class PhealMemcache implements PhealCacheInterface
     protected function getKey($userid, $apikey, $scope, $name, $args) {
         $key = "$userid|$apikey|$scope|$name";
         foreach($args as $k=>$v) {
-            $key  .= "|$k|$v";
+            if($k != 'userid' && $k != 'apikey')
+                $key  .= "|$k|$v";
         }
         return "Pheal_" . md5($key);
     }
