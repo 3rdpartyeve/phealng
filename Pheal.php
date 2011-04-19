@@ -116,11 +116,12 @@ class Pheal
     private function request_xml($scope, $name, $opts)
     {
         $opts = array_merge(PhealConfig::getInstance()->additional_request_parameters, $opts);
+        if($this->userid) $opts['userid'] = $this->userid;
+        if($this->key) $opts['apikey'] = $this->key;
+
         if(!$this->xml = PhealConfig::getInstance()->cache->load($this->userid,$this->key,$scope,$name,$opts))
         {
             $url = PhealConfig::getInstance()->api_base . $scope . '/' . $name . ".xml.aspx";
-            if($this->userid) $opts['userid'] = $this->userid;
-            if($this->key) $opts['apikey'] = $this->key;
             
             try {
                 // start measure the response time
