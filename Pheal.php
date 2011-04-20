@@ -110,28 +110,42 @@ class Pheal
     /**
      * method will ask caching class for valid xml, if non valid available
      * will make API call, and return the appropriate result
-     * @todo errorhandling
+     * @throws PhealException|PhealAPIException|PhealHTTPException
+     * @param string $scope api scope (examples: eve, map, server, ...)
+     * @param string $name  api method (examples: ServerStatus, Kills, Sovereignty, ...)
+     * @param array $opts   additional arguments (example: characterID => 12345, ...), should not contain apikey/userid
      * @return PhealResult
      */
-    private function request_xml($scope, $name, $opts)
+    private function request_xml($scope, $name, array $opts = array())
     {
         $opts = array_merge(PhealConfig::getInstance()->additional_request_parameters, $opts);
-        if($this->userid) $opts['userid'] = $this->userid;
-        if($this->key) $opts['apikey'] = $this->key;
 
+        // apikey/userid should be allowed in arguments and removed to avoid wrong cached api calls
+        foreach($opts AS $k => $v) {
+            if(strtolower($k) == "userid" || strtolower($k) == "apikey")
+                unset($opts[$k]);
+        }
+
+        // check cache first
         if(!$this->xml = PhealConfig::getInstance()->cache->load($this->userid,$this->key,$scope,$name,$opts))
         {
+            // build url
             $url = PhealConfig::getInstance()->api_base . $scope . '/' . $name . ".xml.aspx";
-            
+
             try {
+                // prepare http arguments (to not modify original argument list for cache saving)
+                $http_opts = $opts;
+                if($this->userid) $http_opts['userID'] = $this->userid;
+                if($this->key) $http_opts['apiKey'] = $this->key;
+
                 // start measure the response time
                 PhealConfig::getInstance()->log->start();
 
                 // request
                 if(PhealConfig::getInstance()->http_method == "curl" && function_exists('curl_init'))
-                    $this->xml = self::request_http_curl($url,$opts);
+                    $this->xml = self::request_http_curl($url,$http_opts);
                 else
-                    $this->xml = self::request_http_file($url,$opts);
+                    $this->xml = self::request_http_file($url,$http_opts);
 
                 // stop measure the response time
                 PhealConfig::getInstance()->log->stop();
@@ -141,7 +155,7 @@ class Pheal
 
             // just forward HTTP Errors
             } catch(PhealHTTPException $e) {
-               throw $e;
+                throw $e;
 
             // other request errors
             } catch(Exception $e) {

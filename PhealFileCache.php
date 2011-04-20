@@ -76,10 +76,9 @@ class PhealFileCache implements PhealCacheInterface
      */
     protected function filename($userid, $apikey, $scope, $name, $args)
     {
+    	// build cache filename
         $argstr = "";
-
-        foreach($args as $key => $val)
-        {
+        foreach($args as $key => $val) {
             if(strlen($val) < 1)
                 unset($args[$key]);
             elseif($key != 'userid' && $key != 'apikey')
@@ -88,10 +87,23 @@ class PhealFileCache implements PhealCacheInterface
         $argstr = substr($argstr, 0, -1);
         $filename = "Request" . ($argstr ? "_" . $argstr : "") . ".xml";
         $filepath = $this->basepath . ($userid ? "$userid/$apikey/$scope/$name/" : "public/public/$scope/$name/");
+        
         if(!file_exists($filepath)) {
+            // check write access
+            if(!is_writable($this->basepath))
+                throw new PhealException(sprintf("Cache directory '%s' isn't writeable", $filepath));
+
+            // create cache folder
             $oldUmask = umask(0);
             mkdir($filepath, $this->options['umask_directory'], true);
             umask($oldUmask);
+
+        } else {
+            // check write access
+            if(!is_writable($filepath))
+                throw new PhealException(sprintf("Cache directory '%s' isn't writeable", $filepath));
+            if(file_exists($filename) && !is_writeable($filename))
+                throw new PhealException(sprintf("Cache file '%s' isn't writeable", $filename));
         }
         return $filepath . $filename;
     }
@@ -147,8 +159,14 @@ class PhealFileCache implements PhealCacheInterface
      */
     public function save($userid,$apikey,$scope,$name,$args,$xml) 
     {
-        $filename= $this->filename($userid, $apikey, $scope, $name, $args);
+        $filename = $this->filename($userid, $apikey, $scope, $name, $args);
+        $exists = file_exists($filename);
+        
+        // save content
         file_put_contents($filename, $xml);
-        chmod($filename, $this->options['umask']);
+        
+        // chmod only new files
+        if(!$exists)
+            chmod($filename, $this->options['umask']);
     }
 }

@@ -30,8 +30,16 @@
  */
 class PhealMemcache implements PhealCacheInterface
 {
+    /**
+     * active memcache instance/connection
+     * @var Memcache
+     */
     protected $memcache;
 
+    /**
+     * memcache options (connection)
+     * @var array
+     */
     protected $options = array(
         'host' => 'localhost',
         'port' => 11211,
@@ -51,12 +59,23 @@ class PhealMemcache implements PhealCacheInterface
         $this->memcache->connect($this->options['host'], $this->options['port']);
     }
 
-    protected function getKey($userid, $apikey, $scope, $name, $args) {
+    /**
+     * create a memcache key (prepend Pheal_ to not conflict with other keys)
+     * @param int $userid
+     * @param string $apikey
+     * @param string $scope
+     * @param string $name
+     * @param array $args
+     * @return string
+     */
+    protected function getKey($userid, $apikey, $scope, $name, $args) 
+    {
         $key = "$userid|$apikey|$scope|$name";
         foreach($args as $k=>$v) {
-            $key  .= "|$k|$v";
+            if($k != 'userid' && $k != 'apikey')
+                $key  .= "|$k|$v";
         }
-        return md5($key);
+        return "Pheal_" . md5($key);
     }
 
     /**
@@ -89,7 +108,7 @@ class PhealMemcache implements PhealCacheInterface
         date_default_timezone_set($tz);
         return max(1, $dt - $time);
     }
-    
+
     /**
      * Save XML to cache
      * @param int $userid
@@ -99,10 +118,10 @@ class PhealMemcache implements PhealCacheInterface
      * @param array $args
      * @param string $xml
      */
-    public function save($userid,$apikey,$scope,$name,$args,$xml) 
+    public function save($userid,$apikey,$scope,$name,$args,$xml)
     {
         $key = $this->getKey($userid, $apikey, $scope, $name, $args);
         $timeout = $this->getTimeout($xml);
-        $this->memcache->set($key, $xml, 0, time() + $timeout); 
+        $this->memcache->set($key, $xml, 0, time() + $timeout);
     }
 }
