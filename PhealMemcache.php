@@ -68,7 +68,8 @@ class PhealMemcache implements PhealCacheInterface
      * @param array $args
      * @return string
      */
-    protected function getKey($userid, $apikey, $scope, $name, $args) {
+    protected function getKey($userid, $apikey, $scope, $name, $args) 
+    {
         $key = "$userid|$apikey|$scope|$name";
         foreach($args as $k=>$v) {
             if($k != 'userid' && $k != 'apikey')
