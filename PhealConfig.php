@@ -53,6 +53,12 @@ class PhealConfig
     public $api_base = "http://api.eveonline.com/";
 
     /**
+     * enable the new customize key system (use keyID instead of userID, etc)
+     * @var bool
+     */
+    public $api_customkeys = false;
+
+    /**
      * associative array with additional parameters that should be passed
      * to the API on every request.
      * @var array

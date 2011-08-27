@@ -121,9 +121,9 @@ class PhealFileLog implements PhealLogInterface
         $url = PhealConfig::getInstance()->api_base . $scope . '/' . $name . ".xml.aspx";
 
          // truncacte apikey for log safety
-        if($this->options['truncate_apikey']) {
-            if(count($opts) && isset($opts['apikey']))
-                $opts['apikey'] = substr($opts['apikey'],0,16)."...";
+        if($this->options['truncate_apikey'] && count($opts)) {
+            if(isset($opts['apikey'])) $opts['apikey'] = substr($opts['apikey'],0,16)."...";
+            if(isset($opts['vCode'])) $opts['vCode'] = substr($opts['vCode'],0,16)."...";
         }
 
         // add post data
