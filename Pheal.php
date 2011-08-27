@@ -120,7 +120,7 @@ class Pheal
     {
         $opts = array_merge(PhealConfig::getInstance()->additional_request_parameters, $opts);
 
-        // apikey/userid/keyid|vcode should be allowed in arguments and removed to avoid wrong cached api calls
+        // apikey/userid/keyid|vcode shouldn't be allowed in arguments and removed to avoid wrong cached api calls
         foreach($opts AS $k => $v) {
             if(in_array(strtolower($k), array('userid','apikey','keyid','vcode')))
                 unset($opts[$k]);
