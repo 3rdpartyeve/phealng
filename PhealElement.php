@@ -91,8 +91,11 @@ class PhealElement implements PhealArrayInterface
         $return = array();
         foreach($this->_attribs AS $key => $value)
             $return[$key] = $value;
-        
-        $return[$this->_name] = ($this->_value instanceof PhealArrayInterface) ? $this->_value->toArray() : $this->_value;
+
+        if($this->_value instanceof PhealArrayInterface)
+            $return = array_merge($return, $this->_value->toArray());
+        else
+            $return[$this->_name] = $this->_value;
 
         return $return;
     }

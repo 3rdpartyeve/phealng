@@ -66,8 +66,8 @@ class Pheal
 
     /**
      * creates new Pheal API object
-     * @param int $userid the EVE userid
-     * @param string $key the EVE apikey
+     * @param int $userid the EVE userid/keyID
+     * @param string $key the EVE apikey/vCode
      * @param string $scope scope to use, defaults to account. scope can be changed during usage by modifycation of public attribute "scope"
      */
     public function __construct($userid=null, $key=null, $scope="account")
@@ -113,16 +113,16 @@ class Pheal
      * @throws PhealException|PhealAPIException|PhealHTTPException
      * @param string $scope api scope (examples: eve, map, server, ...)
      * @param string $name  api method (examples: ServerStatus, Kills, Sovereignty, ...)
-     * @param array $opts   additional arguments (example: characterID => 12345, ...), should not contain apikey/userid
+     * @param array $opts   additional arguments (example: characterID => 12345, ...), should not contain apikey/userid/keyid/vcode
      * @return PhealResult
      */
     private function request_xml($scope, $name, array $opts = array())
     {
         $opts = array_merge(PhealConfig::getInstance()->additional_request_parameters, $opts);
 
-        // apikey/userid should be allowed in arguments and removed to avoid wrong cached api calls
+        // apikey/userid/keyid|vcode shouldn't be allowed in arguments and removed to avoid wrong cached api calls
         foreach($opts AS $k => $v) {
-            if(strtolower($k) == "userid" || strtolower($k) == "apikey")
+            if(in_array(strtolower($k), array('userid','apikey','keyid','vcode')))
                 unset($opts[$k]);
         }
 
@@ -131,12 +131,13 @@ class Pheal
         {
             // build url
             $url = PhealConfig::getInstance()->api_base . $scope . '/' . $name . ".xml.aspx";
+            $use_customkey = (bool)PhealConfig::getInstance()->api_customkeys;
 
             try {
                 // prepare http arguments (to not modify original argument list for cache saving)
                 $http_opts = $opts;
-                if($this->userid) $http_opts['userID'] = $this->userid;
-                if($this->key) $http_opts['apiKey'] = $this->key;
+                if($this->userid) $http_opts[($use_customkey?'keyID':'userid')] = $this->userid;
+                if($this->key) $http_opts[($use_customkey?'vCode':'apikey')] = $this->key;
 
                 // start measure the response time
                 PhealConfig::getInstance()->log->start();
@@ -160,17 +161,17 @@ class Pheal
             // other request errors
             } catch(Exception $e) {
                 // log + throw error
-                PhealConfig::getInstance()->log->errorLog($scope,$name,$opts,$e->getCode() . ': ' . $e->getMessage());
-                throw new PhealException('API Date could not be read / parsed, orginial exception: ' . $e->getMessage());
+                PhealConfig::getInstance()->log->errorLog($scope,$name,$http_opts,$e->getCode() . ': ' . $e->getMessage());
+                throw new PhealException('API Date could not be read / parsed, original exception: ' . $e->getMessage());
             }
             PhealConfig::getInstance()->cache->save($this->userid,$this->key,$scope,$name,$opts,$this->xml);
             
             // archive+save only non-error api calls + logging
             if(!$element->error) {
-                PhealConfig::getInstance()->log->log($scope,$name,$opts);
+                PhealConfig::getInstance()->log->log($scope,$name,$http_opts);
                 PhealConfig::getInstance()->archive->save($this->userid,$this->key,$scope,$name,$opts,$this->xml);
             } else {
-                PhealConfig::getInstance()->log->errorLog($scope,$name,$opts,$element->error['code'] . ': ' . $element->error);
+                PhealConfig::getInstance()->log->errorLog($scope,$name,$http_opts,$element->error['code'] . ': ' . $element->error);
             }
         } else {
             $element = new SimpleXMLElement($this->xml);

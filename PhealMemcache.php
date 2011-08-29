@@ -72,7 +72,7 @@ class PhealMemcache implements PhealCacheInterface
     {
         $key = "$userid|$apikey|$scope|$name";
         foreach($args as $k=>$v) {
-            if($k != 'userid' && $k != 'apikey')
+            if(!in_array(strtolower($key), array('userid','apikey','keyid','vcode')))
                 $key  .= "|$k|$v";
         }
         return "Pheal_" . md5($key);
@@ -94,7 +94,7 @@ class PhealMemcache implements PhealCacheInterface
 
     /**
      *  Return the number of seconds the XML is valid. Will never be less than 1.
-     *  @return int 
+     *  @return int
      */
     protected function getTimeout($xml)
     {

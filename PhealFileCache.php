@@ -81,7 +81,7 @@ class PhealFileCache implements PhealCacheInterface
         foreach($args as $key => $val) {
             if(strlen($val) < 1)
                 unset($args[$key]);
-            elseif($key != 'userid' && $key != 'apikey')
+            elseif(!in_array(strtolower($key), array('userid','apikey','keyid','vcode')))
                 $argstr .= $key . $this->options['delimiter'] . $val . $this->options['delimiter'];
         }
         $argstr = substr($argstr, 0, -1);

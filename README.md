@@ -105,7 +105,7 @@ which is the EVE APIs error code, and also contains the EVE API message as messa
     try {
         $pheal->Killlog(array("characterID" => 12345));
     } catch(PhealException $e) {
-        echo 'error: ' . $e->code . ' meesage: ' . $e->getMessage();
+        echo 'error: ' . $e->code . ' message: ' . $e->getMessage();
     }
 
 ### Archiving
@@ -125,7 +125,7 @@ archives. Otherwise you end up with million xml files in your filesystem.
     try {
         $pheal->Sovereignty();
     } catch(PhealException $e) {
-        echo 'error: ' . $e->code . ' meesage: ' . $e->getMessage();
+        echo 'error: ' . $e->code . ' message: ' . $e->getMessage();
     }
 
 ### Logging
@@ -143,7 +143,7 @@ One 'pheal_access.log' for successful calls and a 'pheal_error.log' for failed r
     try {
         $pheal->Sovereignty();
     } catch(PhealException $e) {
-        echo 'error: ' . $e->code . ' meesage: ' . $e->getMessage();
+        echo 'error: ' . $e->code . ' message: ' . $e->getMessage();
     }
 
 ### HTTP request options
@@ -185,7 +185,7 @@ man-in-the-middle attacks then.
     PhealConfig::getInstance()->http_ssl_verifypeer = false;
 
 ### Helper Function
-The method **toArray()** can be called on any leven of the api result. It's usefull 
+The method **toArray()** can be called on any level of the api result. It's useful
 if you wanna convert an api result object into a json string or if you wanna use the 
 result array in your favorite template engine.
 
@@ -193,7 +193,25 @@ result array in your favorite template engine.
     $result = $pheal->eveScope->FacWarStats();
     $array = $result->toArray();
     $json = json_encode($array);
-    
+
+### Customizable API Keys
+Pheal has experimental support the new customizable api key system. To be able to use
+a new custom key, you've to change a config option and force Pheal to use the https
+url. After that just use Pheal like you did before just replace userID with your keyID
+and apiKey with vCode in your Pheal object init.
+Atm, the custom key support is still in testing (use https://apitest.eveonline.com instead).
+
+    require_once "Pheal/Pheal.php";
+    spl_autoload_register("Pheal::classload");
+    PhealConfig::getInstance()->api_base = 'https://api.eveonline.com/';
+    PhealConfig::getInstance()->api_customkeys = true;
+    $pheal = new Pheal($keyID, $vCode);
+    try {
+        $result = $pheal->accountScope->APIKeyInfo();
+    } catch(PhealException $e) {
+        echo 'error: ' . $e->code . ' message: ' . $e->getMessage();
+    }
+
 ## TODO
 - more documentation
 - more error handling

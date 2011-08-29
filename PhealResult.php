@@ -108,12 +108,10 @@ class PhealResult implements PhealArrayInterface
     public function toArray()
     {
         if($this->_element instanceof PhealArrayInterface)
-            return array_merge(
-                array(
-                    'currentTime' => $this->request_time,
-                    'cachedUntil' => $this->cached_until,
-                ),
-                $this->_element->toArray()
+            return array(
+                'currentTime' => $this->request_time,
+                'cachedUntil' => $this->cached_until,
+                'result' => $this->_element->toArray()
             );
         else
             return array();
