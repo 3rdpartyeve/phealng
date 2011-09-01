@@ -83,7 +83,7 @@ class PhealFileArchive implements PhealArchiveInterface
         $userid = (int)$userid;
         $apikey = preg_replace($regexp,'_',$apikey);
         
-	// build cache filename
+        // build cache filename
         $argstr = "";
         foreach($args as $key => $val)
         {
