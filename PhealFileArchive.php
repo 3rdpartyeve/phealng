@@ -76,13 +76,21 @@ class PhealFileArchive implements PhealArchiveInterface
      */
     protected function filename($userid, $apikey, $scope, $name, $args)
     {
+        // secure input to make sure pheal don't write the files anywhere
+        // user can define their own apikey/vcode
+        // maybe this should be tweaked or hashed
+        $regexp = '/[^a-z0-9,.-_=]/i';
+        $userid = (int)$userid;
+        $apikey = preg_replace($regexp,'_',$apikey);
+        
+        // build cache filename
         $argstr = "";
         foreach($args as $key => $val)
         {
             if(strlen($val) < 1)
                 unset($args[$key]);
             elseif(!in_array(strtolower($key), array('userid','apikey','keyid','vcode')))
-                $argstr .= $key . $this->options['delimiter'] . $val . $this->options['delimiter'];
+                $argstr .= preg_replace($regexp,'_',$key) . $this->options['delimiter'] . preg_replace($regexp,'_',$val) . $this->options['delimiter'];
         }
         $argstr = substr($argstr, 0, -1);
         $filename = "Request_" . gmdate('Ymd-His') . ($argstr ? "_" . $argstr : "") . ".xml";
