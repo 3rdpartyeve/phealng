@@ -194,7 +194,7 @@ result array in your favorite template engine.
     $array = $result->toArray();
     $json = json_encode($array);
 
-### Customizable API Keys
+### Customizable API Keys - Basics
 Pheal has experimental support the new customizable api key system. To be able to use
 a new custom key, you've to change a config option and force Pheal to use the https
 url. After that just use Pheal like you did before just replace userID with your keyID
@@ -210,6 +210,35 @@ Atm, the custom key support is still in testing (use https://apitest.eveonline.c
         $result = $pheal->accountScope->APIKeyInfo();
     } catch(PhealException $e) {
         echo 'error: ' . $e->code . ' message: ' . $e->getMessage();
+    }
+
+### Customizable API Keys - Access Check
+This config options allows you to verify the call for a given accessLevel before any
+external API request leaves your software. This is useful to prevent generating api
+errors before you get banned cause of too many api errors.
+Pheal will throw an PhealAccessExcption so you can react on and api level errors.
+
+    require_once "Pheal/Pheal.php";
+    spl_autoload_register("Pheal::classload");
+    PhealConfig::getInstance()->api_base = 'https://api.eveonline.com/';
+    PhealConfig::getInstance()->api_customkeys = true;
+
+    // fetch keyID, vCode, keyType, accessMask from your KeyStorage (DB)
+    $pheal = new Pheal($keyID, $vCode, null, $keyType, $accessMask);
+    try {
+        $result = $pheal->charScope->Contracts();
+
+    } catch(PhealAccessException $e) {
+        echo "access error: ".$e->getMessage();
+        /* do something - example: disable key */
+
+    } catch(PhealAPIException $e) {
+       echo 'api error: ' . $e->code . ' message: ' . $e->getMessage();
+       /* do something - example: disable key */
+
+    } catch(PhealException $e) {
+        echo 'generic error: ' . $e->code . ' message: ' . $e->getMessage();
+        /* do something - example: wait 5 minute next key usage (network/cluster problem) */
     }
 
 ## TODO
