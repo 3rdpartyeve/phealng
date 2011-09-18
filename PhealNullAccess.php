@@ -31,13 +31,25 @@
 class PhealNullAccess implements PhealAccessInterface
 {
     /**
+     * pretend to set accessMask
+     * @param null $keyType
+     * @param int $accessMask
+     * @return void
+     */
+    public function set($keyType=null, $accessMask=0) {}
+
+    /**
+     * pretend to reset keyType/accessMask
+     * @return void
+     */
+    public function reset() {}
+    
+    /**
      * Check if the api key is allowed to make this api call
      * @param string $scope
      * @param string $name
-     * @param string $type
-     * @param int $accessMask
      */
-    public function check($scope, $name, $type, $accessMask)
+    public function check($scope, $name)
     {
         return true;
     }

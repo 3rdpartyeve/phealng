@@ -59,18 +59,6 @@ class Pheal
     public $scope;
 
     /**
-     * Key Type of the given API key
-     * @var string (Account, Character, Corporation)
-     */
-    public $keyType;
-
-    /**
-     * accessMask for this API Key
-     * @var int
-     */
-    public $accessMask;
-    
-    /**
      * Result of the last XML request, so application can use the raw xml data
      * @var String 
      */
@@ -82,13 +70,11 @@ class Pheal
      * @param string $key the EVE apikey/vCode
      * @param string $scope scope to use, defaults to account. scope can be changed during usage by modifycation of public attribute "scope"
      */
-    public function __construct($userid=null, $key=null, $scope="account", $keyType=null, $accessMask=null)
+    public function __construct($userid=null, $key=null, $scope="account")
     {
         $this->userid = $userid;
         $this->key = $key;
         $this->scope = $scope;
-        $this->keyType = in_array(ucfirst(strtolower($keyType)),array('Account','Character','Corporation')) ? $keyType : null;
-        $this->accessMask = (int)$accessMask;
     }
 
     /**
@@ -148,9 +134,9 @@ class Pheal
         if($this->key) $http_opts[($use_customkey?'vCode':'apikey')] = $this->key;
 
         // check access level if given (throws PhealAccessExpception if API call is not allowed)
-        if($use_customkey && $this->keyType && $this->accessMask) {
+        if($use_customkey && $this->userid && $this->key) {
             try {
-                PhealConfig::getInstance()->access->check($scope,$name,$this->keyType,$this->accessMask);
+                PhealConfig::getInstance()->access->check($scope,$name);
             } catch (Exception $e) {
                 PhealConfig::getInstance()->log->errorLog($scope,$name,$http_opts,$e->getMessage());
                 throw $e;

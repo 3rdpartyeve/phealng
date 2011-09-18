@@ -30,11 +30,25 @@
 interface PhealAccessInterface
 {
     /**
+     * Set keyType/accessMask
+     * @param string $keyType   must be Account/Character/Corporation or null
+     * @param int $accessMask   must be integer or 0
+     * @return void
+     */
+    public function set($keyType, $accessMask);
+
+    /**
+     * Reset keyType/accessMask
+     * @return void
+     */
+    public function reset();
+    
+    /**
      * Check if the api key is allowed to make this api call
      * @param string $scope
      * @param string $name
-     * @param string $type
-     * @param int $accessMask
      */
-    public function check($scope, $name, $type, $accessMask);
+    public function check($scope, $name);
+
+
 }

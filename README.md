@@ -222,9 +222,11 @@ Pheal will throw an PhealAccessExcption so you can react on and api level errors
     spl_autoload_register("Pheal::classload");
     PhealConfig::getInstance()->api_base = 'https://api.eveonline.com/';
     PhealConfig::getInstance()->api_customkeys = true;
+    PhealConfig::getInstance()->access = new PhealCheckAccess();
 
     // fetch keyID, vCode, keyType, accessMask from your KeyStorage (DB)
-    $pheal = new Pheal($keyID, $vCode, null, $keyType, $accessMask);
+    PhealConfig::getInstance()->access->set($keyType, $accessMask);
+    $pheal = new Pheal($keyID, $vCode);
     try {
         $result = $pheal->charScope->Contracts();
 
