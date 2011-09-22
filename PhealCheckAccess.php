@@ -166,7 +166,7 @@ class PhealCheckAccess implements PhealAccessInterface
         if($check[0] == $keytype) {
 
             // check single accessbit
-            if(is_int($check[1]) && $check[1] & $this->accessMask)
+            if(is_int($check[1]) && (int)$this->accessMask & (int)$check[1])
                 return true;
 
             // fix if multiple accessbits are valid (eve/CharacterInfo)
