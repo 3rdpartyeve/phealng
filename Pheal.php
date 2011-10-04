@@ -139,6 +139,35 @@ class Pheal
     }
 
     /**
+     * if userid+key is given it automatically detects (api call) the keyinfo and
+     * set the correct access level for futher checks.
+     *
+     * Keep in mind this method will make an api request to account/APIKeyInfo based
+     * on the given PhealConfig settings with the given key credentials.
+     *
+     * More important! This method will throw Exceptions on invalid keys or networks errors
+     * So place this call into your try statement
+     *
+     * @throws PhealException|PhealAPIException|PhealHTTPException
+     * @return void
+     */
+    public function detectAccess()
+    {
+        // don't request keyinfo if api keys are not set or if new CAK aren't enabled
+        if(!$this->userid || !$this->key || !PhealConfig::getInstance()->api_customkeys)
+            return;
+
+        // request api key info, save old scope and restore it afterwords
+        $old = $this->scope;
+        $this->scope = "account";
+        $keyinfo = $this->APIKeyInfo();
+        $this->scope = $old;
+
+        // set detected keytype and accessMask
+        $this->setAccess($keyinfo->type, $keyinfo->accessMask);
+    }
+
+    /**
      * method will ask caching class for valid xml, if non valid available
      * will make API call, and return the appropriate result
      * @throws PhealException|PhealAPIException|PhealHTTPException|PhealAccessException

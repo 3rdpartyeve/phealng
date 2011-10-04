@@ -246,6 +246,30 @@ Pheal will throw an PhealAccessExcption so you can react on and api level errors
     // call clearAccess or empty setAccess to reset the given keyType/accessMask
     // $pheal->clearAccess();
 
+### Customizable API Keys - Access Check Autodetect
+Instead of taking keyType and accessMask from your API key storage you can also use
+the detectAccess method. This will do the APIKeyInfo query and set correct key information
+to prevent you from doing invalid calls. If you're managing a lot of API keys please it's
+still better to store keyType and accessMask along your with the api keys and check them
+if the access configuration is changing.
+
+Keep in mind the detectAccess() method will throw PhealExceptions like your normal API
+request if the API key isn't longer valid or the API Servers are down.
+
+    require_once "Pheal/Pheal.php";
+    spl_autoload_register("Pheal::classload");
+    PhealConfig::getInstance()->api_base = 'https://api.eveonline.com/';
+    PhealConfig::getInstance()->api_customkeys = true;
+    PhealConfig::getInstance()->access = new PhealCheckAccess();
+
+    $pheal = new Pheal($keyID, $vCode);
+    try {
+        $pheal->detectAccess();
+        $result = $pheal->charScope->Contracts();
+
+    } catch( ... ) { ... }
+
+
 ## TODO
 - more documentation
 - more error handling
