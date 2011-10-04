@@ -149,13 +149,13 @@ class Pheal
      * So place this call into your try statement
      *
      * @throws PhealException|PhealAPIException|PhealHTTPException
-     * @return void
+     * @return bool|PhealResult
      */
     public function detectAccess()
     {
         // don't request keyinfo if api keys are not set or if new CAK aren't enabled
         if(!$this->userid || !$this->key || !PhealConfig::getInstance()->api_customkeys)
-            return;
+            return false;
 
         // request api key info, save old scope and restore it afterwords
         $old = $this->scope;
@@ -165,6 +165,9 @@ class Pheal
 
         // set detected keytype and accessMask
         $this->setAccess($keyinfo->key->type, $keyinfo->key->accessMask);
+
+        // return the APIKeyInfo Result object in the case you need it.
+        return $keyinfo;
     }
 
     /**
