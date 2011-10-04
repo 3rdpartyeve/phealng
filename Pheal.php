@@ -53,11 +53,21 @@ class Pheal
     private $key;
 
     /**
+     * var @string|null
+     */
+    private $keyType;
+    
+    /**
+     * @var int
+     */
+    private $accessMask;
+
+    /**
      * EVE Api scope to be used (for example: "account", "char","corp"...)
-     * @var String 
+     * @var string
      */
     public $scope;
-    
+
     /**
      * Result of the last XML request, so application can use the raw xml data
      * @var String 
@@ -108,9 +118,62 @@ class Pheal
     }
 
     /**
+     * Set keyType/accessMask
+     * @param string $keyType   must be Account/Character/Corporation or null
+     * @param int $accessMask   must be integer or 0
+     * @return void
+     */
+    public function setAccess($keyType=null, $accessMask=0)
+    {
+        $this->keyType = in_array(ucfirst(strtolower($keyType)),array('Account','Character','Corporation')) ? $keyType : null;
+        $this->accessMask = (int)$accessMask;
+    }
+
+    /**
+     * clear+reset keyType/accessMask
+     * @return void
+     */
+    public function clearAccess()
+    {
+        $this->setAccess();
+    }
+
+    /**
+     * if userid+key is given it automatically detects (api call) the keyinfo and
+     * set the correct access level for futher checks.
+     *
+     * Keep in mind this method will make an api request to account/APIKeyInfo based
+     * on the given PhealConfig settings with the given key credentials.
+     *
+     * More important! This method will throw Exceptions on invalid keys or networks errors
+     * So place this call into your try statement
+     *
+     * @throws PhealException|PhealAPIException|PhealHTTPException
+     * @return bool|PhealResult
+     */
+    public function detectAccess()
+    {
+        // don't request keyinfo if api keys are not set or if new CAK aren't enabled
+        if(!$this->userid || !$this->key || !PhealConfig::getInstance()->api_customkeys)
+            return false;
+
+        // request api key info, save old scope and restore it afterwords
+        $old = $this->scope;
+        $this->scope = "account";
+        $keyinfo = $this->APIKeyInfo();
+        $this->scope = $old;
+
+        // set detected keytype and accessMask
+        $this->setAccess($keyinfo->key->type, $keyinfo->key->accessMask);
+
+        // return the APIKeyInfo Result object in the case you need it.
+        return $keyinfo;
+    }
+
+    /**
      * method will ask caching class for valid xml, if non valid available
      * will make API call, and return the appropriate result
-     * @throws PhealException|PhealAPIException|PhealHTTPException
+     * @throws PhealException|PhealAPIException|PhealHTTPException|PhealAccessException
      * @param string $scope api scope (examples: eve, map, server, ...)
      * @param string $name  api method (examples: ServerStatus, Kills, Sovereignty, ...)
      * @param array $opts   additional arguments (example: characterID => 12345, ...), should not contain apikey/userid/keyid/vcode
@@ -126,19 +189,27 @@ class Pheal
                 unset($opts[$k]);
         }
 
+        // prepare http arguments + url (to not modify original argument list for cache saving)
+        $url = PhealConfig::getInstance()->api_base . $scope . '/' . $name . ".xml.aspx";
+        $use_customkey = (bool)PhealConfig::getInstance()->api_customkeys;
+        $http_opts = $opts;
+        if($this->userid) $http_opts[($use_customkey?'keyID':'userid')] = $this->userid;
+        if($this->key) $http_opts[($use_customkey?'vCode':'apikey')] = $this->key;
+
+        // check access level if given (throws PhealAccessExpception if API call is not allowed)
+        if($use_customkey && $this->userid && $this->key && $this->keyType) {
+            try {
+                PhealConfig::getInstance()->access->check($scope,$name,$this->keyType,$this->accessMask);
+            } catch (Exception $e) {
+                PhealConfig::getInstance()->log->errorLog($scope,$name,$http_opts,$e->getMessage());
+                throw $e;
+            }
+        }
+
         // check cache first
         if(!$this->xml = PhealConfig::getInstance()->cache->load($this->userid,$this->key,$scope,$name,$opts))
         {
-            // build url
-            $url = PhealConfig::getInstance()->api_base . $scope . '/' . $name . ".xml.aspx";
-            $use_customkey = (bool)PhealConfig::getInstance()->api_customkeys;
-
             try {
-                // prepare http arguments (to not modify original argument list for cache saving)
-                $http_opts = $opts;
-                if($this->userid) $http_opts[($use_customkey?'keyID':'userid')] = $this->userid;
-                if($this->key) $http_opts[($use_customkey?'vCode':'apikey')] = $this->key;
-
                 // start measure the response time
                 PhealConfig::getInstance()->log->start();
 
