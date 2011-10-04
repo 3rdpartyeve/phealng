@@ -53,6 +53,16 @@ class Pheal
     private $key;
 
     /**
+     * var @string|null
+     */
+    private $keyType;
+    
+    /**
+     * @var int
+     */
+    private $accessMask;
+
+    /**
      * EVE Api scope to be used (for example: "account", "char","corp"...)
      * @var string
      */
@@ -108,6 +118,27 @@ class Pheal
     }
 
     /**
+     * Set keyType/accessMask
+     * @param string $keyType   must be Account/Character/Corporation or null
+     * @param int $accessMask   must be integer or 0
+     * @return void
+     */
+    public function setAccess($keyType=null, $accessMask=0)
+    {
+        $this->keyType = in_array(ucfirst(strtolower($keyType)),array('Account','Character','Corporation')) ? $keyType : null;
+        $this->accessMask = (int)$accessMask;
+    }
+
+    /**
+     * clear+reset keyType/accessMask
+     * @return void
+     */
+    public function clearAccess()
+    {
+        $this->setAccess();
+    }
+
+    /**
      * method will ask caching class for valid xml, if non valid available
      * will make API call, and return the appropriate result
      * @throws PhealException|PhealAPIException|PhealHTTPException|PhealAccessException
@@ -134,9 +165,9 @@ class Pheal
         if($this->key) $http_opts[($use_customkey?'vCode':'apikey')] = $this->key;
 
         // check access level if given (throws PhealAccessExpception if API call is not allowed)
-        if($use_customkey && $this->userid && $this->key) {
+        if($use_customkey && $this->userid && $this->key && $this->keyType) {
             try {
-                PhealConfig::getInstance()->access->check($scope,$name);
+                PhealConfig::getInstance()->access->check($scope,$name,$this->keyType,$this->accessMask);
             } catch (Exception $e) {
                 PhealConfig::getInstance()->log->errorLog($scope,$name,$http_opts,$e->getMessage());
                 throw $e;

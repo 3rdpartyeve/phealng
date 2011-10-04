@@ -116,46 +116,25 @@ class PhealCheckAccess implements PhealAccessInterface
             'characterinfo'           => array('Character', array(16777216, 8388608))
         )
         */
-
     );
-
-    /**
-     * @param string $keyType   must be Account/Character/Corporation or null
-     * @param int $accessMask   must be integer or 0
-     * @return void
-     */
-    public function set($keyType=null, $accessMask=0)
-    {
-        $this->keyType = in_array(ucfirst(strtolower($keyType)),array('Account','Character','Corporation')) ? $keyType : null;
-        $this->accessMask = (int)$accessMask;
-    }
-
-    /**
-     * reset keyType/accessMask
-     * @return void
-     */
-    public function reset()
-    {
-        $this->keyType = null;
-        $this->accessMask = 0;
-    }
 
     /**
      * Check if the api key is allowed to make this api call
      * @param string $scope
      * @param string $name
+     * @param string $keyType
+     * @param int $accessMask
      */
-    public function check($scope, $name)
+    public function check($scope, $name, $keyType, $accessMask)
     {
         // there's no "Account" type on the access bits level
-        $keytype = ($this->keyType == "Account") ? "Character" : $this->keyType;
+        $type = ($keyType == "Account") ? "Character" : $keyType;
         
-        // no keyinfo or access bit configuration found
+        // no keyinfo configuration found
         // assume it's a public call or it's not yet defined
         // allow and let the CCP decide
-        if(    !$this->keyType
-            || !$this->accessMask
-            || !in_array($keytype, array('Character','Corporation'))
+        if(    !$keyType
+            || !in_array($type, array('Character','Corporation'))
             || !isset($this->bits[strtolower($scope)][strtolower($name)]))
             return true;
 
@@ -163,10 +142,10 @@ class PhealCheckAccess implements PhealAccessInterface
         $check = $this->bits[strtolower($scope)][strtolower($name)];
 
         // check if keytype is correct for this call
-        if($check[0] == $keytype) {
+        if($check[0] == $type) {
 
             // check single accessbit
-            if(is_int($check[1]) && (int)$this->accessMask & (int)$check[1])
+            if(is_int($check[1]) && (int)$accessMask & (int)$check[1])
                 return true;
 
             // fix if multiple accessbits are valid (eve/CharacterInfo)
@@ -181,8 +160,8 @@ class PhealCheckAccess implements PhealAccessInterface
             "Pheal blocked an API call (%s/%s) which is not allowed by the given keyType/accessMask (%s/%d)",
             $scope,
             $name,
-            $this->keyType,
-            $this->accessMask
+            $keyType,
+            $accessMask
         ));
     }
 }

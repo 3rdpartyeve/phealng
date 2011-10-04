@@ -225,8 +225,8 @@ Pheal will throw an PhealAccessExcption so you can react on and api level errors
     PhealConfig::getInstance()->access = new PhealCheckAccess();
 
     // fetch keyID, vCode, keyType, accessMask from your KeyStorage (DB)
-    PhealConfig::getInstance()->access->set($keyType, $accessMask);
     $pheal = new Pheal($keyID, $vCode);
+    $pheal->setAccess($keyType, $accessMask);
     try {
         $result = $pheal->charScope->Contracts();
 
@@ -242,6 +242,9 @@ Pheal will throw an PhealAccessExcption so you can react on and api level errors
         echo 'generic error: ' . $e->code . ' message: ' . $e->getMessage();
         /* do something - example: wait 5 minute next key usage (network/cluster problem) */
     }
+
+    // call clearAccess or empty setAccess to reset the given keyType/accessMask
+    // $pheal->clearAccess();
 
 ## TODO
 - more documentation
