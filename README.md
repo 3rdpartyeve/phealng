@@ -216,7 +216,7 @@ Atm, the custom key support is still in testing (use https://apitest.eveonline.c
 This config options allows you to verify the call for a given accessLevel before any
 external API request leaves your software. This is useful to prevent generating api
 errors before you get banned cause of too many api errors.
-Pheal will throw an PhealAccessExcption so you can react on and api level errors.
+Pheal will throw an PhealAccessException so you can react on the access limitations.
 
     require_once "Pheal/Pheal.php";
     spl_autoload_register("Pheal::classload");
@@ -266,7 +266,6 @@ request if the API key isn't longer valid or the API Servers are down.
     try {
         $pheal->detectAccess();
         $result = $pheal->charScope->Contracts();
-
     } catch( ... ) { ... }
 
 
