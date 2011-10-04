@@ -164,7 +164,7 @@ class Pheal
         $this->scope = $old;
 
         // set detected keytype and accessMask
-        $this->setAccess($keyinfo->type, $keyinfo->accessMask);
+        $this->setAccess($keyinfo->key->type, $keyinfo->key->accessMask);
     }
 
     /**
