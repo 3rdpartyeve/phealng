@@ -43,7 +43,7 @@ or
     $pheal = new Pheal(null, null, 'map');
 
 ### Request Information
-    $result = $pheal>ApiPage();
+    $result = $pheal->ApiPage();
 this will return an Object of type PhealResult which then can be used to read the api result
 If you want to access the raw http/xml result for whatever reason, you can just ask the xml 
 attribute afterwords.
