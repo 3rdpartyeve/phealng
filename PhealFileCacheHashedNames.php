@@ -92,7 +92,7 @@ class PhealFileCacheHashedNames implements PhealCacheInterface
                 $argstr .= preg_replace($regexp,'_',$key) . $this->options['delimiter'] . preg_replace($regexp,'_',$val) . $this->options['delimiter'];
         }
         $argstr = substr($argstr, 0, -1);
-        $filename = "Request" . md5($argstr ? "_" . $argstr : "") . ".xml";
+        $filename = "Request" . ($argstr ? "_" . md5($argstr) : "") . ".xml";
         $filepath = $this->basepath . ($userid ? "$userid/$apikey/$scope/$name/" : "public/public/$scope/$name/");
         
         if(!file_exists($filepath)) {
