@@ -1,0 +1,22 @@
+{
+    "name": "pheal/pheal",
+    "description": "PHP Eve Api Library, a simple PHP lib to access the EVE Online API",
+    "type": "library",
+    "keywords": ["EVE Online", "Pheal", "EVE API"],
+    "homepage": "https://github.com/ppetermann/pheal",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Peter Petermann",
+            "email": "ppetermann80@googlemail.com",
+            "homepage": "http://devedge.eu"
+        },
+        {   
+            "name": "Wollari",
+            "homepage": "http://evemaps.dotlan.net/"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/ppetermann/pheal/issues"
+    }
+}
