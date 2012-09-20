@@ -26,7 +26,7 @@
 */
 /**
  * Filecache which always validates a cached file to be valid
- * for example for tests 
+ * for example and for tests 
  */
 class PhealFileCacheForced extends PhealFileCache
 {
