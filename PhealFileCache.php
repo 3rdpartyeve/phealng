@@ -128,7 +128,7 @@ class PhealFileCache implements PhealCacheInterface
         $filename = $this->filename($userid, $apikey, $scope, $name, $args);
         if(!file_exists($filename))
             return false;
-        $xml = join('', file($filename));
+        $xml = file_get_contents($filename);
         if($this->validate_cache($xml))
             return $xml;
         return false;
