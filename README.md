@@ -1,6 +1,6 @@
 # Pheal
 
-Copyright (C) 2010-2011 by Peter Petermann
+Copyright (C) 2010-2012 by Peter Petermann
 All rights reserved.
 
 Pheal is a port of EAAL to PHP
