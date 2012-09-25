@@ -53,7 +53,7 @@ class Pheal
     private $key;
 
     /**
-     * var @string|null
+     * @var string|null
      */
     private $keyType;
     

@@ -25,13 +25,13 @@
  OTHER DEALINGS IN THE SOFTWARE.
 */
 /**
- * Filecache which allways validates a cached file to be valid
- * for example for tests 
+ * Filecache which always validates a cached file to be valid
+ * for example and for tests 
  */
 class PhealFileCacheForced extends PhealFileCache
 {
     /**
-     * allways returns true since we assume when the file is there then we want to use it
+     * always returns true since we assume that the file always exists
      * @param string $xml
      * @return boolean
      */
