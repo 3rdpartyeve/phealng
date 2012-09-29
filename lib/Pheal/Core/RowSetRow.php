@@ -1,7 +1,7 @@
 <?php
 /*
  MIT License
- Copyright (c) 2010 Peter Petermann
+ Copyright (c) 2010 - 2012 Peter Petermann
 
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
