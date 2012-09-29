@@ -24,44 +24,38 @@
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  OTHER DEALINGS IN THE SOFTWARE.
 */
-
+namespace Pheal\Core;
 /**
- * class to implement EVE API RowSets
+ * Container Class
+ * all elements in the container should be available by PhealContainer->keyname
  */
-class PhealRowSet extends ArrayObject implements PhealArrayInterface
+class Container implements Arrayable
 {
     /**
-     * name of the rowset
-     * @var string
+     * @var array
      */
-    public $_name;
+    private $_container = array();
 
     /**
-     * initialize the rowset
-     * @param SimpleXMLElement $xml
-     * @optional String $name
-     * @optional String $rowname
+     * Adds an Element to the container
+     * @param string $key
+     * @param mixed $val
      */
-    public function __construct($xml,$name=null,$rowname='row')
+    public function add_element($key, $val)
     {
-        $this->_name = (String) ($name !== null) ? $name : $xml->attributes()->name;
-       
-        foreach($xml->$rowname as $rowxml)
-        {
-            $row = array();
-            foreach($rowxml->attributes() as $attkey => $attval)
-            {
-                $row[$attkey] = (String) $attval;
-            }
-            foreach($rowxml->children() as $child) // nested tags in rowset/row
-            {
-                $element= PhealElement::parse_element($child);
-                $row[(String) $element->_name] = $element;
-            }
-            $rowObject = new PhealRowSetRow($row);
-            $rowObject->setStringValue((string) $rowxml);
-            $this->append($rowObject);
-        }
+        $this->_container = array_merge($this->_container, array((String) $key => $val));
+    }
+
+    /**
+     * magic method for returning values from container on attribute calls
+     * @param string $name
+     * @return mixed
+     */
+    public function  __get($name)
+    {
+        if(isset($this->_container[$name]))
+                return $this->_container[$name];
+        return null;
     }
 
     /**
@@ -71,11 +65,9 @@ class PhealRowSet extends ArrayObject implements PhealArrayInterface
     public function toArray()
     {
         $return = array();
-        foreach($this AS $row)
-            if($row instanceof PhealArrayInterface)
-                $return[] = $row->toArray();
+        foreach($this->_container AS $key => $value)
+            $return[$key] = ($value instanceof Arrayable) ? $value->toArray() : $value;
 
         return $return;
     }
 }
-

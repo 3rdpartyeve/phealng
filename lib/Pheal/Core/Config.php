@@ -24,30 +24,31 @@
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  OTHER DEALINGS IN THE SOFTWARE.
 */
+namespace Pheal\Core;
 /**
  * PhealConfig, implementing Singleton this is meant to 
  * store all Library configuration, like cache etc.
  * to change the default config you can for example do:
  * PhealConfig::getInstance()->cache = new CacheObject();
  */
-class PhealConfig
+class Config
 {
     /**
-     * Cache Object, defaults to an PhealNullCache Object
-     * @var PhealCacheInterface
+     * Cache Object, defaults to an \Pheal\Cache\NullStorage Object
+     * @var \Pheal\Cache\Cacheable
      */
     public $cache;
 
     /**
-     * Archive Object, defaults to an PhealNullArchive Object
-     * @var PhealArchiveInterface
+     * Archive Object, defaults to an \Pheal\Archive\NullStorage Object
+     * @var \Pheal\Archive\Archivable
      */
     public $archive;
 
     /**
      * Access Object to validate and check an API with a given keyType+accessMask
-     * defaults to PhealNullAccess Object
-     * @var PhealAccessInterface
+     * defaults to \Pheal\Access\NullCheck
+     * @var \Pheal\Access\Accessible
      */
     public $access;
 
@@ -105,7 +106,7 @@ class PhealConfig
     public $http_timeout = 10;
 
     /**
-     * verify ssl peer (CURLOPT_SSL_VERIFYPEER
+     * verify ssl peer (CURLOPT_SSL_VERIFYPEER)
      * @var bool
      */
     public $http_ssl_verifypeer = true;
@@ -129,20 +130,20 @@ class PhealConfig
      */
     private function __construct()
     {
-        $this->cache = new PhealNullCache();
-        $this->archive = new PhealNullArchive();
-        $this->log = new PhealNullLog();
-        $this->access = new PhealNullAccess();
+        $this->cache = new \Pheal\Cache\NullStorage();
+        $this->archive = new \Pheal\Archive\NullStorage();
+        $this->log = new \Pheal\Log\NullStorage();
+        $this->access = new \Pheal\Access\NullCheck();
     }
 
     /**
      * Return Instance of PhealConfig Object
-     * @return PhealConfig
+     * @return \Pheal\Core\Config
      */
     public static function getInstance()
     {
         if(is_null(self::$myInstance))
-            self::$myInstance = new PhealConfig();
+            self::$myInstance = new \Pheal\Core\Config();
         return self::$myInstance;
     }
 }

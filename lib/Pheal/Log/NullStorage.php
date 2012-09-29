@@ -1,7 +1,7 @@
 <?php
 /*
  MIT License
- Copyright (c) 2010 Peter Petermann, Daniel Hoffend
+ Copyright (c) 2010 Daniel Hoffend
 
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -24,19 +24,52 @@
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  OTHER DEALINGS IN THE SOFTWARE.
 */
+namespace Pheal\Log;
 /**
- * Interface that should be implemented by the archive handlers
+ * null log, as a placeholder if no logging is used
  */
-interface PhealArchiveInterface
+class NullStorage implements Logable
 {
     /**
-     * Save XML from cache
-     * @param int $userid
-     * @param string $apikey
+     * Start of measure the response time
+     * @return boolean
+     */
+    public function start()
+    {
+        return true;
+    }
+
+    /**
+     * Stop of measure the response time
+     * @return boolean
+     */
+    public function stop()
+    {
+        return true;
+    }
+
+    /**
+     * logs request api call including options
      * @param string $scope
      * @param string $name
-     * @param array $args
-     * @param string $xml
+     * @param array $opts
+     * @return boolean
      */
-    public function save($userid, $apikey, $scope, $name, $args, $xml);
+    public function log($scope,$name,$opts)
+    {
+        return true;
+    }
+
+    /**
+     * logs failed request api call including options and error message
+     * @param string $scope
+     * @param string $name
+     * @param array $opts
+     * @param string $message
+     * @return boolean
+     */
+    public function errorLog($scope,$name,$opts,$message)
+    {
+        return true;
+    }
 }

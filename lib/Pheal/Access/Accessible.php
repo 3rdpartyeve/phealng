@@ -1,7 +1,7 @@
 <?php
 /*
  MIT License
- Copyright (c) 2010 Peter Petermann, Daniel Hoffend
+ Copyright (c) 2010 Peter Petermann
 
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -25,22 +25,19 @@
  OTHER DEALINGS IN THE SOFTWARE.
 */
 
+namespace Pheal\Access;
 /**
- * null archive, as a placeholder if no cache is used
+ * Interface that should be implemented by the access handlers
  */
-class PhealNullArchive implements PhealArchiveInterface
+interface Accessible
 {
     /**
-     * Save XML from cache
-     * @param int $userid
-     * @param string $apikey
+     * Check if the api key is allowed to make this api call
      * @param string $scope
      * @param string $name
-     * @param array $args
-     * @param string $xml
+     * @param string $keyType
+     * @param int $accessMask
      */
-    public function save($userid, $apikey, $scope, $name, $args, $xml)
-    {
-        return false;
-    }
+    public function check($scope, $name, $keyType, $accessMask);
+
 }

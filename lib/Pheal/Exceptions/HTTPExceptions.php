@@ -24,10 +24,11 @@
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  OTHER DEALINGS IN THE SOFTWARE.
 */
+namespace Pheal\Exceptions;
 /**
  * basic Pheal Exception, all Pheal exceptions should be derived from this
  */
-class PhealHTTPException extends PhealException
+class HTTPException extends Exception
 {
     /**
      * http response code to string conversation

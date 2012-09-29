@@ -1,7 +1,7 @@
 <?php
 /*
  MIT License
- Copyright (c) 2010 Daniel Hoffend
+ Copyright (c) 2010 Peter Petermann
 
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -24,48 +24,60 @@
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  OTHER DEALINGS IN THE SOFTWARE.
 */
-
+namespace Pheal\Core;
 /**
- * null log, as a placeholder if no logging is used
+ * RowSetRow, extends array object to allow
+ * usage as array
  */
-class PhealNullLog implements PhealLogInterface
+class RowSetRow extends \ArrayObject implements Arrayable
 {
+
     /**
-     * Start of measure the response time
-     */
-    public function start()
+    * @var string if the element has a specific string value, 
+    * it can be stored here;
+    */
+    private $_stringValue = null; 
+
+    /**
+    * set string value of row
+    * @param string $string 
+    */ 
+    public function setStringValue($string)
     {
-        return true;
+        $this->_stringValue = $string;
     }
 
     /**
-     * Stop of measure the response time
-     */
-    public function stop()
+    * Magic __toString method, will return stringvalue of row
+    */ 
+    public function __toString()
     {
-        return true;
+        return $this->_stringValue;
     }
 
     /**
-     * logs request api call including options
-     * @param string $scope
+     * magic function to allow access to the array like an object would do too
      * @param string $name
-     * @param array $opts
+     * @return mixed
      */
-    public function log($scope,$name,$opts)
+    public function __get($name)
     {
-        return true;
+        return $this[$name];
     }
 
     /**
-     * logs failed request api call including options and error message
-     * @param string $scope
-     * @param string $name
-     * @param array $opts
-     * @param string $message
+     * returns the Object as associated array
+     * @return array
      */
-    public function errorLog($scope,$name,$opts,$message)
+    public function toArray()
     {
-        return true;
+        $return = array();
+        foreach($this AS $key => $value)
+            $return[$key] = ($value instanceof Arrayable) ? $value->toArray() : $value;
+        
+        if($this->_stringValue)
+            $return['_stringValue'] = $this->_stringValue;
+        
+        return $return;
     }
 }

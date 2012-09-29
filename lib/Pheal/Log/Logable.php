@@ -1,7 +1,7 @@
 <?php
 /*
  MIT License
- Copyright (c) 2010 Peter Petermann
+ Copyright (c) 2010 Daniel Hoffend
 
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -24,50 +24,40 @@
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  OTHER DEALINGS IN THE SOFTWARE.
 */
-
+namespace Pheal\Log;
 /**
- * Container Class
- * all elements in the container should be available by PhealContainer->keyname
+ * Interface that should be implemented by the archive handlers
  */
-class PhealContainer implements PhealArrayInterface
+interface Logable
 {
     /**
-     * @var array
+     * Start of measure the response time
+     * @return boolean
      */
-    private $_container = array();
+    public function start();
 
     /**
-     * Adds an Element to the container
-     * @param string $key
-     * @param mixed $val
+     * Stop of measure the response time
+     * @return boolean
      */
-    public function add_element($key, $val)
-    {
-        $this->_container = array_merge($this->_container, array((String) $key => $val));
-    }
+    public function stop();
 
     /**
-     * magic method for returning values from container on attribute calls
+     * logs request api call including options
+     * @param string $scope
      * @param string $name
-     * @return mixed
+     * @param array $opts
+     * @return boolean
      */
-    public function  __get($name)
-    {
-        if(isset($this->_container[$name]))
-                return $this->_container[$name];
-        return null;
-    }
+    public function log($scope,$name,$opts);
 
     /**
-     * returns the Object as associated array
-     * @return array
+     * logs failed request api call including options and error message
+     * @param string $scope
+     * @param string $name
+     * @param array $opts
+     * @param string $message
+     * @return boolean
      */
-    public function toArray()
-    {
-        $return = array();
-        foreach($this->_container AS $key => $value)
-            $return[$key] = ($value instanceof PhealArrayInterface) ? $value->toArray() : $value;
-
-        return $return;
-    }
+    public function errorLog($scope,$name,$opts,$message);
 }

@@ -1,7 +1,7 @@
 <?php
 /*
  MIT License
- Copyright (c) 2010 Peter Petermann
+ Copyright (c) 2010 Peter Petermann, Daniel Hoffend
 
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -24,10 +24,23 @@
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  OTHER DEALINGS IN THE SOFTWARE.
 */
+namespace Pheal\Archive;
 /**
- * basic Pheal Exception, all Pheal exceptions should be derived from this
+ * null archive, as a placeholder if no cache is used
  */
-class PhealException extends Exception
+class NullStorage implements Archivable
 {
-
+    /**
+     * Save XML from cache
+     * @param int $userid
+     * @param string $apikey
+     * @param string $scope
+     * @param string $name
+     * @param array $args
+     * @param string $xml
+     */
+    public function save($userid, $apikey, $scope, $name, $args, $xml)
+    {
+        return false;
+    }
 }

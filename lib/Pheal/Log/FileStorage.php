@@ -24,11 +24,12 @@
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  OTHER DEALINGS IN THE SOFTWARE.
 */
+namespace Pheal\Log;
 
 /**
  * null log, as a placeholder if no logging is used
  */
-class PhealFileLog implements PhealLogInterface
+class FileStorage implements Logable
 {
     /**
      * path where to store the logs
@@ -65,7 +66,7 @@ class PhealFileLog implements PhealLogInterface
     );
 
     /**
-     * construct PhealFileCache,
+     * construct
      * @param string $basepath optional string on where to store files, defaults to the current/users/home/.pheal/cache/
      * @param array $options optional config array, valid keys are: delimiter, umask, umask_directory
      */
@@ -114,11 +115,12 @@ class PhealFileLog implements PhealLogInterface
      * @param string $scope
      * @param string $name
      * @param array $opts
+     * @return string
      */
     protected function formatUrl($scope,$name,$opts)
     {
         // create url
-        $url = PhealConfig::getInstance()->api_base . $scope . '/' . $name . ".xml.aspx";
+        $url = \Pheal\Core\Config::getInstance()->api_base . $scope . '/' . $name . ".xml.aspx";
 
          // truncacte apikey for log safety
         if($this->options['truncate_apikey'] && count($opts)) {
@@ -127,7 +129,7 @@ class PhealFileLog implements PhealLogInterface
         }
 
         // add post data
-        if(PhealConfig::getInstance()->http_post)
+        if(\Pheal\Core\Config::getInstance()->http_post)
             $url .= " DATA: ".http_build_query($opts);
 
         // add data to url
@@ -139,6 +141,7 @@ class PhealFileLog implements PhealLogInterface
 
     /**
      * returns current microtime
+     * @return float
      */
     protected function getmicrotime()
     {
@@ -173,6 +176,7 @@ class PhealFileLog implements PhealLogInterface
      * @param string $scope
      * @param string $name
      * @param array $opts
+     * @return boolean
      */
     public function log($scope,$name,$opts)
     {
@@ -187,12 +191,13 @@ class PhealFileLog implements PhealLogInterface
         file_put_contents($filename,
             sprintf($this->options['access_format'],
                 date('r'),                
-                (PhealConfig::getInstance()->http_post?'POST':'GET'),
+                (\Pheal\Core\Config::getInstance()->http_post?'POST':'GET'),
                 $this->responseTime,
                 $this->formatUrl($scope,$name,$opts)
             ),
             FILE_APPEND
         );
+        return true;
     }
 
     /**
@@ -201,6 +206,7 @@ class PhealFileLog implements PhealLogInterface
      * @param string $name
      * @param array $opts
      * @param string $message
+     * @return boolean
      */
     public function errorLog($scope,$name,$opts,$message)
     {
@@ -218,12 +224,13 @@ class PhealFileLog implements PhealLogInterface
         file_put_contents($filename,
             sprintf($this->options['error_format'],
                 date('r'),
-                (PhealConfig::getInstance()->http_post?'POST':'GET'),
+                (\Pheal\Core\Config::getInstance()->http_post?'POST':'GET'),
                 $this->responseTime,
                 $this->formatUrl($scope,$name,$opts),
                 $message
             ),
             FILE_APPEND
         );
+        return true;
     }
 }

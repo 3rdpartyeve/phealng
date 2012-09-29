@@ -24,11 +24,11 @@
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  OTHER DEALINGS IN THE SOFTWARE.
 */
-
+namespace Pheal\Cache;
 /**
  * null cache, as a placeholder if no cache is used
  */
-class PhealNullCache implements PhealCacheInterface
+class NullStorage implements Cacheable
 {
     /**
      * Load XML from cache

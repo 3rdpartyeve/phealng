@@ -24,11 +24,11 @@
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  OTHER DEALINGS IN THE SOFTWARE.
 */
-
+namespace Pheal\Cache;
 /**
  * Implememnts memcached into Pheal
  */
-class PhealMemcache implements PhealCacheInterface
+class MemcacheStorage implements Cacheable
 {
     /**
      * active memcache instance/connection
@@ -55,7 +55,7 @@ class PhealMemcache implements PhealCacheInterface
         if(is_array($options) && count($options))
             $this->options = array_merge($this->options, $options);
 
-        $this->memcache = new Memcache();
+        $this->memcache = new \Memcache();
         $this->memcache->connect($this->options['host'], $this->options['port']);
     }
 
@@ -101,7 +101,7 @@ class PhealMemcache implements PhealCacheInterface
         $tz = date_default_timezone_get();
         date_default_timezone_set("UTC");
 
-        $xml = new SimpleXMLElement($xml);
+        $xml = new \SimpleXMLElement($xml);
         $dt = (int) strtotime($xml->cachedUntil);
         $time = time();
 

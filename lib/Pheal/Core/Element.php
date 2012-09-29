@@ -24,11 +24,11 @@
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  OTHER DEALINGS IN THE SOFTWARE.
 */
-
+namespace Pheal\Core;
 /**
  * PhealElement holds elements of the EVE API
  */
-class PhealElement implements PhealArrayInterface
+class Element implements Arrayable
 {
     /**
      * Name of the Element
@@ -92,7 +92,7 @@ class PhealElement implements PhealArrayInterface
         foreach($this->_attribs AS $key => $value)
             $return[$key] = $value;
 
-        if($this->_value instanceof PhealArrayInterface)
+        if($this->_value instanceof Arrayable)
             $return = array_merge($return, $this->_value->toArray());
         else
             $return[$this->_name] = $this->_value;
@@ -109,14 +109,14 @@ class PhealElement implements PhealArrayInterface
     {
         if($element->getName() =="rowset")
         {
-            $re = new PhealRowSet($element);
+            $re = new RowSet($element);
         }
         // corp/MemberSecurity workaround
         elseif($element->getName() == "result" && $element->member)
         {
-            $container = new PhealContainer();
+            $container = new Container();
             $container->add_element('members',new PhealRowSet($element,'members','member'));
-            $re = new PhealElement('result',$container);
+            $re = new Element('result',$container);
         }
         else
         {
@@ -124,10 +124,10 @@ class PhealElement implements PhealArrayInterface
             $echilds = $element->children();
             if(count($echilds) > 0)
             {
-                $container = new PhealContainer();
+                $container = new Container();
                 foreach($echilds as $celement)
                 {
-                    $cel = PhealElement::parse_element($celement);
+                    $cel = Element::parse_element($celement);
                     if(count($celement->attributes()) > 0)
                         $container->add_element($cel->_name, $cel);
                     else
@@ -136,7 +136,7 @@ class PhealElement implements PhealArrayInterface
                 $value = $container;
             } else $value = (String) $element;
 
-            $re = new PhealElement($key, $value);
+            $re = new Element($key, $value);
             if(count($element->attributes()) > 0)
             {
                 foreach($element->attributes() as $attelem)

@@ -24,29 +24,11 @@
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  OTHER DEALINGS IN THE SOFTWARE.
 */
+namespace Pheal\Exceptions;
 /**
- * Interface that should be implemented by the cache handlers
+ * Pheal Access Exception. Should be thrown when Pheal dedects a not allowed API Call based on accessMask
  */
-interface PhealCacheInterface
+class AccessException extends Exception
 {
-    /**
-     * Load XML from cache
-     * @param int $userid
-     * @param string $apikey
-     * @param string $scope
-     * @param string $name
-     * @param array $args
-     */
-    public function load($userid, $apikey, $scope, $name, $args);
 
-    /**
-     * Save XML from cache
-     * @param int $userid
-     * @param string $apikey
-     * @param string $scope
-     * @param string $name
-     * @param array $args
-     * @param string $xml
-     */
-    public function save($userid, $apikey, $scope, $name, $args, $xml);
 }

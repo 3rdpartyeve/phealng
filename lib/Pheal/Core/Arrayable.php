@@ -1,7 +1,7 @@
 <?php
 /*
  MIT License
- Copyright (c) 2010 Peter Petermann
+ Copyright (c) 2010 Peter Petermann, Daniel Hoffend
 
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -24,19 +24,14 @@
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  OTHER DEALINGS IN THE SOFTWARE.
 */
+namespace Pheal\Core;
 /**
- * Filecache which always validates a cached file to be valid
- * for example and for tests 
+ * Interface that should be implemented the toArray Method (for Pheal API Result Objects)
  */
-class PhealFileCacheForced extends PhealFileCache
+interface Arrayable
 {
     /**
-     * always returns true since we assume that the file always exists
-     * @param string $xml
-     * @return boolean
+     * returns the current api result object as array
      */
-    public function validate_cache($xml)
-    {
-        return true;
-    }
+    public function toArray();
 }

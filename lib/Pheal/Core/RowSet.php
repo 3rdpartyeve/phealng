@@ -24,44 +24,44 @@
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  OTHER DEALINGS IN THE SOFTWARE.
 */
+namespace Pheal\Core;
 /**
- * RowSetRow, extends array object to allow
- * usage as array
+ * class to implement EVE API RowSets
  */
-class PhealRowSetRow extends ArrayObject implements PhealArrayInterface
+class RowSet extends \ArrayObject implements Arrayable
 {
-
     /**
-    * @var string if the element has a specific string value, 
-    * it can be stored here;
-    */
-    private $_stringValue = null; 
-
-    /**
-    * set string value of row
-    * @param string $string 
-    */ 
-    public function setStringValue($string)
-    {
-        $this->_stringValue = $string;
-    }
-
-    /**
-    * Magic __toString method, will return stringvalue of row
-    */ 
-    public function __toString()
-    {
-        return $this->_stringValue;
-    }
-
-    /**
-     * magic function to allow access to the array like an object would do too
-     * @param string $name
-     * @return mixed
+     * name of the rowset
+     * @var string
      */
-    public function __get($name)
+    public $_name;
+
+    /**
+     * initialize the rowset
+     * @param \SimpleXMLElement $xml
+     * @optional String $name
+     * @optional String $rowname
+     */
+    public function __construct($xml,$name=null,$rowname='row')
     {
-        return $this[$name];
+        $this->_name = (String) ($name !== null) ? $name : $xml->attributes()->name;
+       
+        foreach($xml->$rowname as $rowxml)
+        {
+            $row = array();
+            foreach($rowxml->attributes() as $attkey => $attval)
+            {
+                $row[$attkey] = (String) $attval;
+            }
+            foreach($rowxml->children() as $child) // nested tags in rowset/row
+            {
+                $element= Element::parse_element($child);
+                $row[(String) $element->_name] = $element;
+            }
+            $rowObject = new RowSetRow($row);
+            $rowObject->setStringValue((string) $rowxml);
+            $this->append($rowObject);
+        }
     }
 
     /**
@@ -71,12 +71,11 @@ class PhealRowSetRow extends ArrayObject implements PhealArrayInterface
     public function toArray()
     {
         $return = array();
-        foreach($this AS $key => $value)
-            $return[$key] = ($value instanceof PhealArrayInterface) ? $value->toArray() : $value;
-        
-        if($this->_stringValue)
-            $return['_stringValue'] = $this->_stringValue;
-        
+        foreach($this AS $row)
+            if($row instanceof Arrayable)
+                $return[] = $row->toArray();
+
         return $return;
     }
 }
+

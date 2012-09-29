@@ -24,7 +24,7 @@
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  OTHER DEALINGS IN THE SOFTWARE.
 */
-
+ namespace Pheal;
 /**
  * Pheal (PHp Eve Api Library), a EAAL Port for PHP
  */
@@ -33,7 +33,7 @@ class Pheal
     /**
      * Version container
      */
-    public static $version = "0.1.4";
+    public static $version = "1.0.0";
 
     /**
      * resource handler for curl
@@ -91,7 +91,7 @@ class Pheal
      * Magic __call method, will translate all function calls to object to API requests
      * @param String $name name of the function
      * @param array $arguments an array of arguments
-     * @return PhealResult
+     * @return \Pheal\Core\Result
      */
     public function  __call($name, $arguments)
     {
@@ -106,7 +106,7 @@ class Pheal
     /**
      * Magic __get method used to set scope
      * @param string $name name of the scope e.g. "mapScope"
-     * @return mixed Pheal or null
+     * @return \Pheal\Pheal|null
      */
     public function __get($name)
     {
@@ -143,18 +143,18 @@ class Pheal
      * set the correct access level for futher checks.
      *
      * Keep in mind this method will make an api request to account/APIKeyInfo based
-     * on the given PhealConfig settings with the given key credentials.
+     * on the given \Pheal\Core\Config settings with the given key credentials.
      *
      * More important! This method will throw Exceptions on invalid keys or networks errors
      * So place this call into your try statement
      *
-     * @throws PhealException|PhealAPIException|PhealHTTPException
-     * @return bool|PhealResult
+     * @throws \Pheal\Exceptions\Exception|\Pheal\Exceptions\APIException|\Pheal\Exceptions\HTTPException
+     * @return boolean|\Pheal\Core\Result
      */
     public function detectAccess()
     {
         // don't request keyinfo if api keys are not set or if new CAK aren't enabled
-        if(!$this->userid || !$this->key || !PhealConfig::getInstance()->api_customkeys)
+        if(!$this->userid || !$this->key || !\Pheal\Core\Config::getInstance()->api_customkeys)
             return false;
 
         // request api key info, save old scope and restore it afterwords
@@ -173,15 +173,15 @@ class Pheal
     /**
      * method will ask caching class for valid xml, if non valid available
      * will make API call, and return the appropriate result
-     * @throws PhealException|PhealAPIException|PhealHTTPException|PhealAccessException
+     * @throws \Pheal\Exceptions\Exception|\Pheal\Exceptions\APIException|\Pheal\Exceptions\HTTPException
      * @param string $scope api scope (examples: eve, map, server, ...)
      * @param string $name  api method (examples: ServerStatus, Kills, Sovereignty, ...)
      * @param array $opts   additional arguments (example: characterID => 12345, ...), should not contain apikey/userid/keyid/vcode
-     * @return PhealResult
+     * @return \Pheal\Core\Result
      */
     private function request_xml($scope, $name, array $opts = array())
     {
-        $opts = array_merge(PhealConfig::getInstance()->additional_request_parameters, $opts);
+        $opts = array_merge(\Pheal\Core\Config::getInstance()->additional_request_parameters, $opts);
 
         // apikey/userid/keyid|vcode shouldn't be allowed in arguments and removed to avoid wrong cached api calls
         foreach($opts AS $k => $v) {
@@ -190,8 +190,8 @@ class Pheal
         }
 
         // prepare http arguments + url (to not modify original argument list for cache saving)
-        $url = PhealConfig::getInstance()->api_base . $scope . '/' . $name . ".xml.aspx";
-        $use_customkey = (bool)PhealConfig::getInstance()->api_customkeys;
+        $url = \Pheal\Core\Config::getInstance()->api_base . $scope . '/' . $name . ".xml.aspx";
+        $use_customkey = (bool)\Pheal\Core\Config::getInstance()->api_customkeys;
         $http_opts = $opts;
         if($this->userid) $http_opts[($use_customkey?'keyID':'userid')] = $this->userid;
         if($this->key) $http_opts[($use_customkey?'vCode':'apikey')] = $this->key;
@@ -199,55 +199,55 @@ class Pheal
         // check access level if given (throws PhealAccessExpception if API call is not allowed)
         if($use_customkey && $this->userid && $this->key && $this->keyType) {
             try {
-                PhealConfig::getInstance()->access->check($scope,$name,$this->keyType,$this->accessMask);
-            } catch (Exception $e) {
-                PhealConfig::getInstance()->log->errorLog($scope,$name,$http_opts,$e->getMessage());
+                \Pheal\Core\Config::getInstance()->access->check($scope,$name,$this->keyType,$this->accessMask);
+            } catch (\Exception $e) {
+                \Pheal\Core\Config::getInstance()->log->errorLog($scope,$name,$http_opts,$e->getMessage());
                 throw $e;
             }
         }
 
         // check cache first
-        if(!$this->xml = PhealConfig::getInstance()->cache->load($this->userid,$this->key,$scope,$name,$opts))
+        if(!$this->xml = \Pheal\Core\Config::getInstance()->cache->load($this->userid,$this->key,$scope,$name,$opts))
         {
             try {
                 // start measure the response time
-                PhealConfig::getInstance()->log->start();
+                \Pheal\Core\Config::getInstance()->log->start();
 
                 // request
-                if(PhealConfig::getInstance()->http_method == "curl" && function_exists('curl_init'))
+                if(\Pheal\Core\Config::getInstance()->http_method == "curl" && function_exists('curl_init'))
                     $this->xml = self::request_http_curl($url,$http_opts);
                 else
                     $this->xml = self::request_http_file($url,$http_opts);
 
                 // stop measure the response time
-                PhealConfig::getInstance()->log->stop();
+                \Pheal\Core\Config::getInstance()->log->stop();
 
                 // parse
-                $element = new SimpleXMLElement($this->xml);
+                $element = new \SimpleXMLElement($this->xml);
 
             // just forward HTTP Errors
-            } catch(PhealHTTPException $e) {
+            } catch(\HttpException $e) {
                 throw $e;
 
             // other request errors
-            } catch(Exception $e) {
+            } catch(\Exception $e) {
                 // log + throw error
-                PhealConfig::getInstance()->log->errorLog($scope,$name,$http_opts,$e->getCode() . ': ' . $e->getMessage());
-                throw new PhealException('API Date could not be read / parsed, original exception: ' . $e->getMessage());
+                \Pheal\Core\Config::getInstance()->log->errorLog($scope,$name,$http_opts,$e->getCode() . ': ' . $e->getMessage());
+                throw new \Pheal\Exceptions\Exception('API Date could not be read / parsed, original exception: ' . $e->getMessage());
             }
-            PhealConfig::getInstance()->cache->save($this->userid,$this->key,$scope,$name,$opts,$this->xml);
+            \Pheal\Core\Config::getInstance()->cache->save($this->userid,$this->key,$scope,$name,$opts,$this->xml);
             
             // archive+save only non-error api calls + logging
             if(!$element->error) {
-                PhealConfig::getInstance()->log->log($scope,$name,$http_opts);
-                PhealConfig::getInstance()->archive->save($this->userid,$this->key,$scope,$name,$opts,$this->xml);
+                \Pheal\Core\Config::getInstance()->log->log($scope,$name,$http_opts);
+                \Pheal\Core\Config::getInstance()->archive->save($this->userid,$this->key,$scope,$name,$opts,$this->xml);
             } else {
-                PhealConfig::getInstance()->log->errorLog($scope,$name,$http_opts,$element->error['code'] . ': ' . $element->error);
+                \Pheal\Core\Config::getInstance()->log->errorLog($scope,$name,$http_opts,$element->error['code'] . ': ' . $element->error);
             }
         } else {
-            $element = new SimpleXMLElement($this->xml);
+            $element = new \SimpleXMLElement($this->xml);
         }
-        return new PhealResult($element);
+        return new \Pheal\Core\Result($element);
     }
 
     /**
@@ -265,23 +265,23 @@ class Pheal
             self::$curl = curl_init();
 
         // custom user agent
-        if(($http_user_agent = PhealConfig::getInstance()->http_user_agent) != false)
+        if(($http_user_agent = \Pheal\Core\Config::getInstance()->http_user_agent) != false)
             curl_setopt(self::$curl, CURLOPT_USERAGENT, $http_user_agent);
         
         // custom outgoing ip address
-        if(($http_interface_ip = PhealConfig::getInstance()->http_interface_ip) != false)
+        if(($http_interface_ip = \Pheal\Core\Config::getInstance()->http_interface_ip) != false)
             curl_setopt(self::$curl, CURLOPT_INTERFACE, $http_interface_ip);
 
         // ignore ssl peer verification if needed
         if(substr($url,5) == "https")
-            curl_setopt(self::$curl, CURLOPT_SSL_VERIFYPEER, PhealConfig::getInstance()->http_ssl_verifypeer);
+            curl_setopt(self::$curl, CURLOPT_SSL_VERIFYPEER, \Pheal\Core\Config::getInstance()->http_ssl_verifypeer);
             
         // http timeout 
-        if(($http_timeout = PhealConfig::getInstance()->http_timeout) != false)
+        if(($http_timeout = \Pheal\Core\Config::getInstance()->http_timeout) != false)
             curl_setopt(self::$curl, CURLOPT_TIMEOUT, $http_timeout);
             
         // use post for params
-        if(count($opts) && PhealConfig::getInstance()->http_post)
+        if(count($opts) && \Pheal\Core\Config::getInstance()->http_post)
         {
             curl_setopt(self::$curl, CURLOPT_POST, true);
             curl_setopt(self::$curl, CURLOPT_POSTFIELDS, $opts);
@@ -299,7 +299,7 @@ class Pheal
         $headers = array();
         
         // enable/disable keepalive
-        if(($http_keepalive = PhealConfig::getInstance()->http_keepalive) != false)
+        if(($http_keepalive = \Pheal\Core\Config::getInstance()->http_keepalive) != false)
         {
             curl_setopt(self::$curl, CURLOPT_FORBID_REUSE, false);
             $http_keepalive = ($http_keepalive === true) ? 15 : (int)$http_keepalive;
@@ -327,16 +327,16 @@ class Pheal
         // response http headers
         $httpCode = curl_getinfo(self::$curl, CURLINFO_HTTP_CODE);
 
-        if(!PhealConfig::getInstance()->http_keepalive)
+        if(!\Pheal\Core\Config::getInstance()->http_keepalive)
             self::disconnect();
 
         // http errors
         if($httpCode >= 400)
-            throw new PhealHTTPException($httpCode, $url);
+            throw new \Pheal\Exceptions\HTTPException($httpCode, $url);
 
         // curl errors
         if($errno)
-            throw new Exception($error, $errno);
+            throw new \Exception($error, $errno);
         else
             return $result;
     }
@@ -354,19 +354,19 @@ class Pheal
         $options = array();
         
         // set custom user agent
-        if(($http_user_agent = PhealConfig::getInstance()->http_user_agent) != false)
+        if(($http_user_agent = \Pheal\Core\Config::getInstance()->http_user_agent) != false)
             $options['http']['user_agent'] = $http_user_agent;
         
         // set custom http timeout
-        if(($http_timeout = PhealConfig::getInstance()->http_timeout) != false)
+        if(($http_timeout = \Pheal\Core\Config::getInstance()->http_timeout) != false)
             $options['http']['timeout'] = $http_timeout;
         
         // ignore ssl peer verification if needed
         if(substr($url,5) == "https")
-            $options['ssl']['verify_peer'] = PhealConfig::getInstance()->http_ssl_verifypeer;
+            $options['ssl']['verify_peer'] = \Pheal\Core\Config::getInstance()->http_ssl_verifypeer;
         
         // use post for params
-        if(count($opts) && PhealConfig::getInstance()->http_post)
+        if(count($opts) && \Pheal\Core\Config::getInstance()->http_post)
         {
             $options['http']['method'] = 'POST';
             $options['http']['content'] = http_build_query($opts);
@@ -398,7 +398,7 @@ class Pheal
         
         // throw http error
         if(is_numeric($httpCode) && $httpCode >= 400)
-            throw new PhealHTTPException($httpCode, $url);
+            throw new \Pheal\Exceptions\HTTPException($httpCode, $url);
 
         // throw error
         if($result === false) {
@@ -407,7 +407,7 @@ class Pheal
             // set track_errors back to the old value
             ini_set('track_errors',$oldTrackErrors);
 
-            throw new Exception($message);
+            throw new \Exception($message);
 
         // return result
         } else {
@@ -447,4 +447,3 @@ class Pheal
         return false;
     }
 }
-

@@ -24,36 +24,31 @@
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  OTHER DEALINGS IN THE SOFTWARE.
 */
-
+namespace Pheal\Core;
 /**
- * Exception to be thrown if the EVE API returns an error
+ * Pheal Result Object
  */
-class PhealAPIException extends PhealException
+class Result implements Arrayable
 {
-    /**
-     * EVE API Errorcode
-     * @var int
-     */
-    public $code;
-
     /**
      * time at which the API got the request
      * @var string
      */
     public $request_time;
-
+    
     /**
      * time at which the API got the request as unixtimestamp
      * @var int
+
      */
     public $request_time_unixtime;
-
+    
     /**
      * time till the cache should hold this result
      * @var string
      */
     public $cached_until;
-
+    
     /**
      * time till the cache should hold this result
      * @var string
@@ -61,32 +56,65 @@ class PhealAPIException extends PhealException
     public $cached_until_unixtime;
 
     /**
-     * construct exception with EVE API errorcode, and message
-     * @param int $code
-     * @param string $message
-     * @param SimpleXMLElement $xml
+     * root element of the result
+     * @var Element
      */
-    public function  __construct($code, $message, $xml)
-    {
-        $this->code = (int) $code;
+    private $_element = null;
 
+    /**
+     * initializes the PhealResult
+     * @param \SimpleXMLElement $xml
+     */
+    public function __construct($xml)
+    {
         // switch to UTC
         $oldtz	= date_default_timezone_get();
         date_default_timezone_set('UTC');
-
-        // save request/cache timers (if ccp provides them)
-        if($xml->currentTime) {
-            $this->request_time = (string) $xml->currentTime;
-            $this->request_time_unixtime = (int) strtotime($xml->currentTime);
+        
+        $this->request_time = (string) $xml->currentTime;
+        $this->cached_until = (string) $xml->cachedUntil;
+        $this->request_time_unixtime = (int) strtotime($xml->currentTime);
+        $this->cached_until_unixtime = (int) strtotime($xml->cachedUntil);
+        
+        // workaround if cachedUntil is missing in API response (request + 1 hour)
+        if(!$this->cached_until)
+        {
+            $this->cached_until_unixtime = $this->request_time_unixtime + 60*60;
+            $this->cached_until = date('Y-m-d H:i:s',$this->cached_until_unixtime);
         }
-        if($xml->cachedUntil) {
-            $this->cached_until = (string) $xml->cachedUntil;
-            $this->cached_until_unixtime = (int) strtotime($xml->cachedUntil);
-        }
-
+             
         // switch back to normal time
         date_default_timezone_set($oldtz);
 
-        parent::__construct($message);
+        // error detection
+        if($xml->error)
+            throw new Pheal\Exceptions\APIException($xml->error["code"], (String) $xml->error, $xml);
+        $this->_element = Element::parse_element($xml->result);
+    }
+
+    /**
+     * magic method, forwarding attribute access to $this->element
+     * @param string $name
+     * @return mixed
+     */
+    public function  __get($name)
+    {
+        return $this->_element->$name;
+    }
+
+    /**
+     * returns the Object as associated array
+     * @return array
+     */
+    public function toArray()
+    {
+        if($this->_element instanceof Arrayable)
+            return array(
+                'currentTime' => $this->request_time,
+                'cachedUntil' => $this->cached_until,
+                'result' => $this->_element->toArray()
+            );
+        else
+            return array();
     }
 }

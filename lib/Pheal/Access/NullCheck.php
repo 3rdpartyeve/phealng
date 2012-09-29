@@ -24,11 +24,11 @@
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  OTHER DEALINGS IN THE SOFTWARE.
 */
-
+namespace Pheal\Access;
 /**
  * null access, as a placeholder if no access verification is used
  */
-class PhealNullAccess implements PhealAccessInterface
+class NullCheck implements Accessible
 {
     /**
      * Check if the api key is allowed to make this api call

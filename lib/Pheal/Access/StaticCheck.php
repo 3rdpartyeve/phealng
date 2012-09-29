@@ -24,7 +24,7 @@
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  OTHER DEALINGS IN THE SOFTWARE.
 */
-
+namespace Pheal\Access;
 /**
  * check access modules. Check if the given keyinfo allows a specific api call
  * access bits are static for performance reason. Feel free to write your own version
@@ -32,7 +32,7 @@
  *
  * new/unknown api calls are allowed by default.
  */
-class PhealCheckAccess implements PhealAccessInterface
+class StaticCheck implements Accessible
 {
     /**
      * Key Type of the given API key
@@ -156,7 +156,7 @@ class PhealCheckAccess implements PhealAccessInterface
         }
 
         // no match == no access right found.
-        throw new PhealAccessException(sprintf(
+        throw new \Pheal\Exceptions\AccessException(sprintf(
             "Pheal blocked an API call (%s/%s) which is not allowed by the given keyType/accessMask (%s/%d)",
             $scope,
             $name,
