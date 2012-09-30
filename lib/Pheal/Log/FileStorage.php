@@ -1,7 +1,7 @@
 <?php
 /*
  MIT License
- Copyright (c) 2010 Daniel Hoffend
+ Copyright (c) 2010 - 2012 Daniel Hoffend, Peter Petermann
 
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -130,11 +130,11 @@ class FileStorage implements Logable
 
         // add post data
         if(\Pheal\Core\Config::getInstance()->http_post)
-            $url .= " DATA: ".http_build_query($opts);
+            $url .= " DATA: ".http_build_query($opts,'','&');
 
         // add data to url
         elseif(count($opts))
-            $url .= '?' . http_build_query($opts);
+            $url .= '?' . http_build_query($opts, '', '&');
 
         return $url;
     }
