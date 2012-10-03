@@ -20,6 +20,7 @@
         "issues": "https://github.com/ppetermann/pheal/issues"
     },
     "autoload": {
-        "files": ["PhealLoadMe.php"]
+        "psr-0": { "Pheal": "lib/" }
     }
+
 }
