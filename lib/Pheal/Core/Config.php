@@ -53,6 +53,13 @@ class Config
     public $access;
 
     /**
+     * Fetcher object to decide what technology is to be sued to fetch
+     * defaults to \Pheal\Fetcher\Curl
+     * @var \Pheal\Fetcher\CanFetch
+     */
+    public $fetcher;
+
+    /**
      * usually this points to the EVE API directly, however if you use a API
      * proxy you might want to modify this.
      * use https://api.eveonline.com/ if you like to have ssl support
@@ -73,12 +80,6 @@ class Config
      */
     public $additional_request_parameters = array();
 
-    /**
-     * which http request method should be used 'curl' or 'file'
-     * @var String
-     */
-    public $http_method	= "curl";
-    
     /**
      * which outgoing ip/inteface should be used for the http request
      * (bool) false means use default ip address
@@ -121,7 +122,7 @@ class Config
 
     /**
      * Singleton Instance
-     * @var PhealConfig
+     * @var \Pheal\Core\Config
      */
     private static $myInstance = null;
 
@@ -134,6 +135,7 @@ class Config
         $this->archive = new \Pheal\Archive\NullStorage();
         $this->log = new \Pheal\Log\NullStorage();
         $this->access = new \Pheal\Access\NullCheck();
+        $this->fetcher = new \Pheal\Fetcher\Curl();
     }
 
     /**
