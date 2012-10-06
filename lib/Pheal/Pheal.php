@@ -207,7 +207,7 @@ class Pheal
                 \Pheal\Core\Config::getInstance()->log->start();
 
                 // request
-                \Pheal\Core\Config::getInstance()->fetcher->fetch($url, $http_opts);
+                $this->xml = \Pheal\Core\Config::getInstance()->fetcher->fetch($url, $http_opts);
 
                 // stop measure the response time
                 \Pheal\Core\Config::getInstance()->log->stop();
