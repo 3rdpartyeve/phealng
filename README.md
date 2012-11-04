@@ -32,7 +32,7 @@ usage examples need to be rewriten.
 - more error handling
 
 ## LINKS
-- [Github](http://github.com/ppetermann/pheal)
+- [Github](http://github.com/ppetermann/phealng)
 - [devedge](http://devedge.eu/project/pheal/)
 
 ## CONTACT
