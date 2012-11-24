@@ -30,7 +30,7 @@ class File implements CanFetch
             $options['http']['timeout'] = $http_timeout;
 
         // ignore ssl peer verification if needed
-        if(substr($url,5) == "https")
+        if(substr($url,0,5) == "https")
             $options['ssl']['verify_peer'] = \Pheal\Core\Config::getInstance()->http_ssl_verifypeer;
 
         // use post for params
