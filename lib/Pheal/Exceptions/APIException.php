@@ -28,7 +28,7 @@ namespace Pheal\Exceptions;
 /**
  * Exception to be thrown if the EVE API returns an error
  */
-class APIException extends Exception
+class APIException extends PhealException
 {
     /**
      * EVE API Errorcode

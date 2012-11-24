@@ -28,7 +28,7 @@ namespace Pheal\Core;
 /**
  * PhealElement holds elements of the EVE API
  */
-class Element implements Arrayable
+class Element implements CanConvertToArray
 {
     /**
      * Name of the Element
@@ -92,7 +92,7 @@ class Element implements Arrayable
         foreach($this->_attribs AS $key => $value)
             $return[$key] = $value;
 
-        if($this->_value instanceof Arrayable)
+        if($this->_value instanceof CanConvertToArray)
             $return = array_merge($return, $this->_value->toArray());
         else
             $return[$this->_name] = $this->_value;

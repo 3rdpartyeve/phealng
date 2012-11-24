@@ -28,7 +28,7 @@ namespace Pheal\Cache;
 /**
  * Implememnts memcached into Pheal
  */
-class MemcacheStorage implements Cacheable
+class MemcacheStorage implements CanCache
 {
     /**
      * active memcache instance/connection

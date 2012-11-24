@@ -28,7 +28,7 @@ namespace Pheal\Core;
 /**
  * class to implement EVE API RowSets
  */
-class RowSet extends \ArrayObject implements Arrayable
+class RowSet extends \ArrayObject implements CanConvertToArray
 {
     /**
      * name of the rowset
@@ -72,7 +72,7 @@ class RowSet extends \ArrayObject implements Arrayable
     {
         $return = array();
         foreach($this AS $row)
-            if($row instanceof Arrayable)
+            if($row instanceof CanConvertToArray)
                 $return[] = $row->toArray();
 
         return $return;

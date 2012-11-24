@@ -29,7 +29,7 @@ namespace Pheal\Log;
 /**
  * null log, as a placeholder if no logging is used
  */
-class FileStorage implements Logable
+class FileStorage implements CanLog
 {
     /**
      * path where to store the logs

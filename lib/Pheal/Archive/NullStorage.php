@@ -28,7 +28,7 @@ namespace Pheal\Archive;
 /**
  * null archive, as a placeholder if no cache is used
  */
-class NullStorage implements Archivable
+class NullStorage implements CanArchive
 {
     /**
      * Save XML from cache

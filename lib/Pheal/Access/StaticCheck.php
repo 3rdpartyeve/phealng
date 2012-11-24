@@ -32,7 +32,7 @@ namespace Pheal\Access;
  *
  * new/unknown api calls are allowed by default.
  */
-class StaticCheck implements Accessible
+class StaticCheck implements CanCheck
 {
     /**
      * Key Type of the given API key

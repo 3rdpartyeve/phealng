@@ -24,7 +24,7 @@
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  OTHER DEALINGS IN THE SOFTWARE.
 */
- namespace Pheal;
+namespace Pheal;
 /**
  * Pheal (PHp Eve Api Library), a EAAL Port for PHP
  */
@@ -141,7 +141,7 @@ class Pheal
      * More important! This method will throw Exceptions on invalid keys or networks errors
      * So place this call into your try statement
      *
-     * @throws \Pheal\Exceptions\Exception|\Pheal\Exceptions\APIException|\Pheal\Exceptions\HTTPException
+     * @throws \Pheal\Exceptions\PhealException|\Pheal\Exceptions\APIException|\Pheal\Exceptions\HTTPException
      * @return boolean|\Pheal\Core\Result
      */
     public function detectAccess()
@@ -166,7 +166,7 @@ class Pheal
     /**
      * method will ask caching class for valid xml, if non valid available
      * will make API call, and return the appropriate result
-     * @throws \Pheal\Exceptions\Exception|\Pheal\Exceptions\APIException|\Pheal\Exceptions\HTTPException
+     * @throws \Pheal\Exceptions\PhealException|\Pheal\Exceptions\APIException|\Pheal\Exceptions\HTTPException
      * @param string $scope api scope (examples: eve, map, server, ...)
      * @param string $name  api method (examples: ServerStatus, Kills, Sovereignty, ...)
      * @param array $opts   additional arguments (example: characterID => 12345, ...), should not contain apikey/userid/keyid/vcode
@@ -223,7 +223,7 @@ class Pheal
             } catch(\Exception $e) {
                 // log + throw error
                 \Pheal\Core\Config::getInstance()->log->errorLog($scope,$name,$http_opts,$e->getCode() . ': ' . $e->getMessage());
-                throw new \Pheal\Exceptions\Exception('API Date could not be read / parsed, original exception: ' . $e->getMessage());
+                throw new \Pheal\Exceptions\PhealException('API Date could not be read / parsed, original exception: ' . $e->getMessage());
             }
             \Pheal\Core\Config::getInstance()->cache->save($this->userid,$this->key,$scope,$name,$opts,$this->xml);
             

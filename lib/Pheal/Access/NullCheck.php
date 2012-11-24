@@ -28,7 +28,7 @@ namespace Pheal\Access;
 /**
  * null access, as a placeholder if no access verification is used
  */
-class NullCheck implements Accessible
+class NullCheck implements CanCheck
 {
     /**
      * Check if the api key is allowed to make this api call

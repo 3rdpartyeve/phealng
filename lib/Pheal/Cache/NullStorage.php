@@ -28,7 +28,7 @@ namespace Pheal\Cache;
 /**
  * null cache, as a placeholder if no cache is used
  */
-class NullStorage implements Cacheable
+class NullStorage implements CanCache
 {
     /**
      * Load XML from cache

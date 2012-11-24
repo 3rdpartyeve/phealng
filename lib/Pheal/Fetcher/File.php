@@ -13,7 +13,7 @@ class File implements CanFetch
      * method will do the actual http call using file()
      * @param String $url url beeing requested
      * @param array $opts an array of query paramters
-     * @throws \Pheal\Exceptions\Exception
+     * @throws \Pheal\Exceptions\PhealException
      * @throws \Pheal\Exceptions\HTTPException
      * @return string raw http response
      */
@@ -75,7 +75,7 @@ class File implements CanFetch
             // set track_errors back to the old value
             ini_set('track_errors',$oldTrackErrors);
 
-            throw new \Pheal\Exceptions\Exception($message);
+            throw new \Pheal\Exceptions\PhealException($message);
 
         // return result
         } else {

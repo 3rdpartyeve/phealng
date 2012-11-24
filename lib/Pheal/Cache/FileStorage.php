@@ -28,7 +28,7 @@ namespace Pheal\Cache;
 /**
  * Simple filecache for the xml
  */
-class FileStorage implements Cacheable
+class FileStorage implements CanCache
 {
     /**
      * path where to store the xml
@@ -99,7 +99,7 @@ class FileStorage implements Cacheable
         if(!file_exists($filepath)) {
             // check write access
             if(!is_writable($this->basepath))
-                throw new \Pheal\Exceptions\Exception(sprintf("Cache directory '%s' isn't writeable", $filepath));
+                throw new \Pheal\Exceptions\PhealException(sprintf("Cache directory '%s' isn't writeable", $filepath));
 
             // create cache folder
             $oldUmask = umask(0);
@@ -109,9 +109,9 @@ class FileStorage implements Cacheable
         } else {
             // check write access
             if(!is_writable($filepath))
-                throw new \Pheal\Exceptions\Exception(sprintf("Cache directory '%s' isn't writeable", $filepath));
+                throw new \Pheal\Exceptions\PhealException(sprintf("Cache directory '%s' isn't writeable", $filepath));
             if(file_exists($filename) && !is_writeable($filename))
-                throw new \Pheal\Exceptions\Exception(sprintf("Cache file '%s' isn't writeable", $filename));
+                throw new \Pheal\Exceptions\PhealException(sprintf("Cache file '%s' isn't writeable", $filename));
         }
         return $filepath . $filename;
     }

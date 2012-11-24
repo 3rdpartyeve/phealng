@@ -29,7 +29,7 @@ namespace Pheal\Core;
  * Container Class
  * all elements in the container should be available by PhealContainer->keyname
  */
-class Container implements Arrayable
+class Container implements CanConvertToArray
 {
     /**
      * @var array
@@ -66,7 +66,7 @@ class Container implements Arrayable
     {
         $return = array();
         foreach($this->_container AS $key => $value)
-            $return[$key] = ($value instanceof Arrayable) ? $value->toArray() : $value;
+            $return[$key] = ($value instanceof CanConvertToArray) ? $value->toArray() : $value;
 
         return $return;
     }

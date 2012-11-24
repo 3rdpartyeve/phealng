@@ -31,7 +31,7 @@ class Curl implements CanFetch
      * @param String $url url beeing requested
      * @param array $opts an array of query paramters
      * @throws \Pheal\Exceptions\HTTPException
-     * @throws \Pheal\Exceptions\Exception
+     * @throws \Pheal\Exceptions\PhealException
      * @return string raw http response
      */
     public function fetch($url, $opts)
@@ -112,7 +112,7 @@ class Curl implements CanFetch
 
         // curl errors
         if($errno)
-            throw new \Pheal\Exceptions\Exception($error, $errno);
+            throw new \Pheal\Exceptions\PhealException($error, $errno);
         else
             return $result;
 

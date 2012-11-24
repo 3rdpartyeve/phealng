@@ -28,7 +28,7 @@ namespace Pheal\Core;
 /**
  * Pheal Result Object
  */
-class Result implements Arrayable
+class Result implements CanConvertToArray
 {
     /**
      * time at which the API got the request
@@ -108,7 +108,7 @@ class Result implements Arrayable
      */
     public function toArray()
     {
-        if($this->_element instanceof Arrayable)
+        if($this->_element instanceof CanConvertToArray)
             return array(
                 'currentTime' => $this->request_time,
                 'cachedUntil' => $this->cached_until,

@@ -28,7 +28,7 @@ namespace Pheal\Archive;
 /**
  * Simple filearchive for the xml
  */
-class FileStorage implements Archivable
+class FileStorage implements CanArchive
 {
     /**
      * path where to store the xml

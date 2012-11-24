@@ -26,9 +26,9 @@
 */
 namespace Pheal\Exceptions;
 /**
- * basic Pheal Exception, all Pheal exceptions should be derived from this
+ * basic Pheal Http Exception, all Pheal Http exceptions should be derived from this
  */
-class HTTPException extends Exception
+class HTTPException extends PhealException
 {
     /**
      * http response code to string conversation

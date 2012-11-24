@@ -29,7 +29,7 @@ namespace Pheal\Core;
  * RowSetRow, extends array object to allow
  * usage as array
  */
-class RowSetRow extends \ArrayObject implements Arrayable
+class RowSetRow extends \ArrayObject implements CanConvertToArray
 {
 
     /**
@@ -73,7 +73,7 @@ class RowSetRow extends \ArrayObject implements Arrayable
     {
         $return = array();
         foreach($this AS $key => $value)
-            $return[$key] = ($value instanceof Arrayable) ? $value->toArray() : $value;
+            $return[$key] = ($value instanceof CanConvertToArray) ? $value->toArray() : $value;
         
         if($this->_stringValue)
             $return['_stringValue'] = $this->_stringValue;

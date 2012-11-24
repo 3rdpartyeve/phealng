@@ -35,20 +35,20 @@ class Config
 {
     /**
      * Cache Object, defaults to an \Pheal\Cache\NullStorage Object
-     * @var \Pheal\Cache\Cacheable
+     * @var \Pheal\Cache\CanCache
      */
     public $cache;
 
     /**
      * Archive Object, defaults to an \Pheal\Archive\NullStorage Object
-     * @var \Pheal\Archive\Archivable
+     * @var \Pheal\Archive\CanArchive
      */
     public $archive;
 
     /**
      * Access Object to validate and check an API with a given keyType+accessMask
      * defaults to \Pheal\Access\NullCheck
-     * @var \Pheal\Access\Accessible
+     * @var \Pheal\Access\CanCheck
      */
     public $access;
 

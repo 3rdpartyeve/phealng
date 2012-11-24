@@ -28,7 +28,7 @@ namespace Pheal\Log;
 /**
  * null log, as a placeholder if no logging is used
  */
-class NullStorage implements Logable
+class NullStorage implements CanLog
 {
     /**
      * Start of measure the response time
