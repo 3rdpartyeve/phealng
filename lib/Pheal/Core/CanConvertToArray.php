@@ -28,7 +28,7 @@ namespace Pheal\Core;
 /**
  * Interface that should be implemented the toArray Method (for Pheal API Result Objects)
  */
-interface Arrayable
+interface CanConvertToArray
 {
     /**
      * returns the current api result object as array

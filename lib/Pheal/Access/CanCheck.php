@@ -24,30 +24,20 @@
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  OTHER DEALINGS IN THE SOFTWARE.
 */
-namespace Pheal\Cache;
+
+namespace Pheal\Access;
 /**
- * Interface that should be implemented by the cache handlers
+ * Interface that should be implemented by the access handlers
  */
-interface Cacheable
+interface CanCheck
 {
     /**
-     * Load XML from cache
-     * @param int $userid
-     * @param string $apikey
+     * Check if the api key is allowed to make this api call
      * @param string $scope
      * @param string $name
-     * @param array $args
+     * @param string $keyType
+     * @param int $accessMask
      */
-    public function load($userid, $apikey, $scope, $name, $args);
+    public function check($scope, $name, $keyType, $accessMask);
 
-    /**
-     * Save XML from cache
-     * @param int $userid
-     * @param string $apikey
-     * @param string $scope
-     * @param string $name
-     * @param array $args
-     * @param string $xml
-     */
-    public function save($userid, $apikey, $scope, $name, $args, $xml);
 }

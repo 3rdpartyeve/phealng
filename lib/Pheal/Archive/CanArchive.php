@@ -28,7 +28,7 @@ namespace Pheal\Archive;
 /**
  * Interface that should be implemented by the archive handlers
  */
-interface Archivable
+interface CanArchive
 {
     /**
      * Save XML from cache

@@ -24,20 +24,11 @@
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  OTHER DEALINGS IN THE SOFTWARE.
 */
-
-namespace Pheal\Access;
+namespace Pheal\Exceptions;
 /**
- * Interface that should be implemented by the access handlers
+ * basic Pheal Exception, all Pheal exceptions should be derived from this
  */
-interface Accessible
+class PhealException extends \Exception
 {
-    /**
-     * Check if the api key is allowed to make this api call
-     * @param string $scope
-     * @param string $name
-     * @param string $keyType
-     * @param int $accessMask
-     */
-    public function check($scope, $name, $keyType, $accessMask);
 
 }

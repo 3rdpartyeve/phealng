@@ -1,7 +1,7 @@
 <?php
 /*
  MIT License
- Copyright (c) 2010 Daniel Hoffend
+ Copyright (c) 2010 - 2012 Peter Petermann
 
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -24,40 +24,30 @@
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  OTHER DEALINGS IN THE SOFTWARE.
 */
-namespace Pheal\Log;
+namespace Pheal\Cache;
 /**
- * Interface that should be implemented by the archive handlers
+ * Interface that should be implemented by the cache handlers
  */
-interface Logable
+interface CanCache
 {
     /**
-     * Start of measure the response time
-     * @return boolean
-     */
-    public function start();
-
-    /**
-     * Stop of measure the response time
-     * @return boolean
-     */
-    public function stop();
-
-    /**
-     * logs request api call including options
+     * Load XML from cache
+     * @param int $userid
+     * @param string $apikey
      * @param string $scope
      * @param string $name
-     * @param array $opts
-     * @return boolean
+     * @param array $args
      */
-    public function log($scope,$name,$opts);
+    public function load($userid, $apikey, $scope, $name, $args);
 
     /**
-     * logs failed request api call including options and error message
+     * Save XML from cache
+     * @param int $userid
+     * @param string $apikey
      * @param string $scope
      * @param string $name
-     * @param array $opts
-     * @param string $message
-     * @return boolean
+     * @param array $args
+     * @param string $xml
      */
-    public function errorLog($scope,$name,$opts,$message);
+    public function save($userid, $apikey, $scope, $name, $args, $xml);
 }

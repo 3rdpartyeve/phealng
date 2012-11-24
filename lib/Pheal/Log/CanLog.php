@@ -1,7 +1,7 @@
 <?php
 /*
  MIT License
- Copyright (c) 2010 - 2012 Peter Petermann
+ Copyright (c) 2010 Daniel Hoffend
 
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -24,11 +24,40 @@
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  OTHER DEALINGS IN THE SOFTWARE.
 */
-namespace Pheal\Exceptions;
+namespace Pheal\Log;
 /**
- * basic Pheal Exception, all Pheal exceptions should be derived from this
+ * Interface that should be implemented by the archive handlers
  */
-class Exception extends \Exception
+interface CanLog
 {
+    /**
+     * Start of measure the response time
+     * @return boolean
+     */
+    public function start();
 
+    /**
+     * Stop of measure the response time
+     * @return boolean
+     */
+    public function stop();
+
+    /**
+     * logs request api call including options
+     * @param string $scope
+     * @param string $name
+     * @param array $opts
+     * @return boolean
+     */
+    public function log($scope,$name,$opts);
+
+    /**
+     * logs failed request api call including options and error message
+     * @param string $scope
+     * @param string $name
+     * @param array $opts
+     * @param string $message
+     * @return boolean
+     */
+    public function errorLog($scope,$name,$opts,$message);
 }
