@@ -7,6 +7,9 @@ namespace Pheal\Fetcher;
  * remember: on some installations, file_get_contents(url) might not be available due to
  * restrictions via allow_url_fopen
  */
+use Pheal\Core\Config;
+use Pheal\Exceptions\ConnectionException;
+
 class File implements CanFetch
 {
     /**
@@ -22,19 +25,19 @@ class File implements CanFetch
         $options = array();
 
         // set custom user agent
-        if(($http_user_agent = \Pheal\Core\Config::getInstance()->http_user_agent) != false)
+        if(($http_user_agent = Config::getInstance()->http_user_agent) != false)
             $options['http']['user_agent'] = $http_user_agent;
 
         // set custom http timeout
-        if(($http_timeout = \Pheal\Core\Config::getInstance()->http_timeout) != false)
+        if(($http_timeout = Config::getInstance()->http_timeout) != false)
             $options['http']['timeout'] = $http_timeout;
 
         // ignore ssl peer verification if needed
         if(substr($url,0,5) == "https")
-            $options['ssl']['verify_peer'] = \Pheal\Core\Config::getInstance()->http_ssl_verifypeer;
+            $options['ssl']['verify_peer'] = Config::getInstance()->http_ssl_verifypeer;
 
         // use post for params
-        if(count($opts) && \Pheal\Core\Config::getInstance()->http_post)
+        if(count($opts) && Config::getInstance()->http_post)
         {
             $options['http']['method'] = 'POST';
             $options['http']['content'] = http_build_query($opts, '', '&');
@@ -75,7 +78,7 @@ class File implements CanFetch
             // set track_errors back to the old value
             ini_set('track_errors',$oldTrackErrors);
 
-            throw new \Pheal\Exceptions\PhealException($message);
+            throw new ConnectionException($message);
 
         // return result
         } else {

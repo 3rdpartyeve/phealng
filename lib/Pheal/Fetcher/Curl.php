@@ -2,6 +2,10 @@
 
 namespace Pheal\Fetcher;
 
+use Pheal\Exceptions\ConnectionException;
+use Pheal\Exceptions\HTTPException;
+use Pheal\Core\Config;
+
 class Curl implements CanFetch
 {
     /**
@@ -30,8 +34,8 @@ class Curl implements CanFetch
      * will throw Exception if http request/curl times out or fails
      * @param String $url url beeing requested
      * @param array $opts an array of query paramters
+     * @throws \Pheal\Exceptions\ConnectionException
      * @throws \Pheal\Exceptions\HTTPException
-     * @throws \Pheal\Exceptions\PhealException
      * @return string raw http response
      */
     public function fetch($url, $opts)
@@ -41,23 +45,23 @@ class Curl implements CanFetch
             self::$curl = curl_init();
 
         // custom user agent
-        if(($http_user_agent = \Pheal\Core\Config::getInstance()->http_user_agent) != false)
+        if(($http_user_agent = Config::getInstance()->http_user_agent) != false)
             curl_setopt(self::$curl, CURLOPT_USERAGENT, $http_user_agent);
 
         // custom outgoing ip address
-        if(($http_interface_ip = \Pheal\Core\Config::getInstance()->http_interface_ip) != false)
+        if(($http_interface_ip = Config::getInstance()->http_interface_ip) != false)
             curl_setopt(self::$curl, CURLOPT_INTERFACE, $http_interface_ip);
 
         // ignore ssl peer verification if needed
         if(substr($url,0,5) == "https")
-            curl_setopt(self::$curl, CURLOPT_SSL_VERIFYPEER, \Pheal\Core\Config::getInstance()->http_ssl_verifypeer);
+            curl_setopt(self::$curl, CURLOPT_SSL_VERIFYPEER, Config::getInstance()->http_ssl_verifypeer);
 
         // http timeout
-        if(($http_timeout = \Pheal\Core\Config::getInstance()->http_timeout) != false)
+        if(($http_timeout = Config::getInstance()->http_timeout) != false)
             curl_setopt(self::$curl, CURLOPT_TIMEOUT, $http_timeout);
 
         // use post for params
-        if(count($opts) && \Pheal\Core\Config::getInstance()->http_post)
+        if(count($opts) && Config::getInstance()->http_post)
         {
             curl_setopt(self::$curl, CURLOPT_POST, true);
             curl_setopt(self::$curl, CURLOPT_POSTFIELDS, $opts);
@@ -75,7 +79,7 @@ class Curl implements CanFetch
         $headers = array();
 
         // enable/disable keepalive
-        if(($http_keepalive = \Pheal\Core\Config::getInstance()->http_keepalive) != false)
+        if(($http_keepalive = Config::getInstance()->http_keepalive) != false)
         {
             curl_setopt(self::$curl, CURLOPT_FORBID_REUSE, false);
             $http_keepalive = ($http_keepalive === true) ? 15 : (int)$http_keepalive;
@@ -103,16 +107,16 @@ class Curl implements CanFetch
         // response http headers
         $httpCode = curl_getinfo(self::$curl, CURLINFO_HTTP_CODE);
 
-        if(!\Pheal\Core\Config::getInstance()->http_keepalive)
+        if(!Config::getInstance()->http_keepalive)
             self::disconnect();
 
         // http errors
         if($httpCode >= 400)
-            throw new \Pheal\Exceptions\HTTPException($httpCode, $url);
+            throw new HTTPException($httpCode, $url);
 
         // curl errors
         if($errno)
-            throw new \Pheal\Exceptions\PhealException($error, $errno);
+            throw new ConnectionException($error, $errno);
         else
             return $result;
 

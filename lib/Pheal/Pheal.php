@@ -28,6 +28,11 @@ namespace Pheal;
 /**
  * Pheal (PHp Eve Api Library), a EAAL Port for PHP
  */
+use Pheal\Exceptions\ConnectionException;
+use Pheal\Core\Config;
+use Pheal\Exceptions\PhealException;
+use Pheal\Core\Result;
+
 class Pheal
 {
     /**
@@ -147,7 +152,7 @@ class Pheal
     public function detectAccess()
     {
         // don't request keyinfo if api keys are not set or if new CAK aren't enabled
-        if(!$this->userid || !$this->key || !\Pheal\Core\Config::getInstance()->api_customkeys)
+        if(!$this->userid || !$this->key || !Config::getInstance()->api_customkeys)
             return false;
 
         // request api key info, save old scope and restore it afterwords
@@ -166,15 +171,20 @@ class Pheal
     /**
      * method will ask caching class for valid xml, if non valid available
      * will make API call, and return the appropriate result
-     * @throws \Pheal\Exceptions\PhealException|\Pheal\Exceptions\APIException|\Pheal\Exceptions\HTTPException
+     *
      * @param string $scope api scope (examples: eve, map, server, ...)
      * @param string $name  api method (examples: ServerStatus, Kills, Sovereignty, ...)
      * @param array $opts   additional arguments (example: characterID => 12345, ...), should not contain apikey/userid/keyid/vcode
+     *
+     * @throws \Exception|\Pheal\Exceptions\ConnectionException
+     * @throws \Pheal\Exceptions\PhealException
+     * @throws \Exception|\HttpException
+     * @throws \Exception
      * @return \Pheal\Core\Result
      */
     private function request_xml($scope, $name, array $opts = array())
     {
-        $opts = array_merge(\Pheal\Core\Config::getInstance()->additional_request_parameters, $opts);
+        $opts = array_merge(Config::getInstance()->additional_request_parameters, $opts);
 
         // apikey/userid/keyid|vcode shouldn't be allowed in arguments and removed to avoid wrong cached api calls
         foreach($opts AS $k => $v) {
@@ -183,8 +193,8 @@ class Pheal
         }
 
         // prepare http arguments + url (to not modify original argument list for cache saving)
-        $url = \Pheal\Core\Config::getInstance()->api_base . $scope . '/' . $name . ".xml.aspx";
-        $use_customkey = (bool)\Pheal\Core\Config::getInstance()->api_customkeys;
+        $url = Config::getInstance()->api_base . $scope . '/' . $name . ".xml.aspx";
+        $use_customkey = (bool)Config::getInstance()->api_customkeys;
         $http_opts = $opts;
         if($this->userid) $http_opts[($use_customkey?'keyID':'userid')] = $this->userid;
         if($this->key) $http_opts[($use_customkey?'vCode':'apikey')] = $this->key;
@@ -192,51 +202,54 @@ class Pheal
         // check access level if given (throws PhealAccessExpception if API call is not allowed)
         if($use_customkey && $this->userid && $this->key && $this->keyType) {
             try {
-                \Pheal\Core\Config::getInstance()->access->check($scope,$name,$this->keyType,$this->accessMask);
+                Config::getInstance()->access->check($scope,$name,$this->keyType,$this->accessMask);
             } catch (\Exception $e) {
-                \Pheal\Core\Config::getInstance()->log->errorLog($scope,$name,$http_opts,$e->getMessage());
+                Config::getInstance()->log->errorLog($scope,$name,$http_opts,$e->getMessage());
                 throw $e;
             }
         }
 
         // check cache first
-        if(!$this->xml = \Pheal\Core\Config::getInstance()->cache->load($this->userid,$this->key,$scope,$name,$opts))
+        if(!$this->xml = Config::getInstance()->cache->load($this->userid,$this->key,$scope,$name,$opts))
         {
             try {
                 // start measure the response time
-                \Pheal\Core\Config::getInstance()->log->start();
+                Config::getInstance()->log->start();
 
                 // request
-                $this->xml = \Pheal\Core\Config::getInstance()->fetcher->fetch($url, $http_opts);
+                $this->xml = Config::getInstance()->fetcher->fetch($url, $http_opts);
 
                 // stop measure the response time
-                \Pheal\Core\Config::getInstance()->log->stop();
+                Config::getInstance()->log->stop();
 
                 // parse
                 $element = new \SimpleXMLElement($this->xml);
 
+                // archive+save only non-error api calls + logging
+                if(!$element->error) {
+                    Config::getInstance()->log->log($scope,$name,$http_opts);
+                    Config::getInstance()->archive->save($this->userid,$this->key,$scope,$name,$opts,$this->xml);
+                } else {
+                    Config::getInstance()->log->errorLog($scope,$name,$http_opts,$element->error['code'] . ': ' . $element->error);
+                }
+
+                Config::getInstance()->cache->save($this->userid,$this->key,$scope,$name,$opts,$this->xml);
             // just forward HTTP Errors
             } catch(\HttpException $e) {
                 throw $e;
-
+            // ensure that connection exceptions are passed on
+            } catch(ConnectionException $e) {
+                throw $e;
             // other request errors
             } catch(\Exception $e) {
                 // log + throw error
-                \Pheal\Core\Config::getInstance()->log->errorLog($scope,$name,$http_opts,$e->getCode() . ': ' . $e->getMessage());
-                throw new \Pheal\Exceptions\PhealException('API Date could not be read / parsed, original exception: ' . $e->getMessage());
+                Config::getInstance()->log->errorLog($scope,$name,$http_opts,$e->getCode() . ': ' . $e->getMessage());
+                throw new PhealException('Original exception: ' . $e->getMessage(), $e->getCode(), $e);
             }
-            \Pheal\Core\Config::getInstance()->cache->save($this->userid,$this->key,$scope,$name,$opts,$this->xml);
-            
-            // archive+save only non-error api calls + logging
-            if(!$element->error) {
-                \Pheal\Core\Config::getInstance()->log->log($scope,$name,$http_opts);
-                \Pheal\Core\Config::getInstance()->archive->save($this->userid,$this->key,$scope,$name,$opts,$this->xml);
-            } else {
-                \Pheal\Core\Config::getInstance()->log->errorLog($scope,$name,$http_opts,$element->error['code'] . ': ' . $element->error);
-            }
+
         } else {
             $element = new \SimpleXMLElement($this->xml);
         }
-        return new \Pheal\Core\Result($element);
+        return new Result($element);
     }
 }
