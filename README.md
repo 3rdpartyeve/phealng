@@ -114,9 +114,9 @@ use Pheal\Core\Config;
 // prompt your user for this, and/or use its database to read those information
 // information like the characterID can be obtained through the EVE API,
 // please check the documentation at http://wiki.eve-id.net/APIv2_Page_Index for more information
-$keyID = 124614;
-$vCode = "DxW5cug4D6UIoeD3QBsdReivAVGwVm37M7J3M3diWVdhlISPZwy9Zp75vScusP6Y";
-$characterID = 179004085;
+$keyID = 123456;
+$vCode = "AbcDEFghYXZadfADFasdFASDFasdfQWERGHADAQerqEFADSFASDfqQER";
+$characterID = 1234567;
 
 // Pheal configuration
 // Pheal may be configured through variables at the \Pheal\Cache\FileStorage Singleton object
