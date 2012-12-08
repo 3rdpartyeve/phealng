@@ -37,6 +37,7 @@ class NullStorage implements CanCache
      * @param string $scope
      * @param string $name
      * @param array $args
+     * @return bool
      */
     public function load($userid, $apikey, $scope, $name, $args)
     {
@@ -51,6 +52,7 @@ class NullStorage implements CanCache
      * @param string $name
      * @param array $args
      * @param string $xml
+     * @return bool
      */
     public function save($userid, $apikey, $scope, $name, $args, $xml)
     {

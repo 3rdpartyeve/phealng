@@ -28,6 +28,8 @@ namespace Pheal\Cache;
 /**
  * Simple filecache for the xml
  */
+use Pheal\Exceptions\PhealException;
+
 class HashedNameFileStorage implements CanCache
 {
     /**
@@ -49,7 +51,7 @@ class HashedNameFileStorage implements CanCache
 
     /**
      * construct PhealFileCache,
-     * @param string $basepath optional string on where to store files, defaults to the current/users/home/.pheal/cache/
+     * @param bool|string $basepath optional string on where to store files, defaults to the current/users/home/.pheal/cache/
      * @param array $options optional config array, valid keys are: delimiter, umask, umask_directory
      */
     public function __construct($basepath = false, $options = array())
@@ -73,6 +75,7 @@ class HashedNameFileStorage implements CanCache
      * @param string $scope
      * @param string $name
      * @param array $args
+     * @throws \Pheal\Exceptions\PhealException
      * @return string
      */
     protected function filename($userid, $apikey, $scope, $name, $args)
@@ -99,7 +102,7 @@ class HashedNameFileStorage implements CanCache
         if(!file_exists($filepath)) {
             // check write access
             if(!is_writable($this->basepath))
-                throw new \Pheal\Exceptions\PhealException(sprintf("Cache directory '%s' isn't writeable", $filepath));
+                throw new PhealException(sprintf("Cache directory '%s' isn't writeable", $filepath));
 
             // create cache folder
             $oldUmask = umask(0);
@@ -109,9 +112,9 @@ class HashedNameFileStorage implements CanCache
         } else {
             // check write access
             if(!is_writable($filepath))
-                throw new \Pheal\Exceptions\PhealException(sprintf("Cache directory '%s' isn't writeable", $filepath));
+                throw new PhealException(sprintf("Cache directory '%s' isn't writeable", $filepath));
             if(file_exists($filename) && !is_writeable($filename))
-                throw new \Pheal\Exceptions\PhealException(sprintf("Cache file '%s' isn't writeable", $filename));
+                throw new PhealException(sprintf("Cache file '%s' isn't writeable", $filename));
         }
         return $filepath . $filename;
     }

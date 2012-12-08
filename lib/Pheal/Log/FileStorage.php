@@ -29,6 +29,8 @@ namespace Pheal\Log;
 /**
  * null log, as a placeholder if no logging is used
  */
+use Pheal\Core\Config;
+
 class FileStorage implements CanLog
 {
     /**
@@ -67,7 +69,7 @@ class FileStorage implements CanLog
 
     /**
      * construct
-     * @param string $basepath optional string on where to store files, defaults to the current/users/home/.pheal/cache/
+     * @param bool|string $basepath optional string on where to store files, defaults to the current/users/home/.pheal/cache/
      * @param array $options optional config array, valid keys are: delimiter, umask, umask_directory
      */
     public function __construct($basepath = false, $options = array())
@@ -120,7 +122,7 @@ class FileStorage implements CanLog
     protected function formatUrl($scope,$name,$opts)
     {
         // create url
-        $url = \Pheal\Core\Config::getInstance()->api_base . $scope . '/' . $name . ".xml.aspx";
+        $url = Config::getInstance()->api_base . $scope . '/' . $name . ".xml.aspx";
 
          // truncacte apikey for log safety
         if($this->options['truncate_apikey'] && count($opts)) {
@@ -129,7 +131,7 @@ class FileStorage implements CanLog
         }
 
         // add post data
-        if(\Pheal\Core\Config::getInstance()->http_post)
+        if(Config::getInstance()->http_post)
             $url .= " DATA: ".http_build_query($opts,'','&');
 
         // add data to url
@@ -191,7 +193,7 @@ class FileStorage implements CanLog
         file_put_contents($filename,
             sprintf($this->options['access_format'],
                 date('r'),                
-                (\Pheal\Core\Config::getInstance()->http_post?'POST':'GET'),
+                (Config::getInstance()->http_post?'POST':'GET'),
                 $this->responseTime,
                 $this->formatUrl($scope,$name,$opts)
             ),
@@ -224,7 +226,7 @@ class FileStorage implements CanLog
         file_put_contents($filename,
             sprintf($this->options['error_format'],
                 date('r'),
-                (\Pheal\Core\Config::getInstance()->http_post?'POST':'GET'),
+                (Config::getInstance()->http_post?'POST':'GET'),
                 $this->responseTime,
                 $this->formatUrl($scope,$name,$opts),
                 $message

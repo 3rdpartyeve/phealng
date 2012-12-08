@@ -102,7 +102,7 @@ class Element implements CanConvertToArray
 
     /**
      * parse SimpleXMLElement
-     * @param SimpleXMLElement $element
+     * @param \SimpleXMLElement $element
      * @return mixed
      */
     public static function parse_element($element)
@@ -137,6 +137,7 @@ class Element implements CanConvertToArray
             } else $value = (String) $element;
 
             $re = new Element($key, $value);
+            /** @var $element \SimpleXMLElement */
             if(count($element->attributes()) > 0)
             {
                 foreach($element->attributes() as $attelem)

@@ -32,7 +32,7 @@ class MemcacheStorage implements CanCache
 {
     /**
      * active memcache instance/connection
-     * @var Memcache
+     * @var \Memcache
      */
     protected $memcache;
 
@@ -94,7 +94,8 @@ class MemcacheStorage implements CanCache
 
     /**
      *  Return the number of seconds the XML is valid. Will never be less than 1.
-     *  @return int
+     * @param string $xml
+     * @return int
      */
     protected function getTimeout($xml)
     {

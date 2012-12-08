@@ -32,6 +32,8 @@ namespace Pheal\Access;
  *
  * new/unknown api calls are allowed by default.
  */
+use Pheal\Exceptions\AccessException;
+
 class StaticCheck implements CanCheck
 {
     /**
@@ -124,6 +126,8 @@ class StaticCheck implements CanCheck
      * @param string $name
      * @param string $keyType
      * @param int $accessMask
+     * @throws \Pheal\Exceptions\AccessException
+     * @return bool
      */
     public function check($scope, $name, $keyType, $accessMask)
     {
@@ -156,7 +160,7 @@ class StaticCheck implements CanCheck
         }
 
         // no match == no access right found.
-        throw new \Pheal\Exceptions\AccessException(sprintf(
+        throw new AccessException(sprintf(
             "Pheal blocked an API call (%s/%s) which is not allowed by the given keyType/accessMask (%s/%d)",
             $scope,
             $name,

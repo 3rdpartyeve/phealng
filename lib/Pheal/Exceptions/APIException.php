@@ -64,14 +64,14 @@ class APIException extends PhealException
      * construct exception with EVE API errorcode, and message
      * @param int $code
      * @param string $message
-     * @param SimpleXMLElement $xml
+     * @param \SimpleXMLElement $xml
      */
     public function  __construct($code, $message, $xml)
     {
         $this->code = (int) $code;
 
         // switch to UTC
-        $oldtz	= date_default_timezone_get();
+        $oldtz = date_default_timezone_get();
         date_default_timezone_set('UTC');
 
         // save request/cache timers (if ccp provides them)

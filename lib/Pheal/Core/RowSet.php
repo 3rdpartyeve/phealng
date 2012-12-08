@@ -39,6 +39,8 @@ class RowSet extends \ArrayObject implements CanConvertToArray
     /**
      * initialize the rowset
      * @param \SimpleXMLElement $xml
+     * @param null $name
+     * @param string $rowname
      * @optional String $name
      * @optional String $rowname
      */

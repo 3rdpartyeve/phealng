@@ -145,7 +145,7 @@ class Config
     public static function getInstance()
     {
         if(is_null(self::$myInstance))
-            self::$myInstance = new \Pheal\Core\Config();
+            self::$myInstance = new Config();
         return self::$myInstance;
     }
 }

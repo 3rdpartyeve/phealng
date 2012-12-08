@@ -36,6 +36,7 @@ class NullCheck implements CanCheck
      * @param string $name
      * @param string $keyType
      * @param int $accessMask
+     * @return bool
      */
     public function check($scope, $name, $keyType, $accessMask)
     {

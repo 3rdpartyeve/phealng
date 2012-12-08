@@ -28,6 +28,8 @@ namespace Pheal\Core;
 /**
  * Pheal Result Object
  */
+use Pheal\Exceptions\APIException;
+
 class Result implements CanConvertToArray
 {
     /**
@@ -88,7 +90,7 @@ class Result implements CanConvertToArray
 
         // error detection
         if($xml->error)
-            throw new Pheal\Exceptions\APIException($xml->error["code"], (String) $xml->error, $xml);
+            throw new APIException($xml->error["code"], (String) $xml->error, $xml);
         $this->_element = Element::parse_element($xml->result);
     }
 
