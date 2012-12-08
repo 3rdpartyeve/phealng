@@ -39,12 +39,12 @@ the following json data:
 ```json
 {
     "require": {
-        "3rdpartyeve/phealng": "dev-master"
+        "3rdpartyeve/phealng": "0.2.1"
     }
 }
 ```
-_Note:_ replace dev-master by what ever version you want to use, dev-master will
-likely be unstable.
+_Note:_ replace 0.2.0 by what ever version you want to use, you can use dev-master
+but it will likely be unstable.
 
 
 #### composer
