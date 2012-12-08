@@ -39,11 +39,11 @@ the following json data:
 ```json
 {
     "require": {
-        "3rdpartyeve/phealng": "0.2.1"
+        "3rdpartyeve/phealng": "0.2.2"
     }
 }
 ```
-_Note:_ replace 0.2.0 by what ever version you want to use, you can use dev-master
+_Note:_ replace 0.2.2 by what ever version you want to use, you can use dev-master
 but it will likely be unstable.
 
 
