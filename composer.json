@@ -1,8 +1,8 @@
 {
-    "name": "3rdpartyeve/pheal",
+    "name": "3rdpartyeve/phealng",
     "description": "PHP Eve Api Library, a simple PHP lib to access the EVE Online API",
     "type": "library",
-    "keywords": ["EVE Online", "Pheal", "EVE API"],
+    "keywords": ["EVE Online", "Pheal", "PhealNG", "EVE API"],
     "homepage": "https://github.com/ppetermann/pheal",
     "license": "MIT",
     "authors": [
@@ -17,10 +17,9 @@
         }
     ],
     "support": {
-        "issues": "https://github.com/ppetermann/pheal/issues"
+        "issues": "https://github.com/3rdpartyeve/phealng/issues"
     },
     "autoload": {
         "psr-0": { "Pheal": "lib/" }
     }
-
 }
