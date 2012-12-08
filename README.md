@@ -197,5 +197,5 @@ if you find any problems with PhealNG, please use githubs issue tracker at https
 ## ACKNOWLEDGEMENTS
 - PhealNG is based on [Pheal](http://github.com/ppetermann/pheal)
 - PhealNG is written in [PHP](http://php.net)
-- Pheal is based on [EAAL](http://github.com/ppetermann/eaal)
+- Pheal is based on [EAAL](http://github.com/3rdpartyeve/eaal)
 - Pheal is build for use of the [EVE Online](http://eveonline.com) API
