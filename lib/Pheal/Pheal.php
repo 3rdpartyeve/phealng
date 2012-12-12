@@ -38,7 +38,7 @@ class Pheal
     /**
      * Version container
      */
-    public static $version = "1.0.0";
+    public static $version = "0.2.4";
 
     /**
      * @var int
