@@ -1,5 +1,5 @@
 # PhealNG
-Copyright (C) 2012 by Peter Petermann
+Copyright (C) 2012, 2013 by Peter Petermann
 All rights reserved.
 
 PhealNG is a refactoring of Pheal to meet more modern PHP development standards, for example to support namespaces
