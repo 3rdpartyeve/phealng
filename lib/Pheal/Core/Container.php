@@ -59,6 +59,16 @@ class Container implements CanConvertToArray
     }
 
     /**
+     * magic method to implement an interface for isset/empty
+     * @param string $name
+     * @return boolean
+     */
+    public function __isset($name)
+    {
+        return isset($this->_container[$name]);
+    }
+
+    /**
      * returns the Object as associated array
      * @return array
      */

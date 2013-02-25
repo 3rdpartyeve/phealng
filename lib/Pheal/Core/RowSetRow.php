@@ -66,6 +66,16 @@ class RowSetRow extends \ArrayObject implements CanConvertToArray
     }
 
     /**
+     * magic function to allow isset/empty
+     * @param string $name
+     * @return boolean
+     */
+    public function __isset($name)
+    {
+        return isset($this[$name]);
+    }
+
+    /**
      * returns the Object as associated array
      * @return array
      */

@@ -103,6 +103,16 @@ class Result implements CanConvertToArray
     {
         return $this->_element->$name;
     }
+    
+    /**
+     * magic method, allow for isset/empty
+     * @param string $name
+     * @return boolean
+     */
+    public function __isset($name) 
+    {
+        return isset($this->_element->$name);
+    }
 
     /**
      * returns the Object as associated array
