@@ -34,7 +34,7 @@ the following json data:
 ```json
 {
     "require": {
-        "3rdpartyeve/phealng": "0.2.6"
+        "3rdpartyeve/phealng": "0.2.7"
     }
 }
 ```
