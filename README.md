@@ -5,10 +5,6 @@ All rights reserved.
 PhealNG is a refactoring of Pheal to meet more modern PHP development standards, for example to support namespaces
 and PSR-0 classloading.
 
-## WARNING
-- This is not stable considered to be stable yet.
-- This is not backward compatible to the original Pheal. While it covers the functionality, some classnames have changed!
-
 ## LICENSE
 Pheal is licensed under a MIT style license, see LICENSE.txt
 for further information
@@ -25,8 +21,7 @@ for further information
 PhealNG will be available as package 3rdpartyeve/phealng through packagist on composer http://getcomposer.org, if you
 don't know composer yet, now is a good time to read up on it.
 
-
-
+You can also download it from github, but life is so much easier with composer!
 
 ## PhealNG Usage
 
@@ -39,11 +34,11 @@ the following json data:
 ```json
 {
     "require": {
-        "3rdpartyeve/phealng": "0.2.2"
+        "3rdpartyeve/phealng": "0.2.6"
     }
 }
 ```
-_Note:_ replace 0.2.2 by what ever version you want to use, you can use dev-master
+_Note:_ replace 0.2.6 by what ever version you want to use, you can use dev-master
 but it will likely be unstable.
 
 
