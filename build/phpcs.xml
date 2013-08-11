@@ -1,0 +1,5 @@
+<ruleset name="DefaultCS">
+ <description>use PSR-2 (and by that PSR-1)</description>
+
+ <rule ref="PSR2"/>
+</ruleset>
