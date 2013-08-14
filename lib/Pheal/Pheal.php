@@ -28,6 +28,7 @@ namespace Pheal;
 /**
  * Pheal (PHp Eve Api Library), a EAAL Port for PHP
  */
+use Pheal\Exceptions\HTTPException;
 use Pheal\Exceptions\ConnectionException;
 use Pheal\Core\Config;
 use Pheal\Exceptions\PhealException;
@@ -176,9 +177,9 @@ class Pheal
      * @param string $name  api method (examples: ServerStatus, Kills, Sovereignty, ...)
      * @param array $opts   additional arguments (example: characterID => 12345, ...), should not contain apikey/userid/keyid/vcode
      *
-     * @throws \Exception|\Pheal\Exceptions\ConnectionException
+     * @throws \Pheal\Exceptions\ConnectionException
      * @throws \Pheal\Exceptions\PhealException
-     * @throws \Exception|\HttpException
+     * @throws \Pheal\Exceptions\HTTPException
      * @throws \Exception
      * @return \Pheal\Core\Result
      */
@@ -243,7 +244,7 @@ class Pheal
 
                 Config::getInstance()->cache->save($this->userid,$this->key,$scope,$name,$opts,$this->xml);
             // just forward HTTP Errors
-            } catch(\HttpException $e) {
+            } catch(HTTPException $e) {
                 throw $e;
             // ensure that connection exceptions are passed on
             } catch(ConnectionException $e) {
