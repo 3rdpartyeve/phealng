@@ -177,9 +177,9 @@ class Pheal
      * @param string $name  api method (examples: ServerStatus, Kills, Sovereignty, ...)
      * @param array $opts   additional arguments (example: characterID => 12345, ...), should not contain apikey/userid/keyid/vcode
      *
-     * @throws \Exception|\Pheal\Exceptions\ConnectionException
+     * @throws \Pheal\Exceptions\ConnectionException
      * @throws \Pheal\Exceptions\PhealException
-     * @throws \Exception|\HttpException
+     * @throws \Pheal\Exceptions\HTTPException
      * @throws \Exception
      * @return \Pheal\Core\Result
      */
