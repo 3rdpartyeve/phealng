@@ -29,6 +29,7 @@ namespace Pheal\Core;
 /**
  * Pheal Result Object
  */
+
 use Pheal\Exceptions\APIException;
 
 class Result implements CanConvertToArray

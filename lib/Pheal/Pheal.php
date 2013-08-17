@@ -29,11 +29,12 @@ namespace Pheal;
 /**
  * Pheal (PHp Eve Api Library), a EAAL Port for PHP
  */
-use Pheal\Exceptions\HTTPException;
-use Pheal\Exceptions\ConnectionException;
+
 use Pheal\Core\Config;
-use Pheal\Exceptions\PhealException;
 use Pheal\Core\Result;
+use Pheal\Exceptions\ConnectionException;
+use Pheal\Exceptions\HTTPException;
+use Pheal\Exceptions\PhealException;
 
 class Pheal
 {

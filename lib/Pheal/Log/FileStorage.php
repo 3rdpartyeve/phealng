@@ -29,6 +29,7 @@ namespace Pheal\Log;
 /**
  * null log, as a placeholder if no logging is used
  */
+
 use Pheal\Core\Config;
 
 class FileStorage implements CanLog
@@ -38,19 +39,16 @@ class FileStorage implements CanLog
      * @var string
      */
     protected $basepath;
-
     /**
      * saved startTime to measure the response time
      * @var float
      */
     protected $startTime = 0;
-
     /**
      * save the response time after stop() or log()
      * @var float
      */
     protected $responseTime = 0;
-
     /**
      * various options for the filecache
      * valid keys are: access_log, error_log, access_format, error_format, trancate_apikey, umask, umask_directory
@@ -80,8 +78,74 @@ class FileStorage implements CanLog
         $this->basepath = $basepath;
 
         // add options
-        if (is_array($options) && count($options))
+        if (is_array($options) && count($options)) {
             $this->options = array_merge($this->options, $options);
+        }
+    }
+
+    /**
+     * Start of measure the response time
+     */
+    public function start()
+    {
+        $this->responseTime = 0;
+        $this->startTime = $this->getmicrotime();
+    }
+
+    /**
+     * returns current microtime
+     * @return float
+     */
+    protected function getmicrotime()
+    {
+        list($usec, $sec) = explode(" ", microtime());
+        return ((float)$usec + (float)$sec);
+    }
+
+    /**
+     * logs request api call including options
+     * @param string $scope
+     * @param string $name
+     * @param array $opts
+     * @return boolean
+     */
+    public function log($scope, $name, $opts)
+    {
+        // stop measure the response time
+        $this->stop();
+
+        // get filename, return if disabled
+        if (!($filename = $this->filename('access_log'))) {
+            return false;
+        }
+
+        // log
+        file_put_contents(
+            $filename,
+            sprintf(
+                $this->options['access_format'],
+                date('r'),
+                (Config::getInstance()->http_post ? 'POST' : 'GET'),
+                $this->responseTime,
+                $this->formatUrl($scope, $name, $opts)
+            ),
+            FILE_APPEND
+        );
+        return true;
+    }
+
+    /**
+     * Stop of measure the response time
+     */
+    public function stop()
+    {
+        if (!$this->startTime) {
+            return false;
+        }
+
+        // calc responseTime
+        $this->responseTime = $this->getmicrotime() - $this->startTime;
+        $this->startTime = 0;
     }
 
     /**
@@ -92,8 +156,9 @@ class FileStorage implements CanLog
     protected function filename($type)
     {
         // get filename
-        if (!($filename = $this->options[$type]))
+        if (!($filename = $this->options[$type])) {
             return false;
+        }
 
         // check for directory
         if (!file_exists($this->basepath)) {
@@ -127,82 +192,23 @@ class FileStorage implements CanLog
 
         // truncacte apikey for log safety
         if ($this->options['truncate_apikey'] && count($opts)) {
-            if (isset($opts['apikey'])) $opts['apikey'] = substr($opts['apikey'], 0, 16) . "...";
-            if (isset($opts['vCode'])) $opts['vCode'] = substr($opts['vCode'], 0, 16) . "...";
+            if (isset($opts['apikey'])) {
+                $opts['apikey'] = substr($opts['apikey'], 0, 16) . "...";
+            }
+            if (isset($opts['vCode'])) {
+                $opts['vCode'] = substr($opts['vCode'], 0, 16) . "...";
+            }
         }
 
         // add post data
-        if (Config::getInstance()->http_post)
+        if (Config::getInstance()->http_post) {
             $url .= " DATA: " . http_build_query($opts, '', '&');
-
-        // add data to url
-        elseif (count($opts))
+        } // add data to url
+        elseif (count($opts)) {
             $url .= '?' . http_build_query($opts, '', '&');
+        }
 
         return $url;
-    }
-
-    /**
-     * returns current microtime
-     * @return float
-     */
-    protected function getmicrotime()
-    {
-        list($usec, $sec) = explode(" ", microtime());
-        return ((float)$usec + (float)$sec);
-    }
-
-    /**
-     * Start of measure the response time
-     */
-    public function start()
-    {
-        $this->responseTime = 0;
-        $this->startTime = $this->getmicrotime();
-    }
-
-    /**
-     * Stop of measure the response time
-     */
-    public function stop()
-    {
-        if (!$this->startTime)
-            return false;
-
-        // calc responseTime
-        $this->responseTime = $this->getmicrotime() - $this->startTime;
-        $this->startTime = 0;
-    }
-
-    /**
-     * logs request api call including options
-     * @param string $scope
-     * @param string $name
-     * @param array $opts
-     * @return boolean
-     */
-    public function log($scope, $name, $opts)
-    {
-        // stop measure the response time
-        $this->stop();
-
-        // get filename, return if disabled
-        if (!($filename = $this->filename('access_log')))
-            return false;
-
-        // log
-        file_put_contents(
-            $filename,
-            sprintf(
-                $this->options['access_format'],
-                date('r'),
-                (Config::getInstance()->http_post ? 'POST' : 'GET'),
-                $this->responseTime,
-                $this->formatUrl($scope, $name, $opts)
-            ),
-            FILE_APPEND
-        );
-        return true;
     }
 
     /**
@@ -219,8 +225,9 @@ class FileStorage implements CanLog
         $this->stop();
 
         // get filename, return if disabled
-        if (!($filename = $this->filename('error_log')))
+        if (!($filename = $this->filename('error_log'))) {
             return false;
+        }
 
         // remove htmltags, newlines, and coherent blanks
         $message = preg_replace("/(\s\s+|[\n\r])/", ' ', strip_tags($message));

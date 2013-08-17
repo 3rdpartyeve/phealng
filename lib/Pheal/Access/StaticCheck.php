@@ -33,6 +33,7 @@ namespace Pheal\Access;
  *
  * new/unknown api calls are allowed by default.
  */
+
 use Pheal\Exceptions\AccessException;
 
 class StaticCheck implements CanCheck

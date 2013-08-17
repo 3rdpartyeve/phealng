@@ -29,6 +29,7 @@ namespace Pheal\Cache;
 /**
  * Simple filecache for the xml
  */
+
 use Pheal\Exceptions\PhealException;
 
 class HashedNameFileStorage implements CanCache
