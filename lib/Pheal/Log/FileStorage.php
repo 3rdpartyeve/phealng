@@ -67,7 +67,7 @@ class FileStorage implements CanLog
 
     /**
      * construct
-     * @param bool|string $basepath optional string on where to store files, defaults to the current/users/home/.pheal/cache/
+     * @param bool|string $basepath optional string on where to store files, defaults to ~/.pheal/cache/
      * @param array $options optional config array, valid keys are: delimiter, umask, umask_directory
      */
     public function __construct($basepath = false, $options = array())

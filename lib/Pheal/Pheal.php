@@ -79,7 +79,7 @@ class Pheal
      * creates new Pheal API object
      * @param int $userid the EVE userid/keyID
      * @param string $key the EVE apikey/vCode
-     * @param string $scope scope to use, defaults to account. scope can be changed during usage by modifycation of public attribute "scope"
+     * @param string $scope to use, defaults to account. can be changed during runtime by modifying attribute "scope"
      */
     public function __construct($userid = null, $key = null, $scope = "account")
     {
@@ -181,8 +181,8 @@ class Pheal
      * will make API call, and return the appropriate result
      *
      * @param string $scope api scope (examples: eve, map, server, ...)
-     * @param string $name  api method (examples: ServerStatus, Kills, Sovereignty, ...)
-     * @param array $opts   additional arguments (example: characterID => 12345, ...), should not contain apikey/userid/keyid/vcode
+     * @param string $name api method (examples: ServerStatus, Kills, Sovereignty, ...)
+     * @param array $opts additional args (example.: characterID => 12345), shouldn't contain apikey/userid/keyid/vcode
      *
      * @throws \Pheal\Exceptions\ConnectionException
      * @throws \Pheal\Exceptions\PhealException
