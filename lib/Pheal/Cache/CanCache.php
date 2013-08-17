@@ -25,6 +25,7 @@
  OTHER DEALINGS IN THE SOFTWARE.
 */
 namespace Pheal\Cache;
+
 /**
  * Interface that should be implemented by the cache handlers
  */

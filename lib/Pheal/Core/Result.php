@@ -25,6 +25,7 @@
  OTHER DEALINGS IN THE SOFTWARE.
 */
 namespace Pheal\Core;
+
 /**
  * Pheal Result Object
  */
@@ -37,20 +38,19 @@ class Result implements CanConvertToArray
      * @var string
      */
     public $request_time;
-    
+
     /**
      * time at which the API got the request as unixtimestamp
      * @var int
-
      */
     public $request_time_unixtime;
-    
+
     /**
      * time till the cache should hold this result
      * @var string
      */
     public $cached_until;
-    
+
     /**
      * time till the cache should hold this result
      * @var string
@@ -70,27 +70,27 @@ class Result implements CanConvertToArray
     public function __construct($xml)
     {
         // switch to UTC
-        $oldtz	= date_default_timezone_get();
+        $oldtz = date_default_timezone_get();
         date_default_timezone_set('UTC');
-        
-        $this->request_time = (string) $xml->currentTime;
-        $this->cached_until = (string) $xml->cachedUntil;
-        $this->request_time_unixtime = (int) strtotime($xml->currentTime);
-        $this->cached_until_unixtime = (int) strtotime($xml->cachedUntil);
-        
+
+        $this->request_time = (string)$xml->currentTime;
+        $this->cached_until = (string)$xml->cachedUntil;
+        $this->request_time_unixtime = (int)strtotime($xml->currentTime);
+        $this->cached_until_unixtime = (int)strtotime($xml->cachedUntil);
+
         // workaround if cachedUntil is missing in API response (request + 1 hour)
-        if(!$this->cached_until)
-        {
-            $this->cached_until_unixtime = $this->request_time_unixtime + 60*60;
-            $this->cached_until = date('Y-m-d H:i:s',$this->cached_until_unixtime);
+        if (!$this->cached_until) {
+            $this->cached_until_unixtime = $this->request_time_unixtime + 60 * 60;
+            $this->cached_until = date('Y-m-d H:i:s', $this->cached_until_unixtime);
         }
-             
+
         // switch back to normal time
         date_default_timezone_set($oldtz);
 
         // error detection
-        if($xml->error)
-            throw new APIException($xml->error["code"], (String) $xml->error, $xml);
+        if ($xml->error) {
+            throw new APIException($xml->error["code"], (String)$xml->error, $xml);
+        }
         $this->_element = Element::parse_element($xml->result);
     }
 
@@ -103,13 +103,13 @@ class Result implements CanConvertToArray
     {
         return $this->_element->$name;
     }
-    
+
     /**
      * magic method, allow for isset/empty
      * @param string $name
      * @return boolean
      */
-    public function __isset($name) 
+    public function __isset($name)
     {
         return isset($this->_element->$name);
     }
@@ -120,13 +120,14 @@ class Result implements CanConvertToArray
      */
     public function toArray()
     {
-        if($this->_element instanceof CanConvertToArray)
+        if ($this->_element instanceof CanConvertToArray) {
             return array(
                 'currentTime' => $this->request_time,
                 'cachedUntil' => $this->cached_until,
                 'result' => $this->_element->toArray()
             );
-        else
+        } else {
             return array();
+        }
     }
 }

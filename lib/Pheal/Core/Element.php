@@ -25,6 +25,7 @@
  OTHER DEALINGS IN THE SOFTWARE.
 */
 namespace Pheal\Core;
+
 /**
  * PhealElement holds elements of the EVE API
  */
@@ -41,7 +42,7 @@ class Element implements CanConvertToArray
      * @var mixed
      */
     public $_value;
-    
+
     /**
      * container containing information that the EVE API stored in XML attributes
      * @var array
@@ -77,8 +78,9 @@ class Element implements CanConvertToArray
      */
     public function __get($name)
     {
-        if(isset($this->_attribs[$name]))
+        if (isset($this->_attribs[$name])) {
             return $this->_attribs[$name];
+        }
         return $this->_value->$name;
     }
 
@@ -89,13 +91,15 @@ class Element implements CanConvertToArray
     public function toArray()
     {
         $return = array();
-        foreach($this->_attribs AS $key => $value)
+        foreach ($this->_attribs AS $key => $value) {
             $return[$key] = $value;
+        }
 
-        if($this->_value instanceof CanConvertToArray)
+        if ($this->_value instanceof CanConvertToArray) {
             $return = array_merge($return, $this->_value->toArray());
-        else
+        } else {
             $return[$this->_name] = $this->_value;
+        }
 
         return $return;
     }
@@ -107,42 +111,36 @@ class Element implements CanConvertToArray
      */
     public static function parse_element($element)
     {
-        if($element->getName() =="rowset")
-        {
+        if ($element->getName() == "rowset") {
             $re = new RowSet($element);
-        }
-        // corp/MemberSecurity workaround
-        elseif($element->getName() == "result" && $element->member)
-        {
+        } // corp/MemberSecurity workaround
+        elseif ($element->getName() == "result" && $element->member) {
             $container = new Container();
-            $container->add_element('members',new PhealRowSet($element,'members','member'));
-            $re = new Element('result',$container);
-        }
-        else
-        {
+            $container->add_element('members', new PhealRowSet($element, 'members', 'member'));
+            $re = new Element('result', $container);
+        } else {
             $key = $element->getName();
             $echilds = $element->children();
-            if(count($echilds) > 0)
-            {
+            if (count($echilds) > 0) {
                 $container = new Container();
-                foreach($echilds as $celement)
-                {
+                foreach ($echilds as $celement) {
                     $cel = Element::parse_element($celement);
-                    if(count($celement->attributes()) > 0)
+                    if (count($celement->attributes()) > 0) {
                         $container->add_element($cel->_name, $cel);
-                    else
+                    } else {
                         $container->add_element($cel->_name, $cel->_value);
+                    }
                 }
                 $value = $container;
-            } else $value = (String) $element;
+            } else {
+                $value = (String)$element;
+            }
 
             $re = new Element($key, $value);
             /** @var $element \SimpleXMLElement */
-            if(count($element->attributes()) > 0)
-            {
-                foreach($element->attributes() as $attelem)
-                {
-                    $re->add_attrib($attelem->getName(), (String) $attelem);
+            if (count($element->attributes()) > 0) {
+                foreach ($element->attributes() as $attelem) {
+                    $re->add_attrib($attelem->getName(), (String)$attelem);
                 }
             }
 

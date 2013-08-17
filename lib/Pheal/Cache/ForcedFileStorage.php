@@ -25,9 +25,10 @@
  OTHER DEALINGS IN THE SOFTWARE.
 */
 namespace Pheal\Cache;
+
 /**
  * Filecache which always validates a cached file to be valid
- * for example and for tests 
+ * for example and for tests
  */
 class ForcedFileStorage extends FileStorage
 {

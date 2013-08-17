@@ -25,6 +25,7 @@
  OTHER DEALINGS IN THE SOFTWARE.
 */
 namespace Pheal\Core;
+
 /**
  * class to implement EVE API RowSets
  */
@@ -44,24 +45,22 @@ class RowSet extends \ArrayObject implements CanConvertToArray
      * @optional String $name
      * @optional String $rowname
      */
-    public function __construct($xml,$name=null,$rowname='row')
+    public function __construct($xml, $name = null, $rowname = 'row')
     {
-        $this->_name = (String) ($name !== null) ? $name : $xml->attributes()->name;
-       
-        foreach($xml->$rowname as $rowxml)
-        {
+        $this->_name = (String)($name !== null) ? $name : $xml->attributes()->name;
+
+        foreach ($xml->$rowname as $rowxml) {
             $row = array();
-            foreach($rowxml->attributes() as $attkey => $attval)
-            {
-                $row[$attkey] = (String) $attval;
+            foreach ($rowxml->attributes() as $attkey => $attval) {
+                $row[$attkey] = (String)$attval;
             }
-            foreach($rowxml->children() as $child) // nested tags in rowset/row
+            foreach ($rowxml->children() as $child) // nested tags in rowset/row
             {
-                $element= Element::parse_element($child);
-                $row[(String) $element->_name] = $element;
+                $element = Element::parse_element($child);
+                $row[(String)$element->_name] = $element;
             }
             $rowObject = new RowSetRow($row);
-            $rowObject->setStringValue((string) $rowxml);
+            $rowObject->setStringValue((string)$rowxml);
             $this->append($rowObject);
         }
     }
@@ -73,9 +72,11 @@ class RowSet extends \ArrayObject implements CanConvertToArray
     public function toArray()
     {
         $return = array();
-        foreach($this AS $row)
-            if($row instanceof CanConvertToArray)
+        foreach ($this AS $row) {
+            if ($row instanceof CanConvertToArray) {
                 $return[] = $row->toArray();
+            }
+        }
 
         return $return;
     }

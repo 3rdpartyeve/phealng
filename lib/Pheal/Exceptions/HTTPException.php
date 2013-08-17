@@ -25,6 +25,7 @@
  OTHER DEALINGS IN THE SOFTWARE.
 */
 namespace Pheal\Exceptions;
+
 /**
  * basic Pheal Http Exception, all Pheal Http exceptions should be derived from this
  */
@@ -39,7 +40,6 @@ class HTTPException extends PhealException
         // Informational 1xx
         100 => "Continue",
         101 => "Switching Protocols",
-
         // Successful 2xx
         200 => "OK",
         201 => "Created",
@@ -48,7 +48,6 @@ class HTTPException extends PhealException
         204 => "No Content",
         205 => "Reset Content",
         206 => "Partial Content",
-
         // Redirection 3xx
         300 => "Multiple Choices",
         301 => "Moved Permanently",
@@ -58,7 +57,6 @@ class HTTPException extends PhealException
         305 => "Use Proxy",
         306 => "(Unused)",
         307 => "Temporary Redirect",
-
         // Client Error 4xx
         400 => "Bad Request",
         401 => "Unauthorized",
@@ -78,7 +76,6 @@ class HTTPException extends PhealException
         415 => "Unsupported Media Type",
         416 => "Requested Range Not Satisfiable",
         417 => "Expectation Failed",
-
         // Server Error 5xx
         500 => "Internal Server Error",
         501 => "Not Implemented",
@@ -102,7 +99,7 @@ class HTTPException extends PhealException
     public function  __construct($code, $url)
     {
         // safe url and strip apikey for security reasons
-        $this->url = preg_replace("/(apikey=)[a-z0-9]*/i","\\1...",$url);
+        $this->url = preg_replace("/(apikey=)[a-z0-9]*/i", "\\1...", $url);
 
         // build error message
         $message = self::$codes[$code] ? self::$codes[$code] : 'Unknown HTTP Code';

@@ -25,6 +25,7 @@
  OTHER DEALINGS IN THE SOFTWARE.
 */
 namespace Pheal\Exceptions;
+
 /**
  * basic Pheal Exception, all Pheal exceptions should be derived from this
  */

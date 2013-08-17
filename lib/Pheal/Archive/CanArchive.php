@@ -25,6 +25,7 @@
  OTHER DEALINGS IN THE SOFTWARE.
 */
 namespace Pheal\Archive;
+
 /**
  * Interface that should be implemented by the archive handlers
  */

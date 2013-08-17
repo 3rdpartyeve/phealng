@@ -25,6 +25,7 @@
  OTHER DEALINGS IN THE SOFTWARE.
 */
 namespace Pheal\Cache;
+
 /**
  * null cache, as a placeholder if no cache is used
  */

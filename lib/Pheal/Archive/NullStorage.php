@@ -25,6 +25,7 @@
  OTHER DEALINGS IN THE SOFTWARE.
 */
 namespace Pheal\Archive;
+
 /**
  * null archive, as a placeholder if no cache is used
  */

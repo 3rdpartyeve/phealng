@@ -25,6 +25,7 @@
  OTHER DEALINGS IN THE SOFTWARE.
 */
 namespace Pheal\Core;
+
 /**
  * Container Class
  * all elements in the container should be available by PhealContainer->keyname
@@ -43,7 +44,7 @@ class Container implements CanConvertToArray
      */
     public function add_element($key, $val)
     {
-        $this->_container = array_merge($this->_container, array((String) $key => $val));
+        $this->_container = array_merge($this->_container, array((String)$key => $val));
     }
 
     /**
@@ -53,8 +54,9 @@ class Container implements CanConvertToArray
      */
     public function  __get($name)
     {
-        if(isset($this->_container[$name]))
-                return $this->_container[$name];
+        if (isset($this->_container[$name])) {
+            return $this->_container[$name];
+        }
         return null;
     }
 
@@ -75,8 +77,9 @@ class Container implements CanConvertToArray
     public function toArray()
     {
         $return = array();
-        foreach($this->_container AS $key => $value)
+        foreach ($this->_container AS $key => $value) {
             $return[$key] = ($value instanceof CanConvertToArray) ? $value->toArray() : $value;
+        }
 
         return $return;
     }

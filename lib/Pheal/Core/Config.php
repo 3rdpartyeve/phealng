@@ -25,8 +25,9 @@
  OTHER DEALINGS IN THE SOFTWARE.
 */
 namespace Pheal\Core;
+
 /**
- * PhealConfig, implementing Singleton this is meant to 
+ * PhealConfig, implementing Singleton this is meant to
  * store all Library configuration, like cache etc.
  * to change the default config you can for example do:
  * PhealConfig::getInstance()->cache = new CacheObject();
@@ -86,20 +87,20 @@ class Config
      * @var String
      */
     public $http_interface_ip = false;
-    
+
     /**
      * which useragent should be used for http calls.
      * (bool) false means do not change php default
      * @var String
      */
     public $http_user_agent = false;
-    
+
     /**
      * should parameters be transfered in the POST body request or via GET request
      * @var bool
      */
     public $http_post = false;
-    
+
     /**
      * After what time should an api call considered to as timeout?
      * @var int
@@ -144,8 +145,9 @@ class Config
      */
     public static function getInstance()
     {
-        if(is_null(self::$myInstance))
+        if (is_null(self::$myInstance)) {
             self::$myInstance = new Config();
+        }
         return self::$myInstance;
     }
 }

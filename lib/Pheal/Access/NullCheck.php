@@ -25,6 +25,7 @@
  OTHER DEALINGS IN THE SOFTWARE.
 */
 namespace Pheal\Access;
+
 /**
  * null access, as a placeholder if no access verification is used
  */

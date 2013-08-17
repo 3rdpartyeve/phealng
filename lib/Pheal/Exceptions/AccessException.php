@@ -25,6 +25,7 @@
  OTHER DEALINGS IN THE SOFTWARE.
 */
 namespace Pheal\Exceptions;
+
 /**
  * Pheal Access Exception. Should be thrown when Pheal dedects a not allowed API Call based on accessMask
  */

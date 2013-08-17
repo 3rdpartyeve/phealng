@@ -7,6 +7,7 @@ namespace Pheal\Fetcher;
  * remember: on some installations, file_get_contents(url) might not be available due to
  * restrictions via allow_url_fopen
  */
+
 use Pheal\Core\Config;
 use Pheal\Exceptions\ConnectionException;
 
@@ -25,26 +26,26 @@ class File implements CanFetch
         $options = array();
 
         // set custom user agent
-        if(($http_user_agent = Config::getInstance()->http_user_agent) != false)
+        if (($http_user_agent = Config::getInstance()->http_user_agent) != false) {
             $options['http']['user_agent'] = $http_user_agent;
+        }
 
         // set custom http timeout
-        if(($http_timeout = Config::getInstance()->http_timeout) != false)
+        if (($http_timeout = Config::getInstance()->http_timeout) != false) {
             $options['http']['timeout'] = $http_timeout;
+        }
 
         // ignore ssl peer verification if needed
-        if(substr($url,0,5) == "https")
+        if (substr($url, 0, 5) == "https") {
             $options['ssl']['verify_peer'] = Config::getInstance()->http_ssl_verifypeer;
+        }
 
         // use post for params
-        if(count($opts) && Config::getInstance()->http_post)
-        {
+        if (count($opts) && Config::getInstance()->http_post) {
             $options['http']['method'] = 'POST';
             $options['http']['content'] = http_build_query($opts, '', '&');
-        }
-        // else build url parameters
-        elseif(count($opts))
-        {
+        } // else build url parameters
+        elseif (count($opts)) {
             $url .= "?" . http_build_query($opts, '', '&');
         }
 
@@ -54,8 +55,7 @@ class File implements CanFetch
 
         // create context with options and request api call
         // suppress the 'warning' message which we'll catch later with $php_errormsg
-        if(count($options))
-        {
+        if (count($options)) {
             $context = stream_context_create($options);
             $result = @file_get_contents($url, false, $context);
         } else {
@@ -64,26 +64,28 @@ class File implements CanFetch
 
         // check for http errors via magic $http_response_header
         $httpCode = 200;
-        if(isset($http_response_header[0]))
-            list($httpVersion,$httpCode,$httpMsg) = explode(' ', $http_response_header[0], 3);
+        if (isset($http_response_header[0])) {
+            list($httpVersion, $httpCode, $httpMsg) = explode(' ', $http_response_header[0], 3);
+        }
 
         // throw http error
-        if(is_numeric($httpCode) && $httpCode >= 400)
+        if (is_numeric($httpCode) && $httpCode >= 400) {
             throw new \Pheal\Exceptions\HTTPException($httpCode, $url);
+        }
 
         // throw error
-        if($result === false) {
+        if ($result === false) {
             $message = ($php_errormsg ? $php_errormsg : 'HTTP Request Failed');
 
             // set track_errors back to the old value
-            ini_set('track_errors',$oldTrackErrors);
+            ini_set('track_errors', $oldTrackErrors);
 
             throw new ConnectionException($message);
 
-        // return result
+            // return result
         } else {
             // set track_errors back to the old value
-            ini_set('track_errors',$oldTrackErrors);
+            ini_set('track_errors', $oldTrackErrors);
             return $result;
         }
 

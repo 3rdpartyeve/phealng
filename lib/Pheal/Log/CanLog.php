@@ -25,6 +25,7 @@
  OTHER DEALINGS IN THE SOFTWARE.
 */
 namespace Pheal\Log;
+
 /**
  * Interface that should be implemented by the archive handlers
  */
@@ -49,7 +50,7 @@ interface CanLog
      * @param array $opts
      * @return boolean
      */
-    public function log($scope,$name,$opts);
+    public function log($scope, $name, $opts);
 
     /**
      * logs failed request api call including options and error message
@@ -59,5 +60,5 @@ interface CanLog
      * @param string $message
      * @return boolean
      */
-    public function errorLog($scope,$name,$opts,$message);
+    public function errorLog($scope, $name, $opts, $message);
 }

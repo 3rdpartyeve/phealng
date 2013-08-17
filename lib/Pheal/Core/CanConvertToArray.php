@@ -25,6 +25,7 @@
  OTHER DEALINGS IN THE SOFTWARE.
 */
 namespace Pheal\Core;
+
 /**
  * Interface that should be implemented the toArray Method (for Pheal API Result Objects)
  */

@@ -25,6 +25,7 @@
  OTHER DEALINGS IN THE SOFTWARE.
 */
 namespace Pheal\Log;
+
 /**
  * null log, as a placeholder if no logging is used
  */
@@ -55,7 +56,7 @@ class NullStorage implements CanLog
      * @param array $opts
      * @return boolean
      */
-    public function log($scope,$name,$opts)
+    public function log($scope, $name, $opts)
     {
         return true;
     }
@@ -68,7 +69,7 @@ class NullStorage implements CanLog
      * @param string $message
      * @return boolean
      */
-    public function errorLog($scope,$name,$opts,$message)
+    public function errorLog($scope, $name, $opts, $message)
     {
         return true;
     }

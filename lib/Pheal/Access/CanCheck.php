@@ -26,6 +26,7 @@
 */
 
 namespace Pheal\Access;
+
 /**
  * Interface that should be implemented by the access handlers
  */

@@ -25,6 +25,7 @@
  OTHER DEALINGS IN THE SOFTWARE.
 */
 namespace Pheal\Cache;
+
 /**
  * Implememnts memcached into Pheal
  */
@@ -52,8 +53,9 @@ class MemcacheStorage implements CanCache
     public function __construct($options = array())
     {
         // add options
-        if(is_array($options) && count($options))
+        if (is_array($options) && count($options)) {
             $this->options = array_merge($this->options, $options);
+        }
 
         $this->memcache = new \Memcache();
         $this->memcache->connect($this->options['host'], $this->options['port']);
@@ -68,12 +70,13 @@ class MemcacheStorage implements CanCache
      * @param array $args
      * @return string
      */
-    protected function getKey($userid, $apikey, $scope, $name, $args) 
+    protected function getKey($userid, $apikey, $scope, $name, $args)
     {
         $key = "$userid|$apikey|$scope|$name";
-        foreach($args as $k=>$v) {
-            if(!in_array(strtolower($key), array('userid','apikey','keyid','vcode')))
-                $key  .= "|$k|$v";
+        foreach ($args as $k => $v) {
+            if (!in_array(strtolower($key), array('userid', 'apikey', 'keyid', 'vcode'))) {
+                $key .= "|$k|$v";
+            }
         }
         return "Pheal_" . md5($key);
     }
@@ -103,7 +106,7 @@ class MemcacheStorage implements CanCache
         date_default_timezone_set("UTC");
 
         $xml = new \SimpleXMLElement($xml);
-        $dt = (int) strtotime($xml->cachedUntil);
+        $dt = (int)strtotime($xml->cachedUntil);
         $time = time();
 
         date_default_timezone_set($tz);
@@ -119,7 +122,7 @@ class MemcacheStorage implements CanCache
      * @param array $args
      * @param string $xml
      */
-    public function save($userid,$apikey,$scope,$name,$args,$xml)
+    public function save($userid, $apikey, $scope, $name, $args, $xml)
     {
         $key = $this->getKey($userid, $apikey, $scope, $name, $args);
         $timeout = $this->getTimeout($xml);

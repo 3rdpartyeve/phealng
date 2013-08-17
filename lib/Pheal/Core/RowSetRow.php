@@ -25,6 +25,7 @@
  OTHER DEALINGS IN THE SOFTWARE.
 */
 namespace Pheal\Core;
+
 /**
  * RowSetRow, extends array object to allow
  * usage as array
@@ -33,23 +34,23 @@ class RowSetRow extends \ArrayObject implements CanConvertToArray
 {
 
     /**
-    * @var string if the element has a specific string value, 
-    * it can be stored here;
-    */
-    private $_stringValue = null; 
+     * @var string if the element has a specific string value,
+     * it can be stored here;
+     */
+    private $_stringValue = null;
 
     /**
-    * set string value of row
-    * @param string $string 
-    */ 
+     * set string value of row
+     * @param string $string
+     */
     public function setStringValue($string)
     {
         $this->_stringValue = $string;
     }
 
     /**
-    * Magic __toString method, will return stringvalue of row
-    */ 
+     * Magic __toString method, will return stringvalue of row
+     */
     public function __toString()
     {
         return $this->_stringValue;
@@ -82,12 +83,14 @@ class RowSetRow extends \ArrayObject implements CanConvertToArray
     public function toArray()
     {
         $return = array();
-        foreach($this AS $key => $value)
+        foreach ($this AS $key => $value) {
             $return[$key] = ($value instanceof CanConvertToArray) ? $value->toArray() : $value;
-        
-        if($this->_stringValue)
+        }
+
+        if ($this->_stringValue) {
             $return['_stringValue'] = $this->_stringValue;
-        
+        }
+
         return $return;
     }
 }

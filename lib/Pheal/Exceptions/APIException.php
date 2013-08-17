@@ -25,6 +25,7 @@
  OTHER DEALINGS IN THE SOFTWARE.
 */
 namespace Pheal\Exceptions;
+
 /**
  * Exception to be thrown if the EVE API returns an error
  */
@@ -68,20 +69,20 @@ class APIException extends PhealException
      */
     public function  __construct($code, $message, $xml)
     {
-        $this->code = (int) $code;
+        $this->code = (int)$code;
 
         // switch to UTC
         $oldtz = date_default_timezone_get();
         date_default_timezone_set('UTC');
 
         // save request/cache timers (if ccp provides them)
-        if($xml->currentTime) {
-            $this->request_time = (string) $xml->currentTime;
-            $this->request_time_unixtime = (int) strtotime($xml->currentTime);
+        if ($xml->currentTime) {
+            $this->request_time = (string)$xml->currentTime;
+            $this->request_time_unixtime = (int)strtotime($xml->currentTime);
         }
-        if($xml->cachedUntil) {
-            $this->cached_until = (string) $xml->cachedUntil;
-            $this->cached_until_unixtime = (int) strtotime($xml->cachedUntil);
+        if ($xml->cachedUntil) {
+            $this->cached_until = (string)$xml->cachedUntil;
+            $this->cached_until_unixtime = (int)strtotime($xml->cachedUntil);
         }
 
         // switch back to normal time
