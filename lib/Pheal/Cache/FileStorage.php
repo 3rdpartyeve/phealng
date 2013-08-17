@@ -79,6 +79,7 @@ class FileStorage implements CanCache
      * @param string $scope
      * @param string $name
      * @param array $args
+     * @throws \Pheal\Exceptions\PhealException
      * @return string
      */
     protected function filename($userid, $apikey, $scope, $name, $args)
