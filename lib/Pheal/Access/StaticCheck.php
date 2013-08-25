@@ -165,12 +165,14 @@ class StaticCheck implements CanCheck
         }
 
         // no match == no access right found.
-        throw new AccessException(sprintf(
-            "Pheal blocked an API call (%s/%s) which is not allowed by the given keyType/accessMask (%s/%d)",
-            $scope,
-            $name,
-            $keyType,
-            $accessMask
-        ));
+        throw new AccessException(
+            sprintf(
+                "Pheal blocked an API call (%s/%s) which is not allowed by the given keyType/accessMask (%s/%d)",
+                $scope,
+                $name,
+                $keyType,
+                $accessMask
+            )
+        );
     }
 }
