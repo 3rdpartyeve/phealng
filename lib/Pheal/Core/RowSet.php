@@ -56,7 +56,7 @@ class RowSet extends \ArrayObject implements CanConvertToArray
             }
             foreach ($rowxml->children() as $child) // nested tags in rowset/row
             {
-                $element = Element::parse_element($child);
+                $element = Element::parseElement($child);
                 $row[(String)$element->_name] = $element;
             }
             $rowObject = new RowSetRow($row);

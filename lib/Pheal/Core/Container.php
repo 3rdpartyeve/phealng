@@ -42,7 +42,7 @@ class Container implements CanConvertToArray
      * @param string $key
      * @param mixed $val
      */
-    public function add_element($key, $val)
+    public function addElement($key, $val)
     {
         $this->_container = array_merge($this->_container, array((String)$key => $val));
     }

@@ -88,6 +88,7 @@ class MemcacheStorage implements CanCache
      * @param string $scope
      * @param string $name
      * @param array $args
+     * @return array|string
      */
     public function load($userid, $apikey, $scope, $name, $args)
     {

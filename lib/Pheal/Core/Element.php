@@ -65,7 +65,7 @@ class Element implements CanConvertToArray
      * @param string $key
      * @param string $val
      */
-    public function add_attrib($key, $val)
+    public function addAttrib($key, $val)
     {
         $this->_attribs = array_merge(array($key => $val), $this->_attribs);
     }
@@ -109,14 +109,14 @@ class Element implements CanConvertToArray
      * @param \SimpleXMLElement $element
      * @return mixed
      */
-    public static function parse_element($element)
+    public static function parseElement($element)
     {
         if ($element->getName() == "rowset") {
             $re = new RowSet($element);
         } // corp/MemberSecurity workaround
         elseif ($element->getName() == "result" && $element->member) {
             $container = new Container();
-            $container->add_element('members', new PhealRowSet($element, 'members', 'member'));
+            $container->addElement('members', new PhealRowSet($element, 'members', 'member'));
             $re = new Element('result', $container);
         } else {
             $key = $element->getName();
@@ -124,11 +124,11 @@ class Element implements CanConvertToArray
             if (count($echilds) > 0) {
                 $container = new Container();
                 foreach ($echilds as $celement) {
-                    $cel = Element::parse_element($celement);
+                    $cel = Element::parseElement($celement);
                     if (count($celement->attributes()) > 0) {
-                        $container->add_element($cel->_name, $cel);
+                        $container->addElement($cel->_name, $cel);
                     } else {
-                        $container->add_element($cel->_name, $cel->_value);
+                        $container->addElement($cel->_name, $cel->_value);
                     }
                 }
                 $value = $container;
@@ -140,7 +140,7 @@ class Element implements CanConvertToArray
             /** @var $element \SimpleXMLElement */
             if (count($element->attributes()) > 0) {
                 foreach ($element->attributes() as $attelem) {
-                    $re->add_attrib($attelem->getName(), (String)$attelem);
+                    $re->addAttrib($attelem->getName(), (String)$attelem);
                 }
             }
 

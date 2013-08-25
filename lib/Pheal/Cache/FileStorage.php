@@ -147,7 +147,7 @@ class FileStorage implements CanCache
             return false;
         }
         $xml = file_get_contents($filename);
-        if ($this->validate_cache($xml)) {
+        if ($this->validateCache($xml)) {
             return $xml;
         }
         return false;
@@ -160,7 +160,7 @@ class FileStorage implements CanCache
      * @param string $xml
      * @return boolean
      */
-    public function validate_cache($xml)
+    public function validateCache($xml)
     {
         $tz = date_default_timezone_get();
         date_default_timezone_set("UTC");

@@ -41,7 +41,7 @@ class Pheal
     /**
      * Version container
      */
-    public static $version = "0.2.7";
+    public static $version = "0.3.0";
 
     /**
      * @var int
@@ -100,7 +100,7 @@ class Pheal
             $arguments[0] = array();
         }
         $scope = $this->scope;
-        return $this->request_xml($scope, $name, $arguments[0]); // we only use the
+        return $this->requestXml($scope, $name, $arguments[0]); // we only use the
         //first argument params need to be passed as an array, due to naming
 
     }
@@ -190,7 +190,7 @@ class Pheal
      * @throws \Exception
      * @return \Pheal\Core\Result
      */
-    private function request_xml($scope, $name, array $opts = array())
+    private function requestXml($scope, $name, array $opts = array())
     {
         $opts = array_merge(Config::getInstance()->additional_request_parameters, $opts);
 

@@ -37,7 +37,7 @@ class ForcedFileStorage extends FileStorage
      * @param string $xml
      * @return boolean
      */
-    public function validate_cache($xml)
+    public function validateCache($xml)
     {
         return true;
     }
