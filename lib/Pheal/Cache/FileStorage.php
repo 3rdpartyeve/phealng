@@ -98,10 +98,10 @@ class FileStorage implements CanCache
                 unset($args[$key]);
             } elseif (!in_array(strtolower($key), array('userid', 'apikey', 'keyid', 'vcode'))) {
                 $argstr .= preg_replace($regexp, '_', $key) . $this->options['delimiter'] . preg_replace(
-                        $regexp,
-                        '_',
-                        $val
-                    ) . $this->options['delimiter'];
+                    $regexp,
+                    '_',
+                    $val
+                ) . $this->options['delimiter'];
             }
         }
         $argstr = substr($argstr, 0, -1);

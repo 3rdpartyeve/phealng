@@ -98,10 +98,10 @@ class HashedNameFileStorage implements CanCache
                 unset($args[$key]);
             } elseif (!in_array(strtolower($key), array('userid', 'apikey', 'keyid', 'vcode'))) {
                 $argstr .= preg_replace($regexp, '_', $key) . $this->options['delimiter'] . preg_replace(
-                        $regexp,
-                        '_',
-                        $val
-                    ) . $this->options['delimiter'];
+                    $regexp,
+                    '_',
+                    $val
+                ) . $this->options['delimiter'];
             }
         }
         $argstr = substr($argstr, 0, -1);
@@ -138,6 +138,7 @@ class HashedNameFileStorage implements CanCache
      * @param string $scope
      * @param string $name
      * @param array $args
+     * @return bool|string
      */
     public function load($userid, $apikey, $scope, $name, $args)
     {
