@@ -71,7 +71,7 @@ class RowSet extends \ArrayObject implements CanConvertToArray
     public function toArray()
     {
         $return = array();
-        foreach ($this AS $row) {
+        foreach ($this as $row) {
             if ($row instanceof CanConvertToArray) {
                 $return[] = $row->toArray();
             }

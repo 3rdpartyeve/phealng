@@ -77,7 +77,7 @@ class Container implements CanConvertToArray
     public function toArray()
     {
         $return = array();
-        foreach ($this->_container AS $key => $value) {
+        foreach ($this->_container as $key => $value) {
             $return[$key] = ($value instanceof CanConvertToArray) ? $value->toArray() : $value;
         }
 

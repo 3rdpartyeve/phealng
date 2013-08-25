@@ -159,7 +159,7 @@ class StaticCheck implements CanCheck
 
             // fix if multiple accessbits are valid (eve/CharacterInfo)
             //elseif(is_array($check[1]))
-            //    foreach($check[1] AS $checkbit)
+            //    foreach($check[1] as $checkbit)
             //        if($checkbit && $checkbit & $accessMask)
             //            return true;
         }

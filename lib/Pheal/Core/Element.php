@@ -91,7 +91,7 @@ class Element implements CanConvertToArray
     public function toArray()
     {
         $return = array();
-        foreach ($this->_attribs AS $key => $value) {
+        foreach ($this->_attribs as $key => $value) {
             $return[$key] = $value;
         }
 
