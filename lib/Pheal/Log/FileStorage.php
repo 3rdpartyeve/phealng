@@ -203,8 +203,7 @@ class FileStorage implements CanLog
         // add post data
         if (Config::getInstance()->http_post) {
             $url .= " DATA: " . http_build_query($opts, '', '&');
-        } // add data to url
-        elseif (count($opts)) {
+        } elseif (count($opts)) { // add data to url
             $url .= '?' . http_build_query($opts, '', '&');
         }
 

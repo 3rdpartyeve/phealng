@@ -44,8 +44,7 @@ class File implements CanFetch
         if (count($opts) && Config::getInstance()->http_post) {
             $options['http']['method'] = 'POST';
             $options['http']['content'] = http_build_query($opts, '', '&');
-        } // else build url parameters
-        elseif (count($opts)) {
+        } elseif (count($opts)) { // else build url parameters
             $url .= "?" . http_build_query($opts, '', '&');
         }
 

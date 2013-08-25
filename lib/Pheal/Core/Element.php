@@ -113,8 +113,7 @@ class Element implements CanConvertToArray
     {
         if ($element->getName() == "rowset") {
             $re = new RowSet($element);
-        } // corp/MemberSecurity workaround
-        elseif ($element->getName() == "result" && $element->member) {
+        } elseif ($element->getName() == "result" && $element->member) { // corp/MemberSecurity workaround
             $container = new Container();
             $container->addElement('members', new PhealRowSet($element, 'members', 'member'));
             $re = new Element('result', $container);
