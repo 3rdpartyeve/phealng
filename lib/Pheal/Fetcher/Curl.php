@@ -114,6 +114,19 @@ class Curl implements CanFetch
 
         // http errors
         if ($httpCode >= 400) {
+            // ccp is using error codes even if they send a valid application 
+            // error response now, so we have to use the content as result 
+            // for some of the errors. This will actually break if CCP ever uses
+            // the HTTP Status for an actual transport related error.
+            switch($httpCode) {
+                case 400:
+                case 403:
+                case 500:
+                case 503: 
+                    return $result;
+                    break;
+                default:
+            }
             throw new HTTPException($httpCode, $url);
         }
 

@@ -6,6 +6,8 @@ namespace Pheal\Fetcher;
  * filefetcher, which uses file_get_contents to fetch the api data
  * remember: on some installations, file_get_contents(url) might not be available due to
  * restrictions via allow_url_fopen
+ * this handler is unable to process error responses by ccp which have an http error
+ * status code, since file_get_contents retursn false in that case
  */
 
 use Pheal\Core\Config;
@@ -66,7 +68,7 @@ class File implements CanFetch
         if (isset($http_response_header[0])) {
             list($httpVersion, $httpCode, $httpMsg) = explode(' ', $http_response_header[0], 3);
         }
-
+        
         // throw http error
         if (is_numeric($httpCode) && $httpCode >= 400) {
             throw new \Pheal\Exceptions\HTTPException($httpCode, $url);
