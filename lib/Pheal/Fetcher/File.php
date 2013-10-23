@@ -27,6 +27,9 @@ class File implements CanFetch
     {
         $options = array();
 
+        $options['http'] = array();
+        $options['http']['ignore_errors'] = true;
+
         // set custom user agent
         if (($http_user_agent = Config::getInstance()->http_user_agent) != false) {
             $options['http']['user_agent'] = $http_user_agent;
@@ -58,7 +61,7 @@ class File implements CanFetch
         // suppress the 'warning' message which we'll catch later with $php_errormsg
         if (count($options)) {
             $context = stream_context_create($options);
-            $result = @file_get_contents($url, false, $context);
+            $result = file_get_contents($url, false, $context);
         } else {
             $result = @file_get_contents($url);
         }
@@ -68,11 +71,24 @@ class File implements CanFetch
         if (isset($http_response_header[0])) {
             list($httpVersion, $httpCode, $httpMsg) = explode(' ', $http_response_header[0], 3);
         }
-        
-        // throw http error
+        // http errors
         if (is_numeric($httpCode) && $httpCode >= 400) {
+            // ccp is using error codes even if they send a valid application 
+            // error response now, so we have to use the content as result 
+            // for some of the errors. This will actually break if CCP ever uses
+            // the HTTP Status for an actual transport related error.
+            switch($httpCode) {
+                case 400:
+                case 403:
+                case 500:
+                case 503:
+                    return $result;
+                    break;
+                default:
+            }
             throw new \Pheal\Exceptions\HTTPException($httpCode, $url);
         }
+
 
         // throw error
         if ($result === false) {
