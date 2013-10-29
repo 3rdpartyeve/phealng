@@ -41,7 +41,7 @@ class Pheal
     /**
      * Version container
      */
-    public static $version = "0.3.3";
+    public static $version = "0.3.4";
 
     /**
      * @var int
@@ -279,7 +279,7 @@ class Pheal
             }
 
         } else {
-            $element = new \SimpleXMLElement($this->xml);
+            $element = @new \SimpleXMLElement($this->xml);
         }
         return new Result($element);
     }
