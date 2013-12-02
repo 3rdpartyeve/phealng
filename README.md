@@ -1,4 +1,7 @@
 # PhealNG
+[![Latest Stable Version](https://poser.pugx.org/3rdpartyeve/phealng/v/stable.png)](https://packagist.org/packages/3rdpartyeve/phealng)
+[![Total Downloads](https://poser.pugx.org/3rdpartyeve/phealng/downloads.png)](https://packagist.org/packages/3rdpartyeve/phealng)
+
 Copyright (C) 2012, 2013 by Peter Petermann
 All rights reserved.
 
@@ -41,7 +44,7 @@ the following json data:
 _Note:_ replace 0.2.6 by what ever version you want to use, you can use dev-master
 but it will likely be unstable.
 
-
+_Hint:_ [![Latest Stable Version](https://poser.pugx.org/3rdpartyeve/phealng/v/stable.png)](https://packagist.org/packages/3rdpartyeve/phealng)
 #### composer
 Composer is a tool intended to manage dependencies in PHP applications.
 If you haven't installed composer yet, checkout the composer installation here:
