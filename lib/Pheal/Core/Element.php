@@ -54,7 +54,7 @@ class Element implements CanConvertToArray
      * @param string $name
      * @param mixed $value
      */
-    protected function  __construct($name, $value)
+    protected function __construct($name, $value)
     {
         $this->_name = $name;
         $this->_value = $value;

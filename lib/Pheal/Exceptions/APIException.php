@@ -67,7 +67,7 @@ class APIException extends PhealException
      * @param string $message
      * @param \SimpleXMLElement $xml
      */
-    public function  __construct($code, $message, $xml)
+    public function __construct($code, $message, $xml)
     {
         $this->code = (int)$code;
 

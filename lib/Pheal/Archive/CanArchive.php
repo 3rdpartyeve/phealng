@@ -39,6 +39,7 @@ interface CanArchive
      * @param string $name
      * @param array $args
      * @param string $xml
+     * @return null|boolean
      */
     public function save($userid, $apikey, $scope, $name, $args, $xml);
 }

@@ -138,7 +138,7 @@ class FileStorage implements CanCache
      * @param string $scope
      * @param string $name
      * @param array $args
-     * @return bool|string
+     * @return false|string
      */
     public function load($userid, $apikey, $scope, $name, $args)
     {

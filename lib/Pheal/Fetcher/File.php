@@ -73,8 +73,8 @@ class File implements CanFetch
         }
         // http errors
         if (is_numeric($httpCode) && $httpCode >= 400) {
-            // ccp is using error codes even if they send a valid application 
-            // error response now, so we have to use the content as result 
+            // ccp is using error codes even if they send a valid application
+            // error response now, so we have to use the content as result
             // for some of the errors. This will actually break if CCP ever uses
             // the HTTP Status for an actual transport related error.
             switch($httpCode) {

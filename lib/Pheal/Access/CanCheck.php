@@ -38,6 +38,7 @@ interface CanCheck
      * @param string $name
      * @param string $keyType
      * @param int $accessMask
+     * @return boolean
      */
     public function check($scope, $name, $keyType, $accessMask);
 }

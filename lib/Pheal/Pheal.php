@@ -94,7 +94,7 @@ class Pheal
      * @param array $arguments an array of arguments
      * @return \Pheal\Core\Result
      */
-    public function  __call($name, $arguments)
+    public function __call($name, $arguments)
     {
         if (count($arguments) < 1 || !is_array($arguments[0])) {
             $arguments[0] = array();
