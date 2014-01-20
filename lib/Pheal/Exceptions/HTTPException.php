@@ -35,7 +35,7 @@ class HTTPException extends PhealException
      * http response code to string conversation
      * @var array list of httpcode > description
      */
-    static private $codes = array(
+    private static $codes = array(
 
         // Informational 1xx
         100 => "Continue",
@@ -125,7 +125,7 @@ class HTTPException extends PhealException
      * @param int $code
      * @param string $url
      */
-    public function  __construct($code, $url)
+    public function __construct($code, $url)
     {
         // safe url and strip apikey for security reasons
         $this->url = preg_replace("/(apikey=)[a-z0-9]*/i", "\\1...", $url);

@@ -100,7 +100,7 @@ class Result implements CanConvertToArray
      * @param string $name
      * @return mixed
      */
-    public function  __get($name)
+    public function __get($name)
     {
         return $this->_element->$name;
     }
