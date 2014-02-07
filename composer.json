@@ -20,6 +20,6 @@
         "issues": "https://github.com/3rdpartyeve/phealng/issues"
     },
     "autoload": {
-        "psr-0": { "Pheal": "lib/" }
+        "psr-4": { "Pheal": "lib/Pheal/" }
     }
 }
