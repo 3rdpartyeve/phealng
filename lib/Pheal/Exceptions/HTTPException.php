@@ -35,7 +35,7 @@ class HTTPException extends PhealException
      * http response code to string conversation
      * @var array list of httpcode > description
      */
-    static private $codes = array(
+    private static $codes = array(
 
         // Informational 1xx
         100 => "Continue",
@@ -76,13 +76,42 @@ class HTTPException extends PhealException
         415 => "Unsupported Media Type",
         416 => "Requested Range Not Satisfiable",
         417 => "Expectation Failed",
+        418 => "I'm a teapot",
+        419 => "Authentication Timeout",
+        420 => "Method Failure/Enhance your calm",
+        422 => "Unprocessable Entity",
+        423 => "Locked",
+        424 => "Failed Dependency / Method Failure",
+        425 => "Unordered Collection",
+        426 => "Upgrade Required",
+        428 => "Precondition Required",
+        429 => "Too many requests",
+        431 => "Requests Header Fields Too Large",
+        444 => "No Response",
+        449 => "Retry With",
+        450 => "Blocked by Windows Parental Controls",
+        451 => "Unavailable for legal reasons / Redirect",
+        495 => "Request Headers Too Large",
+        496 => "Cert Error",
+        497 => "HTTP to HTTPS",
+        499 => "Client Closed Request",
+
         // Server Error 5xx
         500 => "Internal Server Error",
         501 => "Not Implemented",
         502 => "Bad Gateway",
         503 => "Service Unavailable",
         504 => "Gateway Timeout",
-        505 => "HTTP Version Not Supported"
+        505 => "HTTP Version Not Supported",
+        506 => "Variant also Negotiates",
+        507 => "Insufficient Storage",
+        508 => "Loop Detected",
+        509 => "Bandwidth Limit Exceeded",
+        510 => "Not Extended",
+        511 => "Network Authentication Required",
+        522 => "Connection timed out",
+        598 => "Network read timeout error",
+        599 => "Network connect timeout error"
     );
 
     /**
@@ -96,13 +125,13 @@ class HTTPException extends PhealException
      * @param int $code
      * @param string $url
      */
-    public function  __construct($code, $url)
+    public function __construct($code, $url)
     {
         // safe url and strip apikey for security reasons
         $this->url = preg_replace("/(apikey=)[a-z0-9]*/i", "\\1...", $url);
 
         // build error message
-        $message = self::$codes[$code] ? self::$codes[$code] : 'Unknown HTTP Code';
+        $message = isset(self::$codes[$code]) ? self::$codes[$code] : 'Unknown HTTP Code';
 
         parent::__construct($message, $code);
     }

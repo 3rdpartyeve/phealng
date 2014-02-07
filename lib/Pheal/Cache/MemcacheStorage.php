@@ -106,7 +106,7 @@ class MemcacheStorage implements CanCache
         $tz = date_default_timezone_get();
         date_default_timezone_set("UTC");
 
-        $xml = new \SimpleXMLElement($xml);
+        $xml = @new \SimpleXMLElement($xml);
         $dt = (int)strtotime($xml->cachedUntil);
         $time = time();
 

@@ -6,6 +6,8 @@ namespace Pheal\Fetcher;
  * filefetcher, which uses file_get_contents to fetch the api data
  * remember: on some installations, file_get_contents(url) might not be available due to
  * restrictions via allow_url_fopen
+ * this handler is unable to process error responses by ccp which have an http error
+ * status code, since file_get_contents retursn false in that case
  */
 
 use Pheal\Core\Config;
@@ -24,6 +26,9 @@ class File implements CanFetch
     public function fetch($url, $opts)
     {
         $options = array();
+
+        $options['http'] = array();
+        $options['http']['ignore_errors'] = true;
 
         // set custom user agent
         if (($http_user_agent = Config::getInstance()->http_user_agent) != false) {
@@ -56,7 +61,7 @@ class File implements CanFetch
         // suppress the 'warning' message which we'll catch later with $php_errormsg
         if (count($options)) {
             $context = stream_context_create($options);
-            $result = @file_get_contents($url, false, $context);
+            $result = file_get_contents($url, false, $context);
         } else {
             $result = @file_get_contents($url);
         }
@@ -66,11 +71,24 @@ class File implements CanFetch
         if (isset($http_response_header[0])) {
             list($httpVersion, $httpCode, $httpMsg) = explode(' ', $http_response_header[0], 3);
         }
-
-        // throw http error
+        // http errors
         if (is_numeric($httpCode) && $httpCode >= 400) {
+            // ccp is using error codes even if they send a valid application
+            // error response now, so we have to use the content as result
+            // for some of the errors. This will actually break if CCP ever uses
+            // the HTTP Status for an actual transport related error.
+            switch($httpCode) {
+                case 400:
+                case 403:
+                case 500:
+                case 503:
+                    return $result;
+                    break;
+                default:
+            }
             throw new \Pheal\Exceptions\HTTPException($httpCode, $url);
         }
+
 
         // throw error
         if ($result === false) {

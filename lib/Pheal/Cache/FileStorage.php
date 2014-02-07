@@ -138,7 +138,7 @@ class FileStorage implements CanCache
      * @param string $scope
      * @param string $name
      * @param array $args
-     * @return bool|string
+     * @return false|string
      */
     public function load($userid, $apikey, $scope, $name, $args)
     {
@@ -165,7 +165,7 @@ class FileStorage implements CanCache
         $tz = date_default_timezone_get();
         date_default_timezone_set("UTC");
 
-        $xml = new \SimpleXMLElement($xml);
+        $xml = @new \SimpleXMLElement($xml);
         $dt = (int)strtotime($xml->cachedUntil);
         $time = time();
 

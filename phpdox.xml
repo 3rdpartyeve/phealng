@@ -1,5 +1,5 @@
 <phpdox xmlns="http://phpdox.de/config">
- <project name="king23" source="lib" workdir="build/phpdox">
+ <project name="PhealNG" source="lib" workdir="build/phpdox">
   <collector publiconly="false">
    <include mask="*.php" />
    <exclude mask="*Autoload.php" />
