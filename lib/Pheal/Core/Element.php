@@ -138,8 +138,8 @@ class Element implements CanConvertToArray
             $re = new Element($key, $value);
             /** @var $element \SimpleXMLElement */
             if (count($element->attributes()) > 0) {
-                foreach ($element->attributes() as $attelem) {
-                    $re->addAttrib($attelem->getName(), (String)$attelem);
+                foreach ($element->attributes() as $name => $attelem) {
+                    $re->addAttrib($name, (String)$attelem);
                 }
             }
 
