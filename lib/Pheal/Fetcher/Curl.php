@@ -5,6 +5,7 @@ namespace Pheal\Fetcher;
 use Pheal\Core\Config;
 use Pheal\Exceptions\ConnectionException;
 use Pheal\Exceptions\HTTPException;
+use Pheal\Pheal;
 
 class Curl implements CanFetch
 {
@@ -47,9 +48,11 @@ class Curl implements CanFetch
         }
 
         // custom user agent
-        if (($http_user_agent = Config::getInstance()->http_user_agent) != false) {
-            curl_setopt(self::$curl, CURLOPT_USERAGENT, $http_user_agent);
-        }
+        curl_setopt(
+            self::$curl,
+            CURLOPT_USERAGENT,
+            "PhealNG/" . Pheal::$version . ' ' . Config::getInstance()->http_user_agent
+        );
 
         // custom outgoing ip address
         if (($http_interface_ip = Config::getInstance()->http_interface_ip) != false) {

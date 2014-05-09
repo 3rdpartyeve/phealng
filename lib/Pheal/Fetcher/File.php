@@ -12,6 +12,7 @@ namespace Pheal\Fetcher;
 
 use Pheal\Core\Config;
 use Pheal\Exceptions\ConnectionException;
+use Pheal\Pheal;
 
 class File implements CanFetch
 {
@@ -31,9 +32,8 @@ class File implements CanFetch
         $options['http']['ignore_errors'] = true;
 
         // set custom user agent
-        if (($http_user_agent = Config::getInstance()->http_user_agent) != false) {
-            $options['http']['user_agent'] = $http_user_agent;
-        }
+        $options['http']['user_agent'] = 'PhealNG/' . Pheal::$version . ' ' . Config::getInstance()->http_user_agent;
+
 
         // set custom http timeout
         if (($http_timeout = Config::getInstance()->http_timeout) != false) {

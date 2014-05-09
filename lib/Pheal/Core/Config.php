@@ -137,6 +137,8 @@ class Config
         $this->log = new \Pheal\Log\NullStorage();
         $this->access = new \Pheal\Access\NullCheck();
         $this->fetcher = new \Pheal\Fetcher\Curl();
+
+        $this->http_user_agent = "( Unknown PHP Application )";
     }
 
     /**
