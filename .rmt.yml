@@ -33,4 +33,6 @@ master:
     pre-release-actions:
         changelog-update:          # Update a CHANGELOG file before the release
             format: semantic
+        update-version-class:
+            class: lib/Pheal/Pheal.php
         vcs-commit: ~              # Commit the CHANGELOG
