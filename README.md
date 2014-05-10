@@ -37,14 +37,17 @@ the following json data:
 ```json
 {
     "require": {
-        "3rdpartyeve/phealng": "0.2.7"
+        "3rdpartyeve/phealng": "1.0.*"
     }
 }
 ```
-_Note:_ replace 0.2.6 by what ever version you want to use, you can use dev-master
+_Note:_ replace 1.0.* by what ever version you want to use, you can use dev-master
 but it will likely be unstable.
 
+_Hint:_ PhealNG follows semantic versioning http://semver.org
+
 _Hint:_ [![Latest Stable Version](https://poser.pugx.org/3rdpartyeve/phealng/v/stable.png)](https://packagist.org/packages/3rdpartyeve/phealng)
+
 #### composer
 Composer is a tool intended to manage dependencies in PHP applications.
 If you haven't installed composer yet, checkout the composer installation here:
@@ -193,7 +196,7 @@ if you find any problems with PhealNG, please use githubs issue tracker at https
 - Daniel Hoffend (Wollari)
 
 ## ACKNOWLEDGEMENTS
-- PhealNG is based on [Pheal](http://github.com/ppetermann/pheal)
+- PhealNG is based on the now deprecated [Pheal](http://github.com/ppetermann/pheal)
 - PhealNG is written in [PHP](http://php.net)
 - Pheal is based on [EAAL](http://github.com/3rdpartyeve/eaal)
 - Pheal is build for use of the [EVE Online](http://eveonline.com) API
