@@ -1,7 +1,7 @@
 <?php
 /*
  MIT License
- Copyright (c) 2011 Peter Petermann
+ Copyright (c) 2010 - 2014 Daniel Hoffend, Peter Petermann
 
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -24,6 +24,7 @@
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  OTHER DEALINGS IN THE SOFTWARE.
 */
+
 namespace Pheal\Cache;
 
 /**

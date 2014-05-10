@@ -2,7 +2,7 @@
 [![Latest Stable Version](https://poser.pugx.org/3rdpartyeve/phealng/v/stable.png)](https://packagist.org/packages/3rdpartyeve/phealng)
 [![Total Downloads](https://poser.pugx.org/3rdpartyeve/phealng/downloads.png)](https://packagist.org/packages/3rdpartyeve/phealng)
 
-Copyright (C) 2012, 2013 by Peter Petermann
+Copyright (C) 2012, 2013, 2014 by Peter Petermann
 All rights reserved.
 
 PhealNG is a refactoring of Pheal to meet more modern PHP development standards, for example to support namespaces
