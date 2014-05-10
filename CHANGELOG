@@ -1,4 +1,14 @@
 
+VERSION 1  PHEALNG STABLE RELEASE
+=================================
+
+   Version 1.0 - PhealNG Stable release
+      10/05/2014 13:07  1.0.0  initial release
+         3de36d6 removed unneeded files from previous sonar install
+         949f48f Readme update
+         45ab734 Updated license information
+         3d90fc4 rmt config change
+
 VERSION 0  CHANGING TO RMT RELEASES
 ===================================
 
