@@ -16,6 +16,9 @@
             "homepage": "http://evemaps.dotlan.net/"
         }
     ],
+    "require": {
+        "php": ">=5.3.0"
+    },
     "support": {
         "issues": "https://github.com/3rdpartyeve/phealng/issues"
     },
