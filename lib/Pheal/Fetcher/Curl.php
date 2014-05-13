@@ -75,7 +75,7 @@ class Curl implements CanFetch
         curl_setopt(
             self::$curl,
             CURLOPT_USERAGENT,
-            "PhealNG/" . Pheal::$version . ' ' . Config::getInstance()->http_user_agent
+            "PhealNG/" . Pheal::VERSION . ' ' . Config::getInstance()->http_user_agent
         );
 
         // custom outgoing ip address
