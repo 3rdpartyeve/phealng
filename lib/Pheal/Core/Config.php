@@ -122,12 +122,6 @@ class Config
     public $http_keepalive = false;
 
     /**
-     * Singleton Instance
-     * @var \Pheal\Core\Config
-     */
-    private static $myInstance = null;
-
-    /**
      * private constructor (use getInstance() to get an Instance)
      */
     private function __construct()
@@ -143,13 +137,17 @@ class Config
 
     /**
      * Return Instance of PhealConfig Object
-     * @return \Pheal\Core\Config
+     * @staticvar null|\static $instance
+     * @return \static
      */
     public static function getInstance()
     {
-        if (is_null(self::$myInstance)) {
-            self::$myInstance = new Config();
+        static $instance = null;
+
+        if (null === $instance) {
+            $instance = new static();
         }
-        return self::$myInstance;
+
+        return $instance;
     }
 }
