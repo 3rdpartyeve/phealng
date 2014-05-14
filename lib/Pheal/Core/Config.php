@@ -122,6 +122,11 @@ class Config
     public $http_keepalive = false;
 
     /**
+     * @var \Pheal\Log\CanLog
+     */
+    public $log;
+
+    /**
      * private constructor (use getInstance() to get an Instance)
      */
     private function __construct()

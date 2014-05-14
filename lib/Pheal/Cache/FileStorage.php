@@ -60,9 +60,10 @@ class FileStorage implements CanCache
     public function __construct($basepath = false, $options = array())
     {
         if (!$basepath) {
-            $basepath = getenv('HOME') . "/.pheal/cache/";
+            $this->basepath = getenv('HOME') . "/.pheal/cache/";
+        } else {
+            $this->basepath = (string) $basepath;
         }
-        $this->basepath = $basepath;
 
         // Windows systems don't allow : as part of the filename
         $this->options['delimiter'] = (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') ? "#" : ":";

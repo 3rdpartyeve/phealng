@@ -37,6 +37,9 @@ use Pheal\Exceptions\ConnectionException;
 use Pheal\Exceptions\HTTPException;
 use Pheal\Exceptions\PhealException;
 
+/**
+ * Class Pheal
+ */
 class Pheal
 {
     /**

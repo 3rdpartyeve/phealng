@@ -74,9 +74,10 @@ class FileStorage implements CanLog
     public function __construct($basepath = false, $options = array())
     {
         if (!$basepath) {
-            $basepath = getenv('HOME') . "/.pheal/log/";
+            $this->basepath = getenv('HOME') . "/.pheal/log/";
+        } else {
+            $this->basepath = (string) $basepath;
         }
-        $this->basepath = $basepath;
 
         // add options
         if (is_array($options) && count($options)) {

@@ -50,6 +50,9 @@ class File implements CanFetch
      */
     public function fetch($url, $opts)
     {
+        // initialize this php abomination
+        $php_errormsg = null;
+
         $options = array();
 
         $options['http'] = array();
