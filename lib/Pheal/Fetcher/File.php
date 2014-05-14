@@ -56,7 +56,7 @@ class File implements CanFetch
         $options['http']['ignore_errors'] = true;
 
         // set custom user agent
-        $options['http']['user_agent'] = 'PhealNG/' . Pheal::$version . ' ' . Config::getInstance()->http_user_agent;
+        $options['http']['user_agent'] = 'PhealNG/' . Pheal::VERSION . ' ' . Config::getInstance()->http_user_agent;
 
 
         // set custom http timeout

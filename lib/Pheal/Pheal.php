@@ -41,8 +41,10 @@ class Pheal
 {
     /**
      * Version container
+     *
+     * @var string
      */
-    public static $version = "1.0.0";
+    const VERSION = "1.0.0";
 
     /**
      * @var int
