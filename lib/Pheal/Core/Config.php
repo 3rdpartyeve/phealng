@@ -114,6 +114,19 @@ class Config
     public $http_ssl_verifypeer = true;
 
     /**
+     * If you want to verify the SSL connections to the EVE API, you may need to provide a bundle of
+     * trusted certification agencies
+     *
+     * If you set this option to anything other than false, self::$http_ssl_verifypeer won't be unused!
+     *
+     * @see CURLOPT_CAINFO
+     * @see http://curl.haxx.se/ca/cacert.pem
+     *
+     * @var string|false
+     */
+    public $http_ssl_certificate_file = false;
+
+    /**
      * reuse a http connection (keep-alive for X seconds) to lower the connection handling overhead
      * keep in mind after the script ended the connection will be closed anyway.
      *
