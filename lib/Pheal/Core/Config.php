@@ -54,7 +54,7 @@ class Config
     public $access;
 
     /**
-     * Fetcher object to decide what technology is to be sued to fetch
+     * Fetcher object to decide what technology is to be used to fetch
      * defaults to \Pheal\Fetcher\Curl
      * @var \Pheal\Fetcher\CanFetch
      */
@@ -122,6 +122,9 @@ class Config
     public $http_keepalive = false;
 
     /**
+     * Log object to log and measure the API calls that were made
+     * defaults to \Pheal\Log\NullStorage (== no logging)
+     *
      * @var \Pheal\Log\CanLog
      */
     public $log;
