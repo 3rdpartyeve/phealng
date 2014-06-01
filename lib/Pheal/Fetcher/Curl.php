@@ -85,12 +85,11 @@ class Curl implements CanFetch
 
         // ignore ssl peer verification if needed
         if (substr($url, 0, 5) == "https") {
-            if (Config::getInstance()->http_ssl_certificate_file !== false) {
-                // if a certificate file is given use it
+            curl_setopt(self::$curl, CURLOPT_SSL_VERIFYPEER, Config::getInstance()->http_ssl_verifypeer);
+
+            if (Config::getInstance()->http_ssl_verifypeer
+                && (Config::getInstance()->http_ssl_certificate_file !== false)) {
                 curl_setopt(self::$curl, CURLOPT_CAINFO, Config::getInstance()->http_ssl_certificate_file);
-            } else {
-                // if no certificate file is given - we may want to disable the SSL verification alltogether
-                curl_setopt(self::$curl, CURLOPT_SSL_VERIFYPEER, Config::getInstance()->http_ssl_verifypeer);
             }
         }
 

@@ -108,7 +108,12 @@ class Config
     public $http_timeout = 20;
 
     /**
-     * verify ssl peer (CURLOPT_SSL_VERIFYPEER)
+     * Verify the SSL peer?
+     * You may need to provide a bundle of trusted Certificate Agencyies
+     *
+     * @see self::$http_ssl_certificate_file
+     * @see CURLOPT_SSL_VERIFYPEER
+     *
      * @var bool
      */
     public $http_ssl_verifypeer = true;
@@ -116,8 +121,6 @@ class Config
     /**
      * If you want to verify the SSL connections to the EVE API, you may need to provide a bundle of
      * trusted certification agencies
-     *
-     * If you set this option to anything other than false, self::$http_ssl_verifypeer won't be unused!
      *
      * @see CURLOPT_CAINFO
      * @see http://curl.haxx.se/ca/cacert.pem
