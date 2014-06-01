@@ -30,9 +30,11 @@ namespace Pheal\Cache;
 use Pheal\Exceptions\PhealException;
 
 /**
- * Database caching, see the db-setup files
+ * Database caching via PDO
+ *
+ * @see the README.md for the create table statement
  */
-class DatabaseStorage implements CanCache
+class PdoStorage implements CanCache
 {
     /**
      * The PDO database object
