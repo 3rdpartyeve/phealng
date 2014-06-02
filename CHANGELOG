@@ -2,6 +2,23 @@
 VERSION 1  PHEALNG STABLE RELEASE
 =================================
 
+   Version 1.1 - some commits from the community (thanks guys)
+      02/06/2014 20:32  1.1.0  initial release
+         7abad4a Update README.md
+         0fe1ba4 Merge pull request #8 from RedAces/master
+         ca78462 rename DatabaseStorage to PdoStorage, add the create statement to the README instead of an extra file
+         5f571e4 http_ssl_verifypeer takes priority over http_ssl_certificate_file now
+         43f0345 enable to set the ssl certification file
+         ca4ef3d Add the database storage
+         2cf93fb bit more code cleanup
+         2488dcb Merge in SobanVuexes changes
+         92f11be Add minimum PHP requirements
+         1dbc766 Use enclosed singleton method
+         fb767a6 Update Curl.php
+         c791274 Update File.php
+         cc23cbd Minor fixes and updates
+         2b24302 Update Config.php
+
    Version 1.0 - PhealNG Stable release
       10/05/2014 13:07  1.0.0  initial release
          3de36d6 removed unneeded files from previous sonar install
