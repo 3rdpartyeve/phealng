@@ -178,6 +178,34 @@ In the previous example there is already two configuration options introduced,
 however there are quite a few more. For more information it is worth reading the
 contents of the vendor/3rdpartyeve/phealng/lib/Pheal/Core/Config.php file.
 
+### Caching
+CCP wants you to respect their cache timers, meaning some of the API Pages will return
+the same data for a specific while, or worse an error. If you use one of the available
+caching implementations, pheal will do the caching transparently for you.
+Pheal offers this implementations out of the box:
+- NullStorage (no caching!)
+- FileStorage
+- ForcedFileStorage
+- HashedNameFileStorage
+- MemcacheStorage
+- PdoStorage (database caching)
+
+In order to cache the request in the database you have to create the table first.
+Use this statement to create a table in MySQL. You may need to alter it a bit for other database types:
+
+```mysql
+CREATE TABLE `phealng-cache` (
+    `userId` INT(10) UNSIGNED NOT NULL,
+    `scope` VARCHAR(50) NOT NULL,
+    `name` VARCHAR(100) NOT NULL,
+    `args` VARCHAR(250) NOT NULL,
+    `xml` LONGTEXT NOT NULL,
+    PRIMARY KEY (`userId`, `scope`, `name`, `args`)
+)
+COMMENT='Caching for PhealNG'
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB;
+```
 
 ## Problems / Bugs
 if you find any problems with PhealNG, please use githubs issue tracker at https://github.com/3rdpartyeve/phealng/issues
