@@ -190,8 +190,13 @@ Pheal offers this implementations out of the box:
 - MemcacheStorage
 - PdoStorage (database caching)
 
+Please refer to the api docs of the classes for more information.
+
+
+#### PdoStorage (database caching)
 In order to cache the request in the database you have to create the table first.
-Use this statement to create a table in MySQL. You may need to alter it a bit for other database types:
+
+for a MySQL DB you can use this snippet as an example:
 
 ```mysql
 CREATE TABLE `phealng-cache` (
