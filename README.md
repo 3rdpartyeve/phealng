@@ -188,6 +188,7 @@ Pheal offers this implementations out of the box:
 - ForcedFileStorage
 - HashedNameFileStorage
 - MemcacheStorage
+- RedisStorage
 - PdoStorage (database caching)
 
 Please refer to the api docs of the classes for more information.
