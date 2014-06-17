@@ -2,6 +2,11 @@
 VERSION 1  PHEALNG STABLE RELEASE
 =================================
 
+   Version 1.2 - comment
+      17/06/2014 12:36  1.2.0  initial release
+         a435f94 Merge pull request #9 from SobanVuex/master
+         0a0754d Add Redis cache implementation
+
    Version 1.1 - some commits from the community (thanks guys)
       02/06/2014 20:32  1.1.0  initial release
          7abad4a Update README.md
