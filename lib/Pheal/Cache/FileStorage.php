@@ -36,14 +36,16 @@ use Pheal\Exceptions\PhealException;
 class FileStorage implements CanCache
 {
     /**
-     * path where to store the xml
+     * Path where to store the xml
+     *
      * @var string
      */
     protected $basepath;
 
     /**
-     * various options for the filecache
+     * Various options for the filecache
      * valid keys are: delimiter, umask, umask_directory
+     *
      * @var array
      */
     protected $options = array(
@@ -53,7 +55,8 @@ class FileStorage implements CanCache
     );
 
     /**
-     * construct PhealStorage for cache,
+     * Initialise file storage cache.
+     *
      * @param bool|string $basepath string on where to store files, defaults to the current/users/home/.pheal/cache/
      * @param array $options optional config array, valid keys are: delimiter, umask, umask_directory
      */
@@ -75,14 +78,15 @@ class FileStorage implements CanCache
     }
 
     /**
-     * create a filename to use
+     * Create a filename to use
+     *
      * @param int $userid
      * @param string $apikey
      * @param string $scope
      * @param string $name
      * @param array $args
-     * @throws \Pheal\Exceptions\PhealException
      * @return string
+     * @throws \Pheal\Exceptions\PhealException
      */
     protected function filename($userid, $apikey, $scope, $name, $args)
     {
@@ -135,12 +139,13 @@ class FileStorage implements CanCache
 
     /**
      * Load XML from cache
+     *
      * @param int $userid
      * @param string $apikey
      * @param string $scope
      * @param string $name
      * @param array $args
-     * @return false|string
+     * @return string|false
      */
     public function load($userid, $apikey, $scope, $name, $args)
     {
@@ -148,17 +153,20 @@ class FileStorage implements CanCache
         if (!file_exists($filename)) {
             return false;
         }
+
         $xml = file_get_contents($filename);
         if ($this->validateCache($xml)) {
             return $xml;
         }
+
         return false;
 
     }
 
     /**
-     * validate the cached xml if it is still valid. This contains a name hack
+     * Validate the cached xml if it is still valid. This contains a name hack
      * to work arround EVE API giving wrong cachedUntil values
+     *
      * @param string $xml
      * @return boolean
      */
@@ -168,16 +176,17 @@ class FileStorage implements CanCache
         date_default_timezone_set("UTC");
 
         $xml = @new \SimpleXMLElement($xml);
-        $dt = (int)strtotime($xml->cachedUntil);
+        $dt = (int) strtotime($xml->cachedUntil);
         $time = time();
 
         date_default_timezone_set($tz);
 
-        return (bool)($dt > $time);
+        return (bool) ($dt > $time);
     }
 
     /**
      * Save XML from cache
+     *
      * @param int $userid
      * @param string $apikey
      * @param string $scope
@@ -191,11 +200,13 @@ class FileStorage implements CanCache
         $exists = file_exists($filename);
 
         // save content
-        file_put_contents($filename, $xml);
+        $result = file_put_contents($filename, $xml);
 
         // chmod only new files
         if (!$exists) {
             chmod($filename, $this->options['umask']);
         }
+
+        return (bool) $result;
     }
 }

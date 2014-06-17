@@ -38,13 +38,15 @@ class PdoStorage implements CanCache
 {
     /**
      * The PDO database object
+     *
      * @var \Pdo
      */
     protected $db;
 
     /**
-     * various options for the database cache
+     * Various options for the database cache
      * valid keys are: table
+     *
      * @var array
      */
     protected $options = array(
@@ -67,7 +69,6 @@ class PdoStorage implements CanCache
      * @param string $password the password for the database connection
      * @param string|false $table the table name for the cache (defaults to "phealng-cache")
      * @param array $dbOptions (optional) additional options for PDO
-     *
      * @throws PhealException if the table name has backticks `
      */
     public function __construct($dsn, $username, $password, $table = false, array $dbOptions = array())
@@ -112,7 +113,6 @@ class PdoStorage implements CanCache
      * Serializes the arguments into a string
      *
      * @param array $args
-     *
      * @return string the serialized arguments array, e. g. ;key1=value1;key2=value2
      */
     protected function serializeArguments(array $args)
@@ -120,7 +120,7 @@ class PdoStorage implements CanCache
         // first we have to sort the args by key to avoid that different orders lead to different cache entries!
         ksort($args);
 
-        $result      = '';
+        $result = '';
         $invalidKeys = array('userid', 'apikey', 'keyid', 'vcode');
         foreach ($args as $key => $value) {
             $key   = trim($key);
@@ -143,7 +143,6 @@ class PdoStorage implements CanCache
      * @param string $scope
      * @param string $name
      * @param array $args
-     *
      * @return false|string
      * @throws PhealException if something happened during the Database operation
      */
@@ -183,11 +182,10 @@ class PdoStorage implements CanCache
     }
 
     /**
-     * validate the cached xml if it is still valid. This contains a name hack
+     * Validate the cached xml if it is still valid. This contains a name hack
      * to work arround EVE API giving wrong cachedUntil values
      *
      * @param string $xml
-     *
      * @return boolean
      */
     public function validateCache($xml)
@@ -213,7 +211,6 @@ class PdoStorage implements CanCache
      * @param string $name
      * @param array $args
      * @param string $xml
-     *
      * @throws PhealException if something happened during the Database operations
      */
     public function save($userid, $apikey, $scope, $name, $args, $xml)

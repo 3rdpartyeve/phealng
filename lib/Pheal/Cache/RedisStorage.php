@@ -54,7 +54,7 @@ class RedisStorage implements CanCache
         'port' => 6379,
         'persistent' => true,
         'auth' => null,
-        'prefix' => 'pheal'
+        'prefix' => 'Pheal'
     );
 
     /**
@@ -117,7 +117,7 @@ class RedisStorage implements CanCache
     }
 
     /**
-     *  Return the number of seconds the XML is valid. Will never be less than 1.
+     * Return the number of seconds the XML is valid. Will never be less than 1.
      *
      * @param string $xml
      * @return int
