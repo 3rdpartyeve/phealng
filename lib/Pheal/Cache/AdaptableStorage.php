@@ -58,7 +58,9 @@ class AdaptableStorage implements CanCache
     public function load($userid, $apikey, $scope, $name, $args)
     {
         $key = $this->getKey($userid, $apikey, $scope, $name, $args);
-        $xml = $this->adapter->load($key);
+        if (!$xml = $this->adapter->load($key)) {
+            return false;
+        }
 
         if ($this->validateCache($xml)) {
             return $xml;
