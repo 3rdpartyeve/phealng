@@ -33,37 +33,38 @@ namespace Pheal\Cache;
 class MemcacheStorage implements CanCache
 {
     /**
-     * active memcache instance/connection
+     * Active memcache instance/connection
+     *
      * @var \Memcache
      */
     protected $memcache;
 
     /**
-     * memcache options (connection)
+     * Memcache options (connection)
+     *
      * @var array
      */
     protected $options = array(
         'host' => 'localhost',
         'port' => 11211,
+        'prefix' => 'Pheal'
     );
 
     /**
-     * construct PhealMemcache,
+     * Initialise memcache storage cache.
+     *
      * @param array $options optional config array, valid keys are: host, port
      */
-    public function __construct($options = array())
+    public function __construct(array $options = array())
     {
-        // add options
-        if (is_array($options) && count($options)) {
-            $this->options = array_merge($this->options, $options);
-        }
-
+        $this->options = $options + $this->options;
         $this->memcache = new \Memcache();
         $this->memcache->connect($this->options['host'], $this->options['port']);
     }
 
     /**
-     * create a memcache key (prepend Pheal_ to not conflict with other keys)
+     * Create a memcache key (prepend Pheal_ to not conflict with other keys)
+     *
      * @param int $userid
      * @param string $apikey
      * @param string $scope
@@ -73,17 +74,20 @@ class MemcacheStorage implements CanCache
      */
     protected function getKey($userid, $apikey, $scope, $name, $args)
     {
-        $key = "$userid|$apikey|$scope|$name";
+        $key = implode('|', compact('userid', 'apikey', 'scope', 'name'));
+
         foreach ($args as $k => $v) {
             if (!in_array(strtolower($key), array('userid', 'apikey', 'keyid', 'vcode'))) {
-                $key .= "|$k|$v";
+                $key .= sprintf('|%s:%s', $k, $v);
             }
         }
-        return "Pheal_" . md5($key);
+
+        return sprintf('%s|%s', $this->options['prefix'], md5($key));
     }
 
     /**
      * Load XML from cache
+     *
      * @param int $userid
      * @param string $apikey
      * @param string $scope
@@ -98,7 +102,8 @@ class MemcacheStorage implements CanCache
     }
 
     /**
-     *  Return the number of seconds the XML is valid. Will never be less than 1.
+     * Return the number of seconds the XML is valid. Will never be less than 1.
+     *
      * @param string $xml
      * @return int
      */
@@ -117,6 +122,7 @@ class MemcacheStorage implements CanCache
 
     /**
      * Save XML to cache
+     *
      * @param int $userid
      * @param string $apikey
      * @param string $scope

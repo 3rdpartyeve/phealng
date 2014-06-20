@@ -34,7 +34,8 @@ namespace Pheal\Cache;
 class ForcedFileStorage extends FileStorage
 {
     /**
-     * always returns true since we assume that the file always exists
+     * Always returns true since we assume that the file always exists
+     *
      * @param string $xml
      * @return boolean
      */
