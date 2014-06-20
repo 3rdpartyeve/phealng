@@ -34,23 +34,26 @@ interface CanCache
 {
     /**
      * Load XML from cache
+     *
      * @param int $userid
      * @param string $apikey
      * @param string $scope
      * @param string $name
      * @param array $args
+     * @return string|false
      */
     public function load($userid, $apikey, $scope, $name, $args);
 
     /**
      * Save XML from cache
+     *
      * @param int $userid
      * @param string $apikey
      * @param string $scope
      * @param string $name
      * @param array $args
      * @param string $xml
-     * @return null|boolean
+     * @return boolean
      */
     public function save($userid, $apikey, $scope, $name, $args, $xml);
 }

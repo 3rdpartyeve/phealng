@@ -33,49 +33,12 @@ namespace Pheal\Cache;
 
 use Pheal\Exceptions\PhealException;
 
-class HashedNameFileStorage implements CanCache
+class HashedNameFileStorage extends FileStorage
 {
+    
     /**
-     * path where to store the xml
-     * @var string
-     */
-    protected $basepath;
-
-    /**
-     * various options for the filecache
-     * valid keys are: delimiter, umask, umask_directory
-     * @var array
-     */
-    protected $options = array(
-        'delimiter' => ':',
-        'umask' => 0666,
-        'umask_directory' => 0777
-    );
-
-    /**
-     * construct PhealFileCache,
-     * @param bool|string $basepath optional string on where to store files, defaults to ~/.pheal/cache/
-     * @param array $options optional config array, valid keys are: delimiter, umask, umask_directory
-     */
-    public function __construct($basepath = false, $options = array())
-    {
-        if (!$basepath) {
-            $this->basepath = getenv('HOME') . "/.pheal/cache/";
-        } else {
-            $this->basepath = (string) $basepath;
-        }
-
-        // Windows systems don't allow : as part of the filename
-        $this->options['delimiter'] = (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') ? "#" : ":";
-
-        // add options
-        if (is_array($options) && count($options)) {
-            $this->options = array_merge($this->options, $options);
-        }
-    }
-
-    /**
-     * create a filename to use
+     * Create a filename to use
+     *
      * @param int $userid
      * @param string $apikey
      * @param string $scope
@@ -120,7 +83,6 @@ class HashedNameFileStorage implements CanCache
             $oldUmask = umask(0);
             mkdir($filepath, $this->options['umask_directory'], true);
             umask($oldUmask);
-
         } else {
             // check write access
             if (!is_writable($filepath)) {
@@ -130,72 +92,8 @@ class HashedNameFileStorage implements CanCache
                 throw new PhealException(sprintf("Cache file '%s' isn't writeable", $filename));
             }
         }
+
         return $filepath . $filename;
     }
 
-    /**
-     * Load XML from cache
-     * @param int $userid
-     * @param string $apikey
-     * @param string $scope
-     * @param string $name
-     * @param array $args
-     * @return false|string
-     */
-    public function load($userid, $apikey, $scope, $name, $args)
-    {
-        $filename = $this->filename($userid, $apikey, $scope, $name, $args);
-        if (!file_exists($filename)) {
-            return false;
-        }
-        $xml = file_get_contents($filename);
-        if ($this->validateCache($xml)) {
-            return $xml;
-        }
-        return false;
-
-    }
-
-    /**
-     * validate the cached xml if it is still valid. This contains a name hack
-     * to work arround EVE API giving wrong cachedUntil values
-     * @param string $xml
-     * @return boolean
-     */
-    public function validateCache($xml)
-    {
-        $tz = date_default_timezone_get();
-        date_default_timezone_set("UTC");
-
-        $xml = @new \SimpleXMLElement($xml);
-        $dt = (int)strtotime($xml->cachedUntil);
-        $time = time();
-
-        date_default_timezone_set($tz);
-
-        return (bool)($dt > $time);
-    }
-
-    /**
-     * Save XML from cache
-     * @param int $userid
-     * @param string $apikey
-     * @param string $scope
-     * @param string $name
-     * @param array $args
-     * @param string $xml
-     */
-    public function save($userid, $apikey, $scope, $name, $args, $xml)
-    {
-        $filename = $this->filename($userid, $apikey, $scope, $name, $args);
-        $exists = file_exists($filename);
-
-        // save content
-        file_put_contents($filename, $xml);
-
-        // chmod only new files
-        if (!$exists) {
-            chmod($filename, $this->options['umask']);
-        }
-    }
 }

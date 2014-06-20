@@ -28,32 +28,20 @@
 
 namespace Pheal\Cache;
 
-use Pheal\Exceptions\PhealException;
-
-/**
- * Redis cache storage for Pheal
- */
-class RedisStorage implements CanCache
+class AdaptableStorage implements CanCache
 {
 
     /**
-     * Redis connection interface
      *
-     * @var \Redis
+     * @var Adaptable
      */
-    protected $redis;
+    protected $adapter;
 
     /**
-     * Redis connection options
-     * `host` can be either IP/hostname(127.0.0.1) or UNIX socket(/tmp/path/to/redis.sock)
      *
      * @var array
      */
     protected $options = array(
-        'host' => '127.0.0.1',
-        'port' => 6379,
-        'persistent' => true,
-        'auth' => null,
         'prefix' => 'Pheal'
     );
 
@@ -70,8 +58,15 @@ class RedisStorage implements CanCache
     public function load($userid, $apikey, $scope, $name, $args)
     {
         $key = $this->getKey($userid, $apikey, $scope, $name, $args);
+        if (!$xml = $this->adapter->load($key)) {
+            return false;
+        }
 
-        return $this->redis->get($key);
+        if ($this->validateCache($xml)) {
+            return $xml;
+        }
+
+        return false;
     }
 
     /**
@@ -90,11 +85,11 @@ class RedisStorage implements CanCache
         $key = $this->getKey($userid, $apikey, $scope, $name, $args);
         $timeout = time() + $this->getTimeout($xml);
 
-        return $this->redis->set($key, $xml, $timeout);
+        return $this->adapter->save($key, $xml, $timeout);
     }
 
     /**
-     * Create a redis key (prepend `prefix` to not conflict with other keys)
+     * Create an adapter key (prepend `prefix` to not conflict with other keys)
      *
      * @param int $userid
      * @param string $apikey
@@ -117,7 +112,7 @@ class RedisStorage implements CanCache
     }
 
     /**
-     * Return the number of seconds the XML is valid. Will never be less than 1.
+     *  Return the number of seconds the XML is valid. Will never be less than 1.
      *
      * @param string $xml
      * @return int
@@ -137,7 +132,28 @@ class RedisStorage implements CanCache
     }
 
     /**
-     * Initialise redis storage cache. Save configuration options
+     * Validate the cached xml if it is still valid. This contains a name hack
+     * to work arround EVE API giving wrong cachedUntil values
+     *
+     * @param string $xml
+     * @return boolean
+     */
+    public function validateCache($xml)
+    {
+        $tz = date_default_timezone_get();
+        date_default_timezone_set("UTC");
+
+        $xml = @new \SimpleXMLElement($xml);
+        $dt = (int) strtotime($xml->cachedUntil);
+        $time = time();
+
+        date_default_timezone_set($tz);
+
+        return (bool) ($dt > $time);
+    }
+
+    /**
+     * Initialise adaptable storage cache.
      *
      * @param array $options
      * @return void
@@ -145,33 +161,9 @@ class RedisStorage implements CanCache
     public function __construct(array $options = array())
     {
         $this->options = $options + $this->options;
-        $this->redis = new \Redis();
-
-        $this->init();
-    }
-
-    /**
-     * Initialize redis connection
-     *
-     * @return void
-     */
-    protected function init()
-    {
-        $method = $this->options['persistent'] ? 'pconnect' : 'connect';
-
-        try {
-            if (strpos($this->options['host'], '/') === 0) {
-                $this->redis->{$method}($this->options['host']);
-            } else {
-                $this->redis->{$method}($this->options['host'], $this->options['port']);
-            }
-
-            if ($this->options['auth']) {
-                $this->redis->auth($this->options['auth']);
-            }
-        } catch (\Exception $e) {
-            throw new PhealException('Connecting to cache failed!', null, $e);
-        }
+        $this->adapter = new Adaptable(array(
+            'save' => $this->options['save'], 'load' => $this->options['load']
+        ));
     }
 
 }
