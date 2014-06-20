@@ -205,6 +205,7 @@ CREATE TABLE `phealng-cache` (
     `scope` VARCHAR(50) NOT NULL,
     `name` VARCHAR(100) NOT NULL,
     `args` VARCHAR(250) NOT NULL,
+    `cachedUntil` TIMESTAMP NOT NULL,
     `xml` LONGTEXT NOT NULL,
     PRIMARY KEY (`userId`, `scope`, `name`, `args`)
 )
