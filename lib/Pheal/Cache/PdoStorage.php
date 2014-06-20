@@ -99,8 +99,8 @@ class PdoStorage implements CanCache
         );
 
         $this->statements['save'] = $this->db->prepare(
-            'INSERT INTO `' . $this->options['table'] . '` (`userId`, `scope`, `name`, `args`, `xml`) VALUES '
-            . '(:userId, :scope, :name, :args, :xml)'
+            'INSERT INTO `' . $this->options['table'] . '` (`userId`, `scope`, `name`, `args`, `cachedUntil`, `xml`) VALUES '
+            . '(:userId, :scope, :name, :args, :cachedUntil, :xml)'
         );
 
         $this->statements['delete'] = $this->db->prepare(
@@ -174,7 +174,7 @@ class PdoStorage implements CanCache
             return false;
         }
 
-        if (!$this->validateCache($result['xml'])) {
+        if (!$this->validateCache($result['cachedUntil'])) {
             return false;
         }
 
@@ -185,16 +185,15 @@ class PdoStorage implements CanCache
      * Validate the cached xml if it is still valid. This contains a name hack
      * to work arround EVE API giving wrong cachedUntil values
      *
-     * @param string $xml
+     * @param int $cachedUntil
      * @return boolean
      */
-    public function validateCache($xml)
+    public function validateCache($cachedUntil)
     {
         $tz = date_default_timezone_get();
         date_default_timezone_set('UTC');
 
-        $xml  = @new \SimpleXMLElement($xml);
-        $dt   = (int) strtotime($xml->cachedUntil);
+        $dt   = (int) strtotime($cachedUntil);
         $time = time();
 
         date_default_timezone_set($tz);
@@ -219,8 +218,9 @@ class PdoStorage implements CanCache
 
         $argumentString = $this->serializeArguments($args);
 
-        $deleteStatement = $this->statements['delete'];
         /* @var $deleteStatement \PDOStatement */
+        $deleteStatement = $this->statements['delete'];
+        
         try {
             $deleteStatement->execute(
                 array(
@@ -234,16 +234,20 @@ class PdoStorage implements CanCache
             throw new PhealException('Deleting old cache entries failed!', null, $e);
         }
 
-        $statement = $this->statements['save'];
         /* @var $statement \PDOStatement */
+        $statement = $this->statements['save'];
+        
         try {
+            $xml = new \SimpleXMLElement($xml);
+            
             $statement->execute(
                 array(
                     ':userId' => $userid,
                     ':scope'  => $scope,
                     ':name'   => $name,
                     ':args'   => $argumentString,
-                    ':xml'    => $xml,
+                    ':cachedUntil' => $xml->cachedUntil,
+                    ':xml'    => $xml->asXML(),
                 )
             );
         } catch (\PDOException $e) {
