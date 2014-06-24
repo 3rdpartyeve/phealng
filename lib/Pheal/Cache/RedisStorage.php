@@ -88,7 +88,7 @@ class RedisStorage implements CanCache
     public function save($userid, $apikey, $scope, $name, $args, $xml)
     {
         $key = $this->getKey($userid, $apikey, $scope, $name, $args);
-        $timeout = time() + $this->getTimeout($xml);
+        $timeout = $this->getTimeout($xml);
 
         return $this->redis->set($key, $xml, $timeout);
     }
