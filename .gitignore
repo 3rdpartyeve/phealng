@@ -8,3 +8,6 @@ build/coverage/
 build/phpdox/
 cache.properties
 atlassian-ide-plugin.xml
+.buildpath
+.project
+.settings

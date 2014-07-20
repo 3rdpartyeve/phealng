@@ -146,6 +146,14 @@ class Config
     public $log;
 
     /**
+     * Rate limiter object to avoid exceeding CCP-defined maximum requests per second.
+     * Defaults to \Pheal\RateLimiter\NullRateLimiter (== no rate limiting)
+     *
+     * @var \Pheal\RateLimiter\CanRateLimit
+     */
+    public $rateLimiter;
+
+    /**
      * private constructor (use getInstance() to get an Instance)
      */
     private function __construct()
@@ -155,6 +163,7 @@ class Config
         $this->log = new \Pheal\Log\NullStorage();
         $this->access = new \Pheal\Access\NullCheck();
         $this->fetcher = new \Pheal\Fetcher\Curl();
+        $this->rateLimiter = new \Pheal\RateLimiter\NullRateLimiter();
 
         $this->http_user_agent = "( Unknown PHP Application )";
     }
@@ -171,6 +180,7 @@ class Config
         if (null === $instance) {
             $instance = new static();
         }
+
         return $instance;
     }
 }
