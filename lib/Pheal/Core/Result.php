@@ -60,7 +60,7 @@ class Result implements CanConvertToArray
 
     /**
      * root element of the result
-     * @var Element|RowSet
+     * @var \Pheal\Core\Element | \Pheal\Core\RowSet
      */
     private $_element = null;
 
