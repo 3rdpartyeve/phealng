@@ -44,12 +44,12 @@ class FileStorage implements CanLog
      * saved startTime to measure the response time
      * @var float
      */
-    protected $startTime = 0;
+    protected $startTime = 0.0;
     /**
      * save the response time after stop() or log()
      * @var float
      */
-    protected $responseTime = 0;
+    protected $responseTime = 0.0;
     /**
      * various options for the filecache
      * valid keys are: access_log, error_log, access_format, error_format, trancate_apikey, umask, umask_directory
@@ -90,7 +90,7 @@ class FileStorage implements CanLog
      */
     public function start()
     {
-        $this->responseTime = 0;
+        $this->responseTime = 0.0;
         $this->startTime = $this->getmicrotime();
     }
 
@@ -147,7 +147,7 @@ class FileStorage implements CanLog
 
         // calc responseTime
         $this->responseTime = $this->getmicrotime() - $this->startTime;
-        $this->startTime = 0;
+        $this->startTime = 0.0;
     }
 
     /**

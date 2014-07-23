@@ -193,6 +193,7 @@ class FileStorage implements CanCache
      * @param string $name
      * @param array $args
      * @param string $xml
+     * @return bool
      */
     public function save($userid, $apikey, $scope, $name, $args, $xml)
     {

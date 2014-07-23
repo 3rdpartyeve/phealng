@@ -39,6 +39,7 @@ use Pheal\Exceptions\PhealException;
 
 /**
  * Class Pheal
+ * @method Result APIKeyInfo
  */
 class Pheal
 {
