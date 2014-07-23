@@ -41,10 +41,10 @@ use Pheal\Exceptions\PhealException;
 class FileLockRateLimiter implements CanRateLimit
 {
     /**
-     * Directory in which to place the lock file.
+     * lock file apth
      * @var string
      */
-    protected $basePath;
+    protected $lockFilePath;
 
     /**
      * Maximum requests per second.
@@ -82,8 +82,9 @@ class FileLockRateLimiter implements CanRateLimit
         $now = time();
 
         do {
-            if ($this->canProceed())
+            if ($this->canProceed()) {
                 return true;
+            }
 
             // Random sleep before trying again.
             usleep(mt_rand(500, 5000));
