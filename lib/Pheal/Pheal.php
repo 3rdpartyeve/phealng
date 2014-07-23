@@ -39,6 +39,7 @@ use Pheal\Exceptions\PhealException;
 
 /**
  * Class Pheal
+ * @method Result APIKeyInfo
  */
 class Pheal
 {
@@ -233,6 +234,9 @@ class Pheal
             try {
                 // start measure the response time
                 Config::getInstance()->log->start();
+
+                // rate limit
+                Config::getInstance()->rateLimiter->rateLimit();
 
                 // request
                 $this->xml = Config::getInstance()->fetcher->fetch($url, $http_opts);

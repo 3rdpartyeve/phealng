@@ -35,7 +35,7 @@ use Pheal\Exceptions\PhealException;
 
 class HashedNameFileStorage extends FileStorage
 {
-    
+
     /**
      * Create a filename to use
      *
@@ -95,5 +95,4 @@ class HashedNameFileStorage extends FileStorage
 
         return $filepath . $filename;
     }
-
 }

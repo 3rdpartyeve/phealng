@@ -56,7 +56,7 @@ class FileStorage implements CanArchive
      */
     public function __construct($basepath = false, $options = array())
     {
-        if (!$basepath) {
+        if (!$basepath || !is_string($basepath)) {
             $basepath = getenv('HOME') . "/.pheal/archive/";
         }
         $this->basepath = $basepath;

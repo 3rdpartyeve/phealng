@@ -54,19 +54,21 @@ class Result implements CanConvertToArray
 
     /**
      * time till the cache should hold this result
-     * @var string
+     * @var int
      */
     public $cached_until_unixtime;
 
     /**
      * root element of the result
-     * @var Element
+     * @var Element|RowSet
      */
     private $_element = null;
 
     /**
      * initializes the PhealResult
+     *
      * @param \SimpleXMLElement $xml
+     * @throws \Pheal\Exceptions\APIException
      */
     public function __construct($xml)
     {
@@ -90,7 +92,7 @@ class Result implements CanConvertToArray
 
         // error detection
         if ($xml->error) {
-            throw new APIException($xml->error["code"], (String)$xml->error, $xml);
+            throw new APIException((int)$xml->error["code"], (String)$xml->error, $xml);
         }
         $this->_element = Element::parseElement($xml->result);
     }

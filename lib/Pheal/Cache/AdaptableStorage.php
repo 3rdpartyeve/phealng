@@ -78,7 +78,7 @@ class AdaptableStorage implements CanCache
      * @param string $name
      * @param array $args
      * @param string $xml
-     * @return void
+     * @return boolean
      */
     public function save($userid, $apikey, $scope, $name, $args, $xml)
     {
@@ -156,7 +156,6 @@ class AdaptableStorage implements CanCache
      * Initialise adaptable storage cache.
      *
      * @param array $options
-     * @return void
      */
     public function __construct(array $options = array())
     {
@@ -165,5 +164,4 @@ class AdaptableStorage implements CanCache
             'save' => $this->options['save'], 'load' => $this->options['load']
         ));
     }
-
 }
