@@ -171,7 +171,7 @@ class Config
     /**
      * Return Instance of PhealConfig Object
      * @staticvar null|\static $instance Singleton Instance
-     * @return \static
+     * @return Config|null
      */
     public static function getInstance()
     {

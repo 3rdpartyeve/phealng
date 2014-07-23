@@ -78,7 +78,7 @@ class AdaptableStorage implements CanCache
      * @param string $name
      * @param array $args
      * @param string $xml
-     * @return void
+     * @return boolean
      */
     public function save($userid, $apikey, $scope, $name, $args, $xml)
     {

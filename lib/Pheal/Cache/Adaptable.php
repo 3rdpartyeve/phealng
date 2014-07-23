@@ -54,8 +54,8 @@ class Adaptable
     /**
      * Load a cache entry via the adapter
      *
-     * @param type $key
-     * @return boolean|mixed
+     * @param string $key
+     * @return string
      */
     public function load($key)
     {
@@ -71,9 +71,9 @@ class Adaptable
     /**
      * Save a cache entry via the adapter
      *
-     * @param type $key
-     * @param type $data
-     * @param type $timeout
+     * @param string $key
+     * @param string $data
+     * @param integer $timeout
      * @return boolean
      */
     public function save($key, $data, $timeout)
