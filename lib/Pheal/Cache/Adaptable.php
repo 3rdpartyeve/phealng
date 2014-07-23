@@ -86,5 +86,4 @@ class Adaptable
 
         return call_user_func_array($callable, array($key, $data, $timeout));
     }
-
 }

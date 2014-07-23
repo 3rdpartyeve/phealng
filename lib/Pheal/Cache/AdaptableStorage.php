@@ -156,7 +156,6 @@ class AdaptableStorage implements CanCache
      * Initialise adaptable storage cache.
      *
      * @param array $options
-     * @return void
      */
     public function __construct(array $options = array())
     {
@@ -165,5 +164,4 @@ class AdaptableStorage implements CanCache
             'save' => $this->options['save'], 'load' => $this->options['load']
         ));
     }
-
 }
