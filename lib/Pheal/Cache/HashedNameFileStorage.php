@@ -95,5 +95,4 @@ class HashedNameFileStorage extends FileStorage
 
         return $filepath . $filename;
     }
-
 }

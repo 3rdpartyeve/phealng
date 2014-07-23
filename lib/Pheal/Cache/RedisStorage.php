@@ -83,7 +83,7 @@ class RedisStorage implements CanCache
      * @param string $name
      * @param array $args
      * @param string $xml
-     * @return void
+     * @return boolean
      */
     public function save($userid, $apikey, $scope, $name, $args, $xml)
     {
@@ -140,7 +140,8 @@ class RedisStorage implements CanCache
      * Initialise redis storage cache. Save configuration options
      *
      * @param array $options
-     * @return void
+     * @throws \Pheal\Exceptions\PhealException
+     * @return \Pheal\Cache\RedisStorage
      */
     public function __construct(array $options = array())
     {
@@ -153,6 +154,7 @@ class RedisStorage implements CanCache
     /**
      * Initialize redis connection
      *
+     * @throws \Pheal\Exceptions\PhealException
      * @return void
      */
     protected function init()
@@ -173,5 +175,4 @@ class RedisStorage implements CanCache
             throw new PhealException('Connecting to cache failed!', null, $e);
         }
     }
-
 }
