@@ -58,7 +58,7 @@ class APIException extends PhealException
 
     /**
      * time till the cache should hold this result
-     * @var string
+     * @var int
      */
     public $cached_until_unixtime;
 
