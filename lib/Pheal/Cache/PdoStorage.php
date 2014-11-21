@@ -155,6 +155,12 @@ class PdoStorage implements CanCache
         $statement = $this->statements['load'];
         /* @var $statement \PDOStatement */
 
+        if ($userid === null) {
+            // Fix for null value userids
+            // e. g. for global calls to /eve/
+            $userid = 0;
+        }
+
         try {
             $statement->execute(
                 array(
@@ -221,6 +227,13 @@ class PdoStorage implements CanCache
         /* @var $deleteStatement \PDOStatement */
         $deleteStatement = $this->statements['delete'];
         
+
+        if ($userid === null) {
+            // Fix for null value userids
+            // e. g. for global calls to /eve/
+            $userid = 0;
+        }
+
         try {
             $deleteStatement->execute(
                 array(
