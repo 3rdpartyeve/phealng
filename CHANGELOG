@@ -2,6 +2,29 @@
 VERSION 1  PHEALNG STABLE RELEASE
 =================================
 
+   Version 1.3 - various community patches from the last month
+      21/11/2014 10:42  1.3.0  initial release
+         8488df2 Merge pull request #22 from RedAces/master
+         8bc8f15 PdoStorage: Fix for userid cannot  be null
+         80b37bd lets see if scrutinizer prefers it this way
+         72e635b lets see if scrutinizer prefers it this way
+         6f32496 more doc fixes
+         6367b55 more doc fixes
+         21010cc more doc fixes
+         a7dce8f initialize floats with a float number, more doc fixes
+         10dfc46 constructors don't return void ;)
+         3e6cbb4 typecheck
+         2a07298 scrutinizer fixing soban's phpdoc ;)
+         fd5aa26  missing var + code style fix
+         208cd4f Merge pull request #20 from andyhassall/master
+         20ee87b API rate limiter
+         e4bb14c Merge pull request #18 from SobanVuex/master
+         1966934 Fix for Redis storage
+         4dd994b Merge pull request #10 from SobanVuex/master
+         401a11e Fix for Adaptable storage
+         dd75aac Add Adaptable cache implementation
+         131b5a5 Normalize docs and style
+
    Version 1.2 - comment
       17/06/2014 12:36  1.2.0  initial release
          a435f94 Merge pull request #9 from SobanVuex/master
