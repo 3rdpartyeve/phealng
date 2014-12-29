@@ -27,32 +27,29 @@
 
 namespace Pheal\Log;
 
-/**
- * null log, as a placeholder if no logging is used
- */
-
 use Pheal\Core\Config;
 
+/**
+ * Class FileStorage a simple file_put_contents based logger
+ *
+ * @package Pheal\Log
+ * @deprecated
+ */
 class FileStorage implements CanLog
 {
+    // import response timer
+    use ResponseTimerTrait;
+
+    // import api url formatter
+    use ApiUrlFormatterTrait;
+
     /**
      * path where to store the logs
      *
      * @var string
      */
     protected $basepath;
-    /**
-     * saved startTime to measure the response time
-     *
-     * @var float
-     */
-    protected $startTime = 0.0;
-    /**
-     * save the response time after stop() or log()
-     *
-     * @var float
-     */
-    protected $responseTime = 0.0;
+
     /**
      * various options for the filecache
      * valid keys are: access_log, error_log, access_format, error_format, trancate_apikey, umask, umask_directory
@@ -90,26 +87,7 @@ class FileStorage implements CanLog
         }
     }
 
-    /**
-     * Start of measure the response time
-     */
-    public function start()
-    {
-        $this->responseTime = 0.0;
-        $this->startTime = $this->getmicrotime();
-    }
 
-    /**
-     * returns current microtime
-     *
-     * @return float
-     */
-    protected function getmicrotime()
-    {
-        list($usec, $sec) = explode(" ", microtime());
-
-        return ((float)$usec + (float)$sec);
-    }
 
     /**
      * logs request api call including options
@@ -137,7 +115,7 @@ class FileStorage implements CanLog
                 date('r'),
                 (Config::getInstance()->http_post ? 'POST' : 'GET'),
                 $this->responseTime,
-                $this->formatUrl($scope, $name, $opts)
+                $this->formatUrl($scope, $name, $opts, $this->options['truncate_apikey'])
             ),
             FILE_APPEND
         );
@@ -145,19 +123,6 @@ class FileStorage implements CanLog
         return true;
     }
 
-    /**
-     * Stop of measure the response time
-     */
-    public function stop()
-    {
-        if (!$this->startTime) {
-            return false;
-        }
-
-        // calc responseTime
-        $this->responseTime = $this->getmicrotime() - $this->startTime;
-        $this->startTime = 0.0;
-    }
 
     /**
      * create a filename to use (type can be access_log or error_log)
@@ -192,39 +157,6 @@ class FileStorage implements CanLog
     }
 
     /**
-     * returns formatted url for logging
-     *
-     * @param string $scope
-     * @param string $name
-     * @param array $opts
-     * @return string
-     */
-    protected function formatUrl($scope, $name, $opts)
-    {
-        // create url
-        $url = Config::getInstance()->api_base.$scope.'/'.$name.".xml.aspx";
-
-        // truncacte apikey for log safety
-        if ($this->options['truncate_apikey'] && count($opts)) {
-            if (isset($opts['apikey'])) {
-                $opts['apikey'] = substr($opts['apikey'], 0, 16)."...";
-            }
-            if (isset($opts['vCode'])) {
-                $opts['vCode'] = substr($opts['vCode'], 0, 16)."...";
-            }
-        }
-
-        // add post data
-        if (Config::getInstance()->http_post) {
-            $url .= " DATA: ".http_build_query($opts, '', '&');
-        } elseif (count($opts)) { // add data to url
-            $url .= '?'.http_build_query($opts, '', '&');
-        }
-
-        return $url;
-    }
-
-    /**
      * logs failed request api call including options and error message
      *
      * @param string $scope
@@ -254,7 +186,7 @@ class FileStorage implements CanLog
                 date('r'),
                 (Config::getInstance()->http_post ? 'POST' : 'GET'),
                 $this->responseTime,
-                $this->formatUrl($scope, $name, $opts),
+                $this->formatUrl($scope, $name, $opts, $this->options['truncate_apikey']),
                 $message
             ),
             FILE_APPEND
