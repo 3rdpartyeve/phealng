@@ -1,4 +1,21 @@
 
+VERSION 2  A FEW COMMUNITY PATCHES, PSR-3 COMPATIBLE LOGGER SUPPORT. THIS RELEASE BREAKS BACKWARD COMPATIBILITY FOR PDOCACHE AS THE STRUCTURE OF THE DB TABLE CHANGES! THE OLD FILE LOGGER IS NOW MARKED AS DEPRECATED, SO PROPER PSR LOGGING CAN BE ADDED IN THE FUTURE.
+=========================================================================================================================================================================================================================================================================
+
+   Version 2.0 - A few community patches, PSR-3 compatible logger support. This Release breaks Backward Compatibility for PdoCache as the structure of the DB table changes! the old file logger is now marked as deprecated, so proper PSR logging can be added in the future.
+      29/12/2014 14:12  2.0.0  initial release
+         f5dcc66 a last whitespace fix
+         05116aa more style fixes
+         ac97064 codestyle fixes
+         8444476 PSR-3 compatible logger added
+         d605387 code style fixes
+         8b8cf0b Merge branch 'master' into development
+         ab4cf7c conflict solved
+         ac60fd4 Merge branch 'master' into development
+         72837f3 Merge branch 'patch-2' of github.com:warlof/phealng into warlof-patch-2
+         cfced35 Update README.md
+         7fc5e9e Update PdoStorage.php
+
 VERSION 1  PHEALNG STABLE RELEASE
 =================================
 
