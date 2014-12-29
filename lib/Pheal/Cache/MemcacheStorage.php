@@ -93,12 +93,12 @@ class MemcacheStorage implements CanCache
      * @param string $scope
      * @param string $name
      * @param array $args
-     * @return array|string
+     * @return string
      */
     public function load($userid, $apikey, $scope, $name, $args)
     {
         $key = $this->getKey($userid, $apikey, $scope, $name, $args);
-        return $this->memcache->get($key);
+        return (string) $this->memcache->get($key);
     }
 
     /**
@@ -129,6 +129,7 @@ class MemcacheStorage implements CanCache
      * @param string $name
      * @param array $args
      * @param string $xml
+     * @return bool|void
      */
     public function save($userid, $apikey, $scope, $name, $args, $xml)
     {

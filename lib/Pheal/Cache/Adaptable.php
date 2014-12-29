@@ -55,7 +55,7 @@ class Adaptable
      * Load a cache entry via the adapter
      *
      * @param string $key
-     * @return string
+     * @return string|boolean
      */
     public function load($key)
     {

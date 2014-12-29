@@ -67,9 +67,9 @@ class PdoStorage implements CanCache
      * @param string $dsn the DSN needed for PDO to connect to the database
      * @param string $username the username for the database connection
      * @param string $password the password for the database connection
-     * @param string|false $table the table name for the cache (defaults to "phealng-cache")
+     * @param bool|false|string $table the table name for the cache (defaults to "phealng-cache")
      * @param array $dbOptions (optional) additional options for PDO
-     * @throws PhealException if the table name has backticks `
+     * @throws PhealException
      */
     public function __construct($dsn, $username, $password, $table = false, array $dbOptions = array())
     {
@@ -216,6 +216,7 @@ class PdoStorage implements CanCache
      * @param string $name
      * @param array $args
      * @param string $xml
+     * @return bool|void
      * @throws PhealException if something happened during the Database operations
      */
     public function save($userid, $apikey, $scope, $name, $args, $xml)
@@ -249,10 +250,10 @@ class PdoStorage implements CanCache
 
         /* @var $statement \PDOStatement */
         $statement = $this->statements['save'];
-        
+
         try {
             $xml = new \SimpleXMLElement($xml);
-            
+
             $statement->execute(
                 array(
                     ':userId' => $userid,

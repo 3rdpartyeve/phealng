@@ -35,7 +35,7 @@ class Container implements CanConvertToArray
     /**
      * @var array
      */
-    private $_container = array();
+    private $myData = array();
 
     /**
      * Adds an Element to the container
@@ -44,7 +44,7 @@ class Container implements CanConvertToArray
      */
     public function addElement($key, $val)
     {
-        $this->_container = array_merge($this->_container, array((String)$key => $val));
+        $this->myData = array_merge($this->myData, array((String)$key => $val));
     }
 
     /**
@@ -54,8 +54,8 @@ class Container implements CanConvertToArray
      */
     public function __get($name)
     {
-        if (isset($this->_container[$name])) {
-            return $this->_container[$name];
+        if (isset($this->myData[$name])) {
+            return $this->myData[$name];
         }
         return null;
     }
@@ -67,7 +67,7 @@ class Container implements CanConvertToArray
      */
     public function __isset($name)
     {
-        return isset($this->_container[$name]);
+        return isset($this->myData[$name]);
     }
 
     /**
@@ -77,7 +77,7 @@ class Container implements CanConvertToArray
     public function toArray()
     {
         $return = array();
-        foreach ($this->_container as $key => $value) {
+        foreach ($this->myData as $key => $value) {
             $return[$key] = ($value instanceof CanConvertToArray) ? $value->toArray() : $value;
         }
 
