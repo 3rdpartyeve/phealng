@@ -2,6 +2,14 @@
 VERSION 2  A FEW COMMUNITY PATCHES, PSR-3 COMPATIBLE LOGGER SUPPORT. THIS RELEASE BREAKS BACKWARD COMPATIBILITY FOR PDOCACHE AS THE STRUCTURE OF THE DB TABLE CHANGES! THE OLD FILE LOGGER IS NOW MARKED AS DEPRECATED, SO PROPER PSR LOGGING CAN BE ADDED IN THE FUTURE.
 =========================================================================================================================================================================================================================================================================
 
+   Version 2.1 - added MemcachedStorage for the cache, thanks to @0mni
+      17/01/2015 18:57  2.1.0  initial release
+         c7d42f2 added memcached storage to docs, closes #23
+         5fec37d fix codestyle, avoid duplicated code
+         f941847 Merge pull request #24 from 0mni/master
+         8b01a16 Added MemcachedStorage.php
+         8d33bfd version information
+
    Version 2.0 - A few community patches, PSR-3 compatible logger support. This Release breaks Backward Compatibility for PdoCache as the structure of the DB table changes! the old file logger is now marked as deprecated, so proper PSR logging can be added in the future.
       29/12/2014 14:12  2.0.0  initial release
          f5dcc66 a last whitespace fix
