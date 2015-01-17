@@ -1,7 +1,7 @@
 <?php
 /*
  MIT License
- Copyright (c) 2010 - 2014 Daniel Hoffend, Peter Petermann
+ Copyright (c) 2010 - 2015 Daniel Hoffend, Peter Petermann
 
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -28,9 +28,9 @@
 namespace Pheal\Cache;
 
 /**
- * Implememnts memcached into Pheal
+ * Implements memcached into Pheal
  */
-class MemcachedStorage implements CanCache
+class MemcachedStorage extends MemcacheBase implements CanCache
 {
     /**
      * Active memcached instance/connection
@@ -38,19 +38,7 @@ class MemcachedStorage implements CanCache
      * @var \Memcached
      */
     protected $memcached;
-	protected $flags;
-
-    /**
-     * Memcached options (connection)
-     *
-     * @var array
-     */
-    protected $options = array(
-        'host' => 'localhost',
-        'port' => 11211,
-        'compressed' => 0,
-        'prefix' => 'Pheal',
-    );
+    protected $flags;
 
     /**
      * Initialise memcached storage cache.
@@ -62,30 +50,7 @@ class MemcachedStorage implements CanCache
         $this->options = $options + $this->options;
         $this->memcached = new \Memcached();
         $this->memcached->addServer($this->options['host'], $this->options['port'], 0);
-		$this->flags = ($this->options['compressed']) ? MEMCACHED_COMPRESSED : 0;
-    }
-
-    /**
-     * Create a memcached key (prepend Pheal_ to not conflict with other keys)
-     *
-     * @param int $userid
-     * @param string $apikey
-     * @param string $scope
-     * @param string $name
-     * @param array $args
-     * @return string
-     */
-    protected function getKey($userid, $apikey, $scope, $name, $args)
-    {
-        $key = implode('|', compact('userid', 'apikey', 'scope', 'name'));
-
-        foreach ($args as $k => $v) {
-            if (!in_array(strtolower($key), array('userid', 'apikey', 'keyid', 'vcode'))) {
-                $key .= sprintf('|%s:%s', $k, $v);
-            }
-        }
-
-        return sprintf('%s|%s', $this->options['prefix'], md5($key));
+        $this->flags = ($this->options['compressed']) ? MEMCACHED_COMPRESSED : 0;
     }
 
     /**
@@ -102,49 +67,27 @@ class MemcachedStorage implements CanCache
     {
         $key = $this->getKey($userid, $apikey, $scope, $name, $args);
 
-		$age_data = $this->memcached->get($key . '_age');
-		$age_result = $this->memcached->getResultCode();
+        $age_data = $this->memcached->get($key.'_age');
+        $age_result = $this->memcached->getResultCode();
 
-		if ($age_result != 0)
-		{
-			return false;
-		}
+        if ($age_result != 0) {
+            return false;
+        }
 
-		$age = time() - (int) $age_data['age'];
+        $age = time() - (int)$age_data['age'];
 
-		if ($age > (int) $age_data['ttl'])
-		{
-			return false;
-		}
+        if ($age > (int)$age_data['ttl']) {
+            return false;
+        }
 
-		$read = (string) $this->memcached->get($key);
-		$read_result = $this->memcached->getResultCode();
+        $read = (string)$this->memcached->get($key);
+        $read_result = $this->memcached->getResultCode();
 
-		if ($read_result != 0)
-		{
-			return false;
-		}
+        if ($read_result != 0) {
+            return false;
+        }
 
         return $read;
-    }
-
-    /**
-     * Return the number of seconds the XML is valid. Will never be less than 1.
-     *
-     * @param string $xml
-     * @return int
-     */
-    protected function getTimeout($xml)
-    {
-        $tz = date_default_timezone_get();
-        date_default_timezone_set("UTC");
-
-        $xml = @new \SimpleXMLElement($xml);
-        $dt = (int)strtotime($xml->cachedUntil);
-        $time = time();
-
-        date_default_timezone_set($tz);
-        return max(1, $dt - $time);
     }
 
     /**
@@ -162,25 +105,23 @@ class MemcachedStorage implements CanCache
     {
         $key = $this->getKey($userid, $apikey, $scope, $name, $args);
         $ttl = $this->getTimeout($xml);
-		$time = time();
-		$timeout = $time + $ttl;
+        $time = time();
+        $timeout = $time + $ttl;
 
-		$replace = $this->memcached->replace($key, $xml, $timeout);
+        $replace = $this->memcached->replace($key, $xml, $timeout);
 
-		$set = $set_age = false;
+        $set = $set_age = false;
 
-		if (!$replace)
-		{
-			$set = $this->memcached->set($key, $xml, $timeout);
-		}
+        if (!$replace) {
+            $set = $this->memcached->set($key, $xml, $timeout);
+        }
 
-		$replace_age = $this->memcached->replace($key . '_age', array('age' => $time, 'ttl' => $ttl), $timeout);
+        $replace_age = $this->memcached->replace($key.'_age', array('age' => $time, 'ttl' => $ttl), $timeout);
 
-		if (!$replace_age)
-		{
-			$set_age = $this->memcached->set($key . '_age', array('age' => $time, 'ttl' => $ttl), $timeout);
-		}
+        if (!$replace_age) {
+            $set_age = $this->memcached->set($key.'_age', array('age' => $time, 'ttl' => $ttl), $timeout);
+        }
 
-		return (($replace || $set) && ($replace_age || $set_age));
+        return (($replace || $set) && ($replace_age || $set_age));
     }
 }

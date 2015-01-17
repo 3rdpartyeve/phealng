@@ -28,31 +28,25 @@
 namespace Pheal\Cache;
 
 /**
- * Implememnts memcached into Pheal
+ * Base class which is used for several memcache based storages
  */
-class MemcacheStorage extends MemcacheBase implements CanCache
+abstract class MemcacheBase
 {
     /**
-     * Active memcache instance/connection
+     * Memcache options (connection)
      *
-     * @var \Memcache
+     * @var array
      */
-    protected $memcache;
+    protected $options = array(
+        'host' => 'localhost',
+        'port' => 11211,
+        'compressed' => 0,
+        'prefix' => 'Pheal',
+    );
+
 
     /**
-     * Initialise memcache storage cache.
-     *
-     * @param array $options optional config array, valid keys are: host, port
-     */
-    public function __construct(array $options = array())
-    {
-        $this->options = $options + $this->options;
-        $this->memcache = new \Memcache();
-        $this->memcache->connect($this->options['host'], $this->options['port']);
-    }
-
-    /**
-     * Load XML from cache
+     * Create a key (prepend options->prefix to not conflict with other keys)
      *
      * @param int $userid
      * @param string $apikey
@@ -61,27 +55,36 @@ class MemcacheStorage extends MemcacheBase implements CanCache
      * @param array $args
      * @return string
      */
-    public function load($userid, $apikey, $scope, $name, $args)
+    protected function getKey($userid, $apikey, $scope, $name, $args)
     {
-        $key = $this->getKey($userid, $apikey, $scope, $name, $args);
-        return (string) $this->memcache->get($key);
+        $key = implode('|', compact('userid', 'apikey', 'scope', 'name'));
+
+        foreach ($args as $k => $v) {
+            if (!in_array(strtolower($key), array('userid', 'apikey', 'keyid', 'vcode'))) {
+                $key .= sprintf('|%s:%s', $k, $v);
+            }
+        }
+
+        return sprintf('%s|%s', $this->options['prefix'], md5($key));
     }
 
     /**
-     * Save XML to cache
+     * Return the number of seconds the XML is valid. Will never be less than 1.
      *
-     * @param int $userid
-     * @param string $apikey
-     * @param string $scope
-     * @param string $name
-     * @param array $args
      * @param string $xml
-     * @return bool|void
+     * @return int
      */
-    public function save($userid, $apikey, $scope, $name, $args, $xml)
+    protected function getTimeout($xml)
     {
-        $key = $this->getKey($userid, $apikey, $scope, $name, $args);
-        $timeout = $this->getTimeout($xml);
-        $this->memcache->set($key, $xml, 0, time() + $timeout);
+        $tz = date_default_timezone_get();
+        date_default_timezone_set("UTC");
+
+        $xml = @new \SimpleXMLElement($xml);
+        $dt = (int)strtotime($xml->cachedUntil);
+        $time = time();
+
+        date_default_timezone_set($tz);
+
+        return max(1, $dt - $time);
     }
 }
