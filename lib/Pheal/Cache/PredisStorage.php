@@ -153,6 +153,5 @@ class PredisStorage implements CanCache
             'port'   => $this->options['port'],
             'password' => $this->options['password'],
         ]);
-        $this->init();
     }
 }
