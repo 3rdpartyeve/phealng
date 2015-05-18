@@ -2,6 +2,12 @@
 VERSION 2  A FEW COMMUNITY PATCHES, PSR-3 COMPATIBLE LOGGER SUPPORT. THIS RELEASE BREAKS BACKWARD COMPATIBILITY FOR PDOCACHE AS THE STRUCTURE OF THE DB TABLE CHANGES! THE OLD FILE LOGGER IS NOW MARKED AS DEPRECATED, SO PROPER PSR LOGGING CAN BE ADDED IN THE FUTURE.
 =========================================================================================================================================================================================================================================================================
 
+   Version 2.2 - predis cache
+      18/05/2015 21:43  2.2.0  initial release
+         b45282b Merge pull request #28 from OrthoLoess/add-predis
+         1612559 Remove call to deleted init function
+         57dfe57 Add PredisStorage cache driver
+
    Version 2.1 - added MemcachedStorage for the cache, thanks to @0mni
       17/01/2015 18:57  2.1.0  initial release
          c7d42f2 added memcached storage to docs, closes #23
