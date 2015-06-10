@@ -3,6 +3,9 @@ VERSION 2  A FEW COMMUNITY PATCHES, PSR-3 COMPATIBLE LOGGER SUPPORT. THIS RELEAS
 =========================================================================================================================================================================================================================================================================
 
    Version 2.2 - predis cache
+      10/06/2015 19:00  2.2.1  bugfix
+         71e078c Merge pull request #29 from OrthoLoess/fix-predis
+         65c9974 add missing option parameter to set call
       18/05/2015 21:43  2.2.0  initial release
          b45282b Merge pull request #28 from OrthoLoess/add-predis
          1612559 Remove call to deleted init function
