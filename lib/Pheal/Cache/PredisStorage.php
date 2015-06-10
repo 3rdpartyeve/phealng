@@ -91,7 +91,7 @@ class PredisStorage implements CanCache
         $key = $this->getKey($userid, $apikey, $scope, $name, $args);
         $timeout = $this->getTimeout($xml);
 
-        return $this->redis->set($key, $xml, $timeout);
+        return $this->redis->set($key, $xml, 'ex', $timeout);
     }
 
     /**
