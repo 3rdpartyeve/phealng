@@ -66,7 +66,7 @@ class Config
      * use https://api.eveonline.com/ if you like to have ssl support
      * @var String
      */
-    public $api_base = "https://api.eveonline.com/";
+    public $api_base = 'https://api.eveonline.com/';
 
     /**
      * enable the new customize key system (use keyID instead of userID, etc)
@@ -109,7 +109,7 @@ class Config
 
     /**
      * Verify the SSL peer?
-     * You may need to provide a bundle of trusted Certificate Agencyies
+     * You may need to provide a bundle of trusted Certificate Agencies
      *
      * @see self::$http_ssl_certificate_file
      * @see CURLOPT_SSL_VERIFYPEER
@@ -162,10 +162,10 @@ class Config
         $this->archive = new \Pheal\Archive\NullStorage();
         $this->log = new \Pheal\Log\NullStorage();
         $this->access = new \Pheal\Access\NullCheck();
-        $this->fetcher = new \Pheal\Fetcher\Curl();
+        $this->fetcher = new \Pheal\Fetcher\Guzzle();
         $this->rateLimiter = new \Pheal\RateLimiter\NullRateLimiter();
 
-        $this->http_user_agent = "( Unknown PHP Application )";
+        $this->http_user_agent = '( Unknown PHP Application )';
     }
 
     /**
