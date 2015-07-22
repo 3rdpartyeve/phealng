@@ -135,7 +135,7 @@ class StaticCheck implements CanCheck
     public function check($scope, $name, $keyType, $accessMask)
     {
         // there's no "Account" type on the access bits level
-        $type = ($keyType == "Account") ? "Character" : $keyType;
+        $type = ($keyType == 'Account') ? 'Character' : $keyType;
 
         // no keyinfo configuration found
         // assume it's a public call or it's not yet defined
@@ -167,7 +167,7 @@ class StaticCheck implements CanCheck
         // no match == no access right found.
         throw new AccessException(
             sprintf(
-                "Pheal blocked an API call (%s/%s) which is not allowed by the given keyType/accessMask (%s/%d)",
+                'Pheal blocked an API call (%s/%s) which is not allowed by the given keyType/accessMask (%s/%d)',
                 $scope,
                 $name,
                 $keyType,

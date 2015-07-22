@@ -48,7 +48,7 @@ class Pheal
      *
      * @var string
      */
-    const VERSION = "2.2.1";
+    const VERSION = '2.2.1';
 
     /**
      * @var int
@@ -88,7 +88,7 @@ class Pheal
      * @param string $key the EVE apikey/vCode
      * @param string $scope to use, defaults to account. can be changed during runtime by modifying attribute "scope"
      */
-    public function __construct($userid = null, $key = null, $scope = "account")
+    public function __construct($userid = null, $key = null, $scope = 'account')
     {
         $this->userid = $userid;
         $this->key = $key;
@@ -209,7 +209,7 @@ class Pheal
         }
 
         // prepare http arguments + url (to not modify original argument list for cache saving)
-        $url = Config::getInstance()->api_base . $scope . '/' . $name . ".xml.aspx";
+        $url = Config::getInstance()->api_base . $scope . '/' . $name . '.xml.aspx';
         $use_customkey = (bool)Config::getInstance()->api_customkeys;
         $http_opts = $opts;
         if ($this->userid) {
@@ -249,7 +249,7 @@ class Pheal
 
                 // check if we could parse this
                 if ($element === false) {
-                    $errmsgs = "";
+                    $errmsgs = '';
                     foreach (libxml_get_errors() as $error) {
                         $errmsgs .= $error->message . "\n";
                     }

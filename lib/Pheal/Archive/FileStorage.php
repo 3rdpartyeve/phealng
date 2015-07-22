@@ -57,12 +57,12 @@ class FileStorage implements CanArchive
     public function __construct($basepath = false, $options = array())
     {
         if (!$basepath || !is_string($basepath)) {
-            $basepath = getenv('HOME') . "/.pheal/archive/";
+            $basepath = getenv('HOME') . '/.pheal/archive/';
         }
         $this->basepath = $basepath;
 
         // Windows systems don't allow : as part of the filename
-        $this->options['delimiter'] = (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') ? "#" : ":";
+        $this->options['delimiter'] = (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') ? '#' : ':';
 
         // add options
         if (is_array($options) && count($options)) {
@@ -89,7 +89,7 @@ class FileStorage implements CanArchive
         $apikey = preg_replace($regexp, '_', $apikey);
 
         // build cache filename
-        $argstr = "";
+        $argstr = '';
         foreach ($args as $key => $val) {
             if (strlen($val) < 1) {
                 unset($args[$key]);
@@ -102,10 +102,10 @@ class FileStorage implements CanArchive
             }
         }
         $argstr = substr($argstr, 0, -1);
-        $filename = "Request_" . gmdate('Ymd-His') . ($argstr ? "_" . $argstr : "") . ".xml";
+        $filename = 'Request_' . gmdate('Ymd-His') . ($argstr ? '_' . $argstr : '') . '.xml';
         $filepath = $this->basepath . gmdate(
-            "Y-m-d"
-        ) . "/" . ($userid ? "$userid/$apikey/$scope/$name/" : "public/public/$scope/$name/");
+            'Y-m-d'
+        ) . '/' . ($userid ? "$userid/$apikey/$scope/$name/" : "public/public/$scope/$name/");
         if (!file_exists($filepath)) {
             $oldUmask = umask(0);
             mkdir($filepath, $this->options['umask_directory'], true);

@@ -91,17 +91,17 @@ class FileLockRateLimiter implements CanRateLimit
 
         } while (time() - $now < $this->maxWait);
 
-        throw new PhealException("Timed out waiting for rate limiter, waited " . (time() - $now) . " seconds");
+        throw new PhealException('Timed out waiting for rate limiter, waited ' . (time() - $now) . ' seconds');
     }
 
     protected function canProceed()
     {
         // Open file, create if does not exist
-        $fp = fopen($this->lockFilePath, "a+");
+        $fp = fopen($this->lockFilePath, 'a+');
 
         if (!$fp) {
             throw new PhealException(
-                "Cannot open rate limiter lock file " .
+                'Cannot open rate limiter lock file ' .
                 $this->lockFilePath .
                 ': ' .
                 error_get_last()

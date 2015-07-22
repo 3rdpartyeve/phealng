@@ -52,12 +52,12 @@ class HashedNameFileStorage extends FileStorage
         // secure input to make sure pheal don't write the files anywhere
         // user can define their own apikey/vcode
         // maybe this should be tweaked or hashed
-        $regexp = "/[^a-z0-9,.-_=]/i";
+        $regexp = '/[^a-z0-9,.-_=]/i';
         $userid = (int)$userid;
         $apikey = preg_replace($regexp, '_', $apikey);
 
         // build cache filename
-        $argstr = "";
+        $argstr = '';
         foreach ($args as $key => $val) {
             if (strlen($val) < 1) {
                 unset($args[$key]);
@@ -70,13 +70,13 @@ class HashedNameFileStorage extends FileStorage
             }
         }
         $argstr = substr($argstr, 0, -1);
-        $filename = "Request" . ($argstr ? "_" . md5($argstr) : "") . ".xml";
+        $filename = 'Request' . ($argstr ? '_' . md5($argstr) : '') . '.xml';
         $filepath = $this->basepath . ($userid ? "$userid/$apikey/$scope/$name/" : "public/public/$scope/$name/");
 
         if (!file_exists($filepath)) {
             // check write access
             if (!is_writable($this->basepath)) {
-                throw new PhealException(sprintf("Cache directory '%s' isn't writeable", $filepath));
+                throw new PhealException(sprintf('Cache directory \'%s\' isn\'t writeable', $filepath));
             }
 
             // create cache folder
@@ -86,10 +86,10 @@ class HashedNameFileStorage extends FileStorage
         } else {
             // check write access
             if (!is_writable($filepath)) {
-                throw new PhealException(sprintf("Cache directory '%s' isn't writeable", $filepath));
+                throw new PhealException(sprintf('Cache directory \'%s\' isn\'t writeable', $filepath));
             }
             if (file_exists($filename) && !is_writeable($filename)) {
-                throw new PhealException(sprintf("Cache file '%s' isn't writeable", $filename));
+                throw new PhealException(sprintf('Cache file \'%s\' isn\'t writeable', $filename));
             }
         }
 

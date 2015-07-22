@@ -70,7 +70,7 @@ class PsrLogger implements CanLog
 
         $this->logger->info(
             sprintf(
-                "%s to %s (%2.4fs)",
+                '%s to %s (%2.4fs)',
                 (Config::getInstance()->http_post ? 'POST' : 'GET'),
                 $this->formatUrl($scope, $name, $opts),
                 $this->responseTime
@@ -96,7 +96,7 @@ class PsrLogger implements CanLog
 
         $this->logger->error(
             sprintf(
-                "failed: %s to %s (%2.4fs), message: %s",
+                'failed: %s to %s (%2.4fs), message: %s',
                 (Config::getInstance()->http_post ? 'POST' : 'GET'),
                 $this->formatUrl($scope, $name, $opts),
                 $this->responseTime,

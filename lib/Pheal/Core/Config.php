@@ -66,7 +66,7 @@ class Config
      * use https://api.eveonline.com/ if you like to have ssl support
      * @var String
      */
-    public $api_base = "https://api.eveonline.com/";
+    public $api_base = 'https://api.eveonline.com/';
 
     /**
      * enable the new customize key system (use keyID instead of userID, etc)
@@ -165,7 +165,7 @@ class Config
         $this->fetcher = new \Pheal\Fetcher\Curl();
         $this->rateLimiter = new \Pheal\RateLimiter\NullRateLimiter();
 
-        $this->http_user_agent = "( Unknown PHP Application )";
+        $this->http_user_agent = '( Unknown PHP Application )';
     }
 
     /**

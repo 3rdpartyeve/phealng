@@ -68,7 +68,7 @@ class File implements CanFetch
         }
 
         // ignore ssl peer verification if needed
-        if (substr($url, 0, 5) == "https") {
+        if (substr($url, 0, 5) == 'https') {
             $options['ssl']['verify_peer'] = Config::getInstance()->http_ssl_verifypeer;
         }
 
@@ -77,7 +77,7 @@ class File implements CanFetch
             $options['http']['method'] = 'POST';
             $options['http']['content'] = http_build_query($opts, '', '&');
         } elseif (count($opts)) { // else build url parameters
-            $url .= "?" . http_build_query($opts, '', '&');
+            $url .= '?' . http_build_query($opts, '', '&');
         }
 
         // set track errors. needed for $php_errormsg

@@ -63,13 +63,13 @@ class FileStorage implements CanCache
     public function __construct($basepath = false, $options = array())
     {
         if (!$basepath) {
-            $this->basepath = getenv('HOME') . "/.pheal/cache/";
+            $this->basepath = getenv('HOME') . '/.pheal/cache/';
         } else {
             $this->basepath = (string) $basepath;
         }
 
         // Windows systems don't allow : as part of the filename
-        $this->options['delimiter'] = (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') ? "#" : ":";
+        $this->options['delimiter'] = (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') ? '#' : ':';
 
         // add options
         if (is_array($options) && count($options)) {
@@ -93,12 +93,12 @@ class FileStorage implements CanCache
         // secure input to make sure pheal don't write the files anywhere
         // user can define their own apikey/vcode
         // maybe this should be tweaked or hashed
-        $regexp = "/[^a-z0-9,.-_=]/i";
+        $regexp = '/[^a-z0-9,.-_=]/i';
         $userid = (int)$userid;
         $apikey = preg_replace($regexp, '_', $apikey);
 
         // build cache filename
-        $argstr = "";
+        $argstr = '';
         foreach ($args as $key => $val) {
             if (strlen($val) < 1) {
                 unset($args[$key]);
@@ -111,13 +111,13 @@ class FileStorage implements CanCache
             }
         }
         $argstr = substr($argstr, 0, -1);
-        $filename = "Request" . ($argstr ? "_" . $argstr : "") . ".xml";
+        $filename = 'Request' . ($argstr ? '_' . $argstr : '') . '.xml';
         $filepath = $this->basepath . ($userid ? "$userid/$apikey/$scope/$name/" : "public/public/$scope/$name/");
 
         if (!file_exists($filepath)) {
             // check write access
             if (!is_writable($this->basepath)) {
-                throw new PhealException(sprintf("Cache directory '%s' isn't writeable", $filepath));
+                throw new PhealException(sprintf('Cache directory \'%s\' isn\'t writeable', $filepath));
             }
 
             // create cache folder
@@ -128,10 +128,10 @@ class FileStorage implements CanCache
         } else {
             // check write access
             if (!is_writable($filepath)) {
-                throw new PhealException(sprintf("Cache directory '%s' isn't writeable", $filepath));
+                throw new PhealException(sprintf('Cache directory \'%s\' isn\'t writeable', $filepath));
             }
             if (file_exists($filename) && !is_writeable($filename)) {
-                throw new PhealException(sprintf("Cache file '%s' isn't writeable", $filename));
+                throw new PhealException(sprintf('Cache file \'%s\' isn\'t writeable', $filename));
             }
         }
         return $filepath . $filename;
@@ -173,7 +173,7 @@ class FileStorage implements CanCache
     public function validateCache($xml)
     {
         $tz = date_default_timezone_get();
-        date_default_timezone_set("UTC");
+        date_default_timezone_set('UTC');
 
         $xml = @new \SimpleXMLElement($xml);
         $dt = (int) strtotime($xml->cachedUntil);

@@ -92,7 +92,7 @@ class Result implements CanConvertToArray
 
         // error detection
         if ($xml->error) {
-            throw new APIException((int)$xml->error["code"], (String)$xml->error, $xml);
+            throw new APIException((int)$xml->error['code'], (String)$xml->error, $xml);
         }
         $this->rootElement = Element::parseElement($xml->result);
     }

@@ -75,7 +75,7 @@ class Curl implements CanFetch
         curl_setopt(
             self::$curl,
             CURLOPT_USERAGENT,
-            "PhealNG/" . Pheal::VERSION . ' ' . Config::getInstance()->http_user_agent
+            'PhealNG/' . Pheal::VERSION . ' ' . Config::getInstance()->http_user_agent
         );
 
         // custom outgoing ip address
@@ -84,7 +84,7 @@ class Curl implements CanFetch
         }
 
         // ignore ssl peer verification if needed
-        if (substr($url, 0, 5) == "https") {
+        if (substr($url, 0, 5) == 'https') {
             curl_setopt(self::$curl, CURLOPT_SSL_VERIFYPEER, Config::getInstance()->http_ssl_verifypeer);
 
             if (Config::getInstance()->http_ssl_verifypeer
@@ -107,7 +107,7 @@ class Curl implements CanFetch
 
             // attach url parameters
             if (count($opts)) {
-                $url .= "?" . http_build_query($opts, '', '&');
+                $url .= '?' . http_build_query($opts, '', '&');
             }
         }
 
@@ -118,14 +118,14 @@ class Curl implements CanFetch
         if (($http_keepalive = Config::getInstance()->http_keepalive) != false) {
             curl_setopt(self::$curl, CURLOPT_FORBID_REUSE, false);
             $http_keepalive = ($http_keepalive === true) ? 15 : (int)$http_keepalive;
-            $headers[] = "Connection: keep-alive";
-            $headers[] = "Keep-Alive: timeout=" . $http_keepalive . ", max=1000";
+            $headers[] = 'Connection: keep-alive';
+            $headers[] = 'Keep-Alive: timeout=' . $http_keepalive . ', max=1000';
         } else {
             curl_setopt(self::$curl, CURLOPT_FORBID_REUSE, true);
         }
 
         // allow all encodings
-        curl_setopt(self::$curl, CURLOPT_ENCODING, "");
+        curl_setopt(self::$curl, CURLOPT_ENCODING, '');
 
         // curl defaults
         curl_setopt(self::$curl, CURLOPT_URL, $url);
