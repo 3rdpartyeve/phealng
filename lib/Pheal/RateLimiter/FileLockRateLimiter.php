@@ -100,11 +100,15 @@ class FileLockRateLimiter implements CanRateLimit
         $fp = fopen($this->lockFilePath, "a+");
 
         if (!$fp) {
-            throw new PhealException("Cannot open rate limiter lock file " . $this->lockFilePath . ': ' . error_get_last());
+            throw new PhealException(
+                "Cannot open rate limiter lock file " .
+                $this->lockFilePath .
+                ': ' .
+                error_get_last()
+            );
         }
 
-        if (flock($fp, LOCK_EX)) {  // acquire an exclusive lock
-
+        if (flock($fp, LOCK_EX)) {
             fseek($fp, 0);
             $bucketSize = trim(fgets($fp));
             $lastRequest = trim(fgets($fp));

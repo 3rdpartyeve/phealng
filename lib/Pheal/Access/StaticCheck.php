@@ -152,7 +152,6 @@ class StaticCheck implements CanCheck
 
         // check if keytype is correct for this call
         if ($check[0] == $type) {
-
             // check single accessbit
             if (is_int($check[1]) && (int)$accessMask & (int)$check[1]) {
                 return true;

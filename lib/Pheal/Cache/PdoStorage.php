@@ -99,8 +99,10 @@ class PdoStorage implements CanCache
         );
 
         $this->statements['save'] = $this->db->prepare(
-            'INSERT INTO `' . $this->options['table'] . '` (`userId`, `scope`, `name`, `args`, `cachedUntil`, `xml`) VALUES '
-            . '(:userId, :scope, :name, :args, :cachedUntil, :xml)'
+            'INSERT INTO `' .
+            $this->options['table'] .
+            '` (`userId`, `scope`, `name`, `args`, `cachedUntil`, `xml`) VALUES ' .
+            '(:userId, :scope, :name, :args, :cachedUntil, :xml)'
         );
 
         $this->statements['delete'] = $this->db->prepare(
@@ -117,7 +119,8 @@ class PdoStorage implements CanCache
      */
     protected function serializeArguments(array $args)
     {
-        // first we have to sort the args by key to avoid that different orders lead to different cache entries!
+        // first we have to sort the args by key to avoid that different orders
+        // lead to different cache entries!
         ksort($args);
 
         $result = '';
