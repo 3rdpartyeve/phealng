@@ -109,7 +109,7 @@ class Config
 
     /**
      * Verify the SSL peer?
-     * You may need to provide a bundle of trusted Certificate Agencyies
+     * You may need to provide a bundle of trusted Certificate Agencies
      *
      * @see self::$http_ssl_certificate_file
      * @see CURLOPT_SSL_VERIFYPEER
@@ -162,7 +162,7 @@ class Config
         $this->archive = new \Pheal\Archive\NullStorage();
         $this->log = new \Pheal\Log\NullStorage();
         $this->access = new \Pheal\Access\NullCheck();
-        $this->fetcher = new \Pheal\Fetcher\Curl();
+        $this->fetcher = new \Pheal\Fetcher\Guzzle();
         $this->rateLimiter = new \Pheal\RateLimiter\NullRateLimiter();
 
         $this->http_user_agent = '( Unknown PHP Application )';

@@ -38,6 +38,9 @@ use Pheal\Core\Config;
 use Pheal\Exceptions\ConnectionException;
 use Pheal\Pheal;
 
+/**
+ * @deprecated
+ */
 class File implements CanFetch
 {
     /**

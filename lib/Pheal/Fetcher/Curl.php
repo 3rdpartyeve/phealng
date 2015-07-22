@@ -31,6 +31,9 @@ use Pheal\Exceptions\ConnectionException;
 use Pheal\Exceptions\HTTPException;
 use Pheal\Pheal;
 
+/**
+ * @deprecated
+ */
 class Curl implements CanFetch
 {
     /**

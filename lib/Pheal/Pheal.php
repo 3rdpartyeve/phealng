@@ -238,12 +238,14 @@ class Pheal
                 // rate limit
                 Config::getInstance()->rateLimiter->rateLimit();
 
+                $config = Config::getInstance();
+                $config->fetcher->init($config);
+
                 // request
-                $this->xml = Config::getInstance()->fetcher->fetch($url, $http_opts);
+                $this->xml = $config->fetcher->fetch($url, $http_opts);
 
                 // stop measure the response time
                 Config::getInstance()->log->stop();
-
 
                 $element = @new \SimpleXMLElement($this->xml);
 
