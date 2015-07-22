@@ -37,11 +37,11 @@ the following json data:
 ```json
 {
     "require": {
-        "3rdpartyeve/phealng": "1.0.*"
+        "3rdpartyeve/phealng": "~2.0"
     }
 }
 ```
-_Note:_ replace 1.0.* by what ever version you want to use, you can use dev-master
+_Note:_ replace ~2.0 by what ever version you want to use, you can use dev-master
 but it will likely be unstable.
 
 _Hint:_ PhealNG follows semantic versioning http://semver.org
@@ -188,6 +188,7 @@ Pheal offers this implementations out of the box:
 - ForcedFileStorage
 - HashedNameFileStorage
 - MemcacheStorage
+- MemcachedStorage
 - RedisStorage
 - PdoStorage (database caching)
 

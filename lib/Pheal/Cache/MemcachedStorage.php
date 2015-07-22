@@ -28,27 +28,29 @@
 namespace Pheal\Cache;
 
 /**
- * Implememnts memcached into Pheal
+ * Implements memcached into Pheal
  */
-class MemcacheStorage extends MemcacheBase implements CanCache
+class MemcachedStorage extends MemcacheBase implements CanCache
 {
     /**
-     * Active memcache instance/connection
+     * Active memcached instance/connection
      *
-     * @var \Memcache
+     * @var \Memcached
      */
-    protected $memcache;
+    protected $memcached;
+    protected $flags;
 
     /**
-     * Initialise memcache storage cache.
+     * Initialise memcached storage cache.
      *
      * @param array $options optional config array, valid keys are: host, port
      */
     public function __construct(array $options = array())
     {
         $this->options = $options + $this->options;
-        $this->memcache = new \Memcache();
-        $this->memcache->connect($this->options['host'], $this->options['port']);
+        $this->memcached = new \Memcached();
+        $this->memcached->addServer($this->options['host'], $this->options['port'], 0);
+        $this->flags = ($this->options['compressed']) ? MEMCACHED_COMPRESSED : 0;
     }
 
     /**
@@ -64,7 +66,28 @@ class MemcacheStorage extends MemcacheBase implements CanCache
     public function load($userid, $apikey, $scope, $name, $args)
     {
         $key = $this->getKey($userid, $apikey, $scope, $name, $args);
-        return (string) $this->memcache->get($key);
+
+        $age_data = $this->memcached->get($key.'_age');
+        $age_result = $this->memcached->getResultCode();
+
+        if ($age_result != 0) {
+            return false;
+        }
+
+        $age = time() - (int)$age_data['age'];
+
+        if ($age > (int)$age_data['ttl']) {
+            return false;
+        }
+
+        $read = (string)$this->memcached->get($key);
+        $read_result = $this->memcached->getResultCode();
+
+        if ($read_result != 0) {
+            return false;
+        }
+
+        return $read;
     }
 
     /**
@@ -81,7 +104,24 @@ class MemcacheStorage extends MemcacheBase implements CanCache
     public function save($userid, $apikey, $scope, $name, $args, $xml)
     {
         $key = $this->getKey($userid, $apikey, $scope, $name, $args);
-        $timeout = $this->getTimeout($xml);
-        $this->memcache->set($key, $xml, 0, time() + $timeout);
+        $ttl = $this->getTimeout($xml);
+        $time = time();
+        $timeout = $time + $ttl;
+
+        $replace = $this->memcached->replace($key, $xml, $timeout);
+
+        $set = $set_age = false;
+
+        if (!$replace) {
+            $set = $this->memcached->set($key, $xml, $timeout);
+        }
+
+        $replace_age = $this->memcached->replace($key.'_age', array('age' => $time, 'ttl' => $ttl), $timeout);
+
+        if (!$replace_age) {
+            $set_age = $this->memcached->set($key.'_age', array('age' => $time, 'ttl' => $ttl), $timeout);
+        }
+
+        return (($replace || $set) && ($replace_age || $set_age));
     }
 }
