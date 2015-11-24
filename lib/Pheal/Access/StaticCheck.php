@@ -59,6 +59,8 @@ class StaticCheck implements CanCheck
      */
     protected $bits = array(
         'char' => array(
+            'bookmarks' => array('Character', 268435456),
+            'locations' => array('Character', 134217728),
             'contracts' => array('Character', 67108864),
             'wallettransactions' => array('Character', 4194304),
             'walletjournal' => array('Character', 2097152),
@@ -88,6 +90,8 @@ class StaticCheck implements CanCheck
             'accountstatus' => array('Character', 33554432)
         ),
         'corp' => array(
+            'bookmarks' => array('Corporation', 67108864),
+            'locations' => array('Corporation', 16777216),
             'contracts' => array('Corporation', 8388608),
             'titles' => array('Corporation', 4194304),
             'wallettransactions' => array('Corporation', 2097152),
