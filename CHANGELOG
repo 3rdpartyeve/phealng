@@ -2,6 +2,20 @@
 VERSION 2  A FEW COMMUNITY PATCHES, PSR-3 COMPATIBLE LOGGER SUPPORT. THIS RELEASE BREAKS BACKWARD COMPATIBILITY FOR PDOCACHE AS THE STRUCTURE OF THE DB TABLE CHANGES! THE OLD FILE LOGGER IS NOW MARKED AS DEPRECATED, SO PROPER PSR LOGGING CAN BE ADDED IN THE FUTURE.
 =========================================================================================================================================================================================================================================================================
 
+   Version 2.3 - maintenance release
+      24/11/2015 15:20  2.3.0  initial release
+         8fc7a34 added bookmarks / locations to static check as requested by sascha
+         96887ff phpunit.xml added
+         0339f72 Merge pull request #32 from Bavragor/feature/GuzzleAsFetcher
+         2792508 Added Guzzle Implementation as Fetcher, marked old fetcher as deprecated and wrote a initial functional test for Pheal
+         7638128 Added guzzle as a dependency
+         7373fa5 Merge pull request #31 from 3rdpartyeve/master
+         c0ce8f5 Changed composer dependencies, removed code quality tools in favor of scrutinizer. Moved phpunit to require-dev
+         debf1d6 Whenever possible don't use double quotes, because PHP will evaluate that string, even if it is not necessary, instead using single quotes.
+         80ed73f Merge pull request #1 from Bavragor/feature/PSR2-Refactoring
+         5a2ed05 Code reformatting according to PSR2
+         c3996ab Added some code quality tools and phpunit for testing purposes
+
    Version 2.2 - predis cache
       10/06/2015 19:00  2.2.1  bugfix
          71e078c Merge pull request #29 from OrthoLoess/fix-predis
