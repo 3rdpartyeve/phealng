@@ -3,6 +3,8 @@ VERSION 2  A FEW COMMUNITY PATCHES, PSR-3 COMPATIBLE LOGGER SUPPORT. THIS RELEAS
 =========================================================================================================================================================================================================================================================================
 
    Version 2.3 - maintenance release
+      25/11/2015 12:14  2.3.1  chatchannels added to static check
+         5f13a28 added chatchannels to static check
       24/11/2015 15:20  2.3.0  initial release
          8fc7a34 added bookmarks / locations to static check as requested by sascha
          96887ff phpunit.xml added
