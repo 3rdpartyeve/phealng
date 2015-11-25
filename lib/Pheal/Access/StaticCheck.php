@@ -59,6 +59,7 @@ class StaticCheck implements CanCheck
      */
     protected $bits = array(
         'char' => array(
+            'chatchannels' => array('Character', 536870912),
             'bookmarks' => array('Character', 268435456),
             'locations' => array('Character', 134217728),
             'contracts' => array('Character', 67108864),
