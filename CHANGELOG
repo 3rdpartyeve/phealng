@@ -3,6 +3,11 @@ VERSION 2  A FEW COMMUNITY PATCHES, PSR-3 COMPATIBLE LOGGER SUPPORT. THIS RELEAS
 =========================================================================================================================================================================================================================================================================
 
    Version 2.3 - maintenance release
+      08/12/2015 14:38  2.3.2  dependency update
+         a5fbb6d adding composer.lock to gitignore
+         e7f0488 removing composer.lock, as that doesn't belong in a lib
+         fb2cfa2 Merge pull request #33 from leonjza/master
+         da87a0e Bump Guzzle version to 6.1
       25/11/2015 12:14  2.3.1  chatchannels added to static check
          5f13a28 added chatchannels to static check
       24/11/2015 15:20  2.3.0  initial release
