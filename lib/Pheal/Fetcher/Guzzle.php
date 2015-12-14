@@ -48,6 +48,11 @@ class Guzzle implements CanFetch
      */
     public function fetch($url, $options)
     {
+
+        $request_type = $this->config->http_post === true ?
+            'form_params' : 'query';
+        $options = [$request_type => $options];
+
         try {
             $response = $this->client->request(
                 $this->config->http_post === true ? 'POST' : 'GET',
