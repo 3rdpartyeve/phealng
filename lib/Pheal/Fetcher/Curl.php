@@ -44,20 +44,6 @@ class Curl implements CanFetch
     public static $curl;
 
     /**
-     * static method to close open http connections.
-     * example: force closing keep-alive connections that are no longer needed.
-     * @static
-     * @return void
-     */
-    public static function disconnect()
-    {
-        if (is_resource(self::$curl) && get_resource_type(self::$curl) == 'curl') {
-            curl_close(self::$curl);
-        }
-        self::$curl = null;
-    }
-
-    /**
      * method will do the actual http call using curl libary.
      * you can choose between POST/GET via config.
      * will throw Exception if http request/curl times out or fails
@@ -91,7 +77,8 @@ class Curl implements CanFetch
             curl_setopt(self::$curl, CURLOPT_SSL_VERIFYPEER, Config::getInstance()->http_ssl_verifypeer);
 
             if (Config::getInstance()->http_ssl_verifypeer
-                && (Config::getInstance()->http_ssl_certificate_file !== false)) {
+                && (Config::getInstance()->http_ssl_certificate_file !== false)
+            ) {
                 curl_setopt(self::$curl, CURLOPT_CAINFO, Config::getInstance()->http_ssl_certificate_file);
             }
         }
@@ -153,7 +140,7 @@ class Curl implements CanFetch
             // error response now, so we have to use the content as result
             // for some of the errors. This will actually break if CCP ever uses
             // the HTTP Status for an actual transport related error.
-            switch($httpCode) {
+            switch ($httpCode) {
                 case 400:
                 case 403:
                 case 500:
@@ -172,5 +159,19 @@ class Curl implements CanFetch
             return $result;
         }
 
+    }
+
+    /**
+     * static method to close open http connections.
+     * example: force closing keep-alive connections that are no longer needed.
+     * @static
+     * @return void
+     */
+    public static function disconnect()
+    {
+        if (is_resource(self::$curl) && get_resource_type(self::$curl) == 'curl') {
+            curl_close(self::$curl);
+        }
+        self::$curl = null;
     }
 }

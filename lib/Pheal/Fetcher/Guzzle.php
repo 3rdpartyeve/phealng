@@ -39,6 +39,43 @@ class Guzzle implements CanFetch
     }
 
     /**
+     * Generates Client configuration based on current config instance
+     * @return array
+     */
+    private function generateClientConfiguration()
+    {
+        $clientConfiguration = [
+            'base_uri' => $this->config->api_base,
+            'timeout' => $this->config->http_timeout,
+            'headers' => [
+                'Connection' => 'keep-alive',
+                'Accept-Encoding' => ''
+            ]
+        ];
+
+        if ($this->config->http_user_agent !== false) {
+            $clientConfiguration['headers']['User-Agent'] =
+                'PhealNG/' . Pheal::VERSION . ' ' . $this->config->http_user_agent;
+        }
+
+        if ($this->config->http_keepalive !== false) {
+            $clientConfiguration['headers']['Keep-Alive'] = 'timeout=' .
+            $this->config->http_keepalive === true ? 15 : $this->config->http_keepalive .
+                ', max=1000';
+        }
+
+        $clientConfiguration['verify'] = false;
+
+        if ($this->config->http_ssl_verifypeer === true && $this->config->http_ssl_certificate_file !== false) {
+            $clientConfiguration['verify'] = $this->config->http_ssl_certificate_file;
+        } elseif ($this->config->http_ssl_verifypeer === true) {
+            $clientConfiguration['verify'] = true;
+        }
+
+        return $clientConfiguration;
+    }
+
+    /**
      * Fetches data from api
      * @param string $url
      * @param array $options
@@ -59,7 +96,7 @@ class Guzzle implements CanFetch
                 $url,
                 $options
             );
-        } catch(GuzzleException $exception) {
+        } catch (GuzzleException $exception) {
             throw new ConnectionException(
                 $exception->getMessage(),
                 $exception->getCode()
@@ -71,7 +108,7 @@ class Guzzle implements CanFetch
             // error response now, so we have to use the content as result
             // for some of the errors. This will actually break if CCP ever uses
             // the HTTP Status for an actual transport related error.
-            switch($response->getStatusCode()) {
+            switch ($response->getStatusCode()) {
                 case 400:
                 case 403:
                 case 500:
@@ -87,42 +124,5 @@ class Guzzle implements CanFetch
         }
 
         return $response->getBody()->getContents();
-    }
-
-    /**
-     * Generates Client configuration based on current config instance
-     * @return array
-     */
-    private function generateClientConfiguration()
-    {
-        $clientConfiguration = [
-            'base_uri' => $this->config->api_base,
-            'timeout' => $this->config->http_timeout,
-            'headers' => [
-                'Connection' => 'keep-alive',
-                'Accept-Encoding' => ''
-            ]
-        ];
-
-        if($this->config->http_user_agent !== false) {
-            $clientConfiguration['headers']['User-Agent'] =
-                'PhealNG/' . Pheal::VERSION . ' ' . $this->config->http_user_agent;
-        }
-
-        if($this->config->http_keepalive !== false) {
-            $clientConfiguration['headers']['Keep-Alive'] = 'timeout=' .
-            $this->config->http_keepalive === true ? 15 : $this->config->http_keepalive .
-                ', max=1000';
-        }
-
-        $clientConfiguration['verify'] = false;
-
-        if($this->config->http_ssl_verifypeer === true && $this->config->http_ssl_certificate_file !== false) {
-            $clientConfiguration['verify'] = $this->config->http_ssl_certificate_file;
-        } elseif($this->config->http_ssl_verifypeer === true) {
-            $clientConfiguration['verify'] = true;
-        }
-
-        return $clientConfiguration;
     }
 }

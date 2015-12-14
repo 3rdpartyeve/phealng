@@ -107,7 +107,7 @@ class File implements CanFetch
             // error response now, so we have to use the content as result
             // for some of the errors. This will actually break if CCP ever uses
             // the HTTP Status for an actual transport related error.
-            switch($httpCode) {
+            switch ($httpCode) {
                 case 400:
                 case 403:
                 case 500:
