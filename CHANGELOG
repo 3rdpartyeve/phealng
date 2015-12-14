@@ -3,6 +3,10 @@ VERSION 2  A FEW COMMUNITY PATCHES, PSR-3 COMPATIBLE LOGGER SUPPORT. THIS RELEAS
 =========================================================================================================================================================================================================================================================================
 
    Version 2.3 - maintenance release
+      14/12/2015 15:44  2.3.3  bugfix for guzzle fetcher
+         954f9a1 code style fix
+         f64295e Merge pull request #34 from leonjza/master
+         e1139aa Fix Guzzle fetcher for both GET & POST HTTP Verbs
       08/12/2015 14:38  2.3.2  dependency update
          a5fbb6d adding composer.lock to gitignore
          e7f0488 removing composer.lock, as that doesn't belong in a lib
