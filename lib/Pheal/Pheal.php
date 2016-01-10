@@ -1,7 +1,7 @@
 <?php
 /*
  MIT License
- Copyright (c) 2010 - 2014 Daniel Hoffend, Peter Petermann
+ Copyright (c) 2010 - 2016 Daniel Hoffend, Peter Petermann
 
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -239,7 +239,7 @@ class Pheal
                 Config::getInstance()->rateLimiter->rateLimit();
 
                 $config = Config::getInstance();
-                
+
                 // request
                 $this->xml = $config->fetcher->fetch($url, $http_opts);
 

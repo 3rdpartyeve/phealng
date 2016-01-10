@@ -1,7 +1,7 @@
 <?php
 /*
  MIT License
- Copyright (c) 2014 Matthias Kühne, Peter Petermann
+ Copyright (c) 2016 Matthias Kühne, Peter Petermann
 
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
