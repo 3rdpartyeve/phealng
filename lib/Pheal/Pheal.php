@@ -239,8 +239,7 @@ class Pheal
                 Config::getInstance()->rateLimiter->rateLimit();
 
                 $config = Config::getInstance();
-                $config->fetcher->init($config);
-
+                
                 // request
                 $this->xml = $config->fetcher->fetch($url, $http_opts);
 

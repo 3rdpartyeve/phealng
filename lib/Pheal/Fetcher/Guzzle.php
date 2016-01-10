@@ -27,15 +27,15 @@ class Guzzle implements CanFetch
 
     /**
      * Set the actual config instance, based on it creates a client instance
-     * @param Config $config
      */
-    public function init(Config $config)
+    private function init()
     {
-        $this->config = $config;
-        $this->client = new Client(
-            $this->generateClientConfiguration()
-        );
-
+        if(!isset($this->config)) {
+            $this->config = Config::getInstance();
+            $this->client = new Client(
+                $this->generateClientConfiguration()
+            );
+        }
     }
 
     /**
@@ -85,6 +85,7 @@ class Guzzle implements CanFetch
      */
     public function fetch($url, $options)
     {
+        $this->init();
 
         $request_type = $this->config->http_post === true ?
             'form_params' : 'query';
