@@ -3,6 +3,9 @@ VERSION 2  A FEW COMMUNITY PATCHES, PSR-3 COMPATIBLE LOGGER SUPPORT. THIS RELEAS
 =========================================================================================================================================================================================================================================================================
 
    Version 2.3 - maintenance release
+      10/01/2016 17:59  2.3.4  bugfix
+         020aa99 update license to 2016
+         c7e93c7 restored public interface of fetcher. (no more non-interface methods called, interface compatible with older fetchers again)
       14/12/2015 15:44  2.3.3  bugfix for guzzle fetcher
          954f9a1 code style fix
          f64295e Merge pull request #34 from leonjza/master
