@@ -160,7 +160,7 @@ try {
 
 // there is a variety of things that can go wrong, like the EVE API not responding,
 // the key being invalid, the key not having the rights to call the method
-// or the characterID beeing wrong - just to name a few. So it is basically
+// or the characterID being wrong - just to name a few. So it is basically
 // a good idea to catch Exceptions. Usually you would want to log that the
 // exception happend and then decide how to inform the user about it.
 // In this example we simply catch all PhealExceptions and display their message
