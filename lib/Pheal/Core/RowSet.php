@@ -40,10 +40,8 @@ class RowSet extends \ArrayObject implements CanConvertToArray
     /**
      * initialize the rowset
      * @param \SimpleXMLElement $xml
-     * @param null $name
-     * @param string $rowname
-     * @optional String $name
-     * @optional String $rowname
+     * @param string $name optional
+     * @param string $rowname optional
      */
     public function __construct($xml, $name = null, $rowname = 'row')
     {
