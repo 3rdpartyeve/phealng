@@ -11,14 +11,14 @@
             "email": "ppetermann80@googlemail.com",
             "homepage": "http://devedge.eu"
         },
-        {   
+        {
             "name": "Wollari",
             "homepage": "http://evemaps.dotlan.net/"
         }
     ],
     "require": {
         "php": ">=5.4.0",
-        "psr/log": "1.0.0",
+        "psr/log": "~1.0.0",
         "guzzlehttp/guzzle": "~6.1"
     },
     "require-dev": {
