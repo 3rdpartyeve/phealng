@@ -3,6 +3,13 @@ VERSION 2  A FEW COMMUNITY PATCHES, PSR-3 COMPATIBLE LOGGER SUPPORT. THIS RELEAS
 =========================================================================================================================================================================================================================================================================
 
    Version 2.3 - maintenance release
+      02/10/2016 16:56  2.3.5  dependency update
+         39e0032 Merge pull request #44 from RedAces/reduce-dep-psr/log
+         a916470 Loosen the dependency to psr/log from a specific version to sem ver
+         e14d2b5 Merge pull request #43 from sarelvdwalt/master
+         a0a1966 Removed @optional parameter docblock entries
+         dbbb4d1 Merge pull request #40 from TetraEtc/master
+         3e5abea Update README.md
       10/01/2016 17:59  2.3.4  bugfix
          020aa99 update license to 2016
          c7e93c7 restored public interface of fetcher. (no more non-interface methods called, interface compatible with older fetchers again)

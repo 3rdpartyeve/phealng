@@ -48,7 +48,7 @@ class Pheal
      *
      * @var string
      */
-    const VERSION = '2.3.4';
+    const VERSION = '2.3.5';
 
     /**
      * @var int
