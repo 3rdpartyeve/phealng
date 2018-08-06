@@ -1,8 +1,18 @@
+# DEPRECATED AND ARCHIVED
+CCP recently (2018) ended the XML API, thus there isn't really a point in continuing this library.
+This repository has been archived in case you ever need access to the code again, but if you read this its very likely that this library is not what you have been looking for.
+
+regards, PP
+
+
+
+
+
 # PhealNG
 [![Latest Stable Version](https://poser.pugx.org/3rdpartyeve/phealng/v/stable.png)](https://packagist.org/packages/3rdpartyeve/phealng)
 [![Total Downloads](https://poser.pugx.org/3rdpartyeve/phealng/downloads.png)](https://packagist.org/packages/3rdpartyeve/phealng)
 
-Copyright (C) 2012, 2013, 2014 by Peter Petermann
+Copyright (C) 2012 - 2018 by Peter Petermann
 All rights reserved.
 
 PhealNG is a refactoring of Pheal to meet more modern PHP development standards, for example to support namespaces
